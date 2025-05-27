@@ -407,7 +407,7 @@
           )
         ]).then(function() {
           // After emails, submit to backend
-          fetch('https://house-dardasha.onrender.com', {
+          fetch('https://your-backend-name.onrender.com/api/appointments', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
