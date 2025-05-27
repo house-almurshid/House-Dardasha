@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Appointment - Aldardasha House</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 480px;
+      margin: 60px auto 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 32px 24px 24px 24px;
+    }
+    h1 {
+      text-align: center;
+      color: #1e293b;
+      font-size: 2rem;
+      margin-bottom: 18px;
+    }
+    label {
+      font-weight: bold;
+      color: #334155;
+      margin-bottom: 6px;
+      display: block;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #888;
+      border-radius: 4px;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      background: #059669;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #047857;
+    }
+    .result, .error {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 1.05rem;
+      text-align: left;
+    }
+    .result {
+      background: #e6ffe6;
+      border: 1px solid #059669;
+      color: #065f46;
+    }
+    .error {
+      background: #ffeaea;
+      border: 1px solid #e11d48;
+      color: #b91c1c;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: #2563eb;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    .status {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    .label {
+      color: #475569;
+      font-weight: bold;
+    }
+    .value {
+      color: #334155;
+      margin-left: 4px;
+    }
+    .admin-note {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #f1f5f9;
+      border-left: 4px solid #059669;
+    }
+    .admin-note.reject {
+      border-left-color: #e11d48;
+      background: #fff1f2;
+    }
+    .admin-note-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Track Appointment</h1>
+    <form id="track-form">
+      <label for="tracking-id">Enter Your Tracking ID:</label>
+      <input type="text" id="tracking-id" name="tracking_id" required placeholder="e.g. APPT171674000000123">
+      <button type="submit">Track</button>
+    </form>
+    <div id="result"></div>
+    <a href="get-appointment.html" class="back-link">← Book New Appointment</a>
+    <a href="appintment.html" class="back-link">← Back to Appointment Portal</a>
+  </div>
+  <div class="footer">
+    &copy; 2025 Aldardasha House - All rights reserved.
+  </div>
+  <script>
+  document.getElementById('track-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const trackingId = document.getElementById('tracking-id').value.trim();
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = '';
+    if (!trackingId) {
+      resultDiv.innerHTML = '<div class="error">Please enter your tracking ID.</div>';
+      return;
+    }
+    // Fetch appointment from backend
+    fetch(`https://house-dardasha.onrender.com/api/appointments?trackingID=${encodeURIComponent(trackingId)}`)
+      .then(res => res.json())
+      .then(data => {
+        const found = Array.isArray(data) ? data[0] : data;
+        if (found && found.trackingID === trackingId) {
+          let adminSection = '';
+          // Approved
+          if (found.status === 'approved' && (found.admin_approved_date || found.admin_approved_time || found.admin_approved_advise)) {
+            adminSection += `
+              <div class="admin-note">
+                <div class="admin-note-title" style="color:#059669;">Approved Meeting Details:</div>
+                <div><span class="label">Meeting Date:</span> <span class="value">${found.admin_approved_date || ''}</span></div>
+                <div><span class="label">Time Slot:</span> <span class="value">${found.admin_approved_time || ''}</span></div>
+                ${found.admin_approved_advise ? `<div><span class="label">Admin Advise:</span> <span class="value">${found.admin_approved_advise}</span></div>` : ''}
+              </div>
+            `;
+          }
+          // Assigned
+          if (found.status === 'assigned' && found.assigned_person) {
+            adminSection += `
+              <div class="admin-note" style="border-left-color:#6366f1;">
+                <div class="admin-note-title" style="color:#6366f1;">Assigned Person:</div>
+                <div><span class="label">Name:</span> <span class="value">${found.assigned_person}</span></div>
+                <div><span class="label">Meeting Date:</span> <span class="value">${found.admin_approved_date || ''}</span></div>
+                <div><span class="label">Time Slot:</span> <span class="value">${found.admin_approved_time || ''}</span></div>
+                ${found.admin_approved_advise ? `<div><span class="label">Admin Advise:</span> <span class="value">${found.admin_approved_advise}</span></div>` : ''}
+              </div>
+            `;
+          }
+          // Postponed
+          if (found.status === 'postponed' && (found.postpone_reason || found.postpone_advise)) {
+            adminSection += `
+              <div class="admin-note" style="border-left-color:#eab308;background:#fef9c3;">
+                <div class="admin-note-title" style="color:#eab308;">Postponed Details:</div>
+                <div><span class="label">Reason:</span> <span class="value">${found.postpone_reason || ''}</span></div>
+                ${found.postpone_advise ? `<div><span class="label">Admin Advise:</span> <span class="value">${found.postpone_advise}</span></div>` : ''}
+              </div>
+            `;
+          }
+          // Meeting Done
+          if (found.status === 'done' && (found.meeting_done_date || found.meeting_done_time || found.meeting_done_details)) {
+            adminSection += `
+              <div class="admin-note" style="border-left-color:#14b8a6;background:#f0fdfa;">
+                <div class="admin-note-title" style="color:#14b8a6;">Meeting Done:</div>
+                <div><span class="label">Date:</span> <span class="value">${found.meeting_done_date || ''}</span></div>
+                <div><span class="label">Time:</span> <span class="value">${found.meeting_done_time || ''}</span></div>
+                <div><span class="label">Details:</span> <span class="value">${found.meeting_done_details || ''}</span></div>
+                ${found.meeting_done_link ? `<div><span class="label">File/Link:</span> <a href="${found.meeting_done_link}" target="_blank" class="value" style="color:#2563eb;text-decoration:underline;">View</a></div>` : ''}
+              </div>
+            `;
+          }
+          // Rejected
+          if (found.status === 'rejected' && (found.admin_reject_reason || found.admin_reject_advise)) {
+            adminSection += `
+              <div class="admin-note reject">
+                <div class="admin-note-title" style="color:#e11d48;">Rejection Details:</div>
+                <div><span class="label">Reason:</span> <span class="value">${found.admin_reject_reason || ''}</span></div>
+                ${found.admin_reject_advise ? `<div><span class="label">Admin Advise:</span> <span class="value">${found.admin_reject_advise}</span></div>` : ''}
+              </div>
+            `;
+          }
+          resultDiv.innerHTML = `
+            <div class="result">
+              <div class="status">Status: <span style="color:${
+                found.status === 'approved' ? '#059669' :
+                found.status === 'assigned' ? '#6366f1' :
+                found.status === 'postponed' ? '#eab308' :
+                found.status === 'done' ? '#14b8a6' :
+                found.status === 'rejected' ? '#e11d48' : '#f59e42'
+              }">${found.status.charAt(0).toUpperCase() + found.status.slice(1)}</span></div>
+              <div class="text-sm" style="color:#64748b;margin-bottom:8px;">
+                <span class="label">Submitted At:</span>
+                <span class="value">${found.submitted_at ? new Date(found.submitted_at).toLocaleString() : 'N/A'}</span>
+                ${found.updated_at ? `<br><span class="label">Last Updated:</span> <span class="value">${new Date(found.updated_at).toLocaleString()}</span>` : ''}
+              </div>
+              <div><span class="label">Name:</span> <span class="value">${found.visitor_name || ''}</span></div>
+              <div><span class="label">Contact:</span> <span class="value">${found.contact || ''}</span></div>
+              <div><span class="label">Email:</span> <span class="value">${found.email || ''}</span></div>
+              <div><span class="label">Meeting Purpose:</span> <span class="value">${found.purpose || ''}</span></div>
+              <div><span class="label">Preferred Date/Time 1:</span> <span class="value">${found.date1 || ''} ${found.time1 || ''} ${found.time2 ? ' / ' + found.time2 : ''}</span></div>
+              <div><span class="label">Preferred Date/Time 2:</span> <span class="value">${found.date2 || ''} ${found.time3 || ''} ${found.time4 ? ' / ' + found.time4 : ''}</span></div>
+              <div style="margin-top:10px;"><span class="label">Tracking ID:</span> <span class="value">${found.trackingID}</span></div>
+              ${adminSection}
+            </div>
+          `;
+        } else {
+          resultDiv.innerHTML = '<div class="error">No appointment found for this Tracking ID.</div>';
+        }
+      })
+      .catch(() => {
+        resultDiv.innerHTML = '<div class="error">Error connecting to server. Please try again later.</div>';
+      });
+  });
+  </script>
+</body>
+</html>
