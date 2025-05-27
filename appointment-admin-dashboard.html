@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Appointment Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen">
+
+  <header class="bg-slate-800 text-white py-4 text-center shadow">
+    <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+    <p class="text-lg mt-1">Appointment Management - Aldardasha House</p>
+  </header>
+
+  <nav class="max-w-4xl mx-auto flex justify-between items-center px-2 py-4">
+    <a href="appintment.html" class="inline-block bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-600 transition">← Back to Portal</a>
+    <button id="logout-btn" class="inline-block bg-red-600 text-white px-3 py-1 rounded hover:bg-red-800 transition">Logout</button>
+  </nav>
+
+  <main class="max-w-4xl mx-auto bg-white rounded shadow p-6 mt-4">
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="tab-btn bg-green-100 text-green-800 px-4 py-2 rounded font-semibold" data-tab="pending">Pending</button>
+      <button class="tab-btn bg-blue-100 text-blue-800 px-4 py-2 rounded font-semibold" data-tab="approved">Approved</button>
+      <button class="tab-btn bg-indigo-100 text-indigo-800 px-4 py-2 rounded font-semibold" data-tab="assigned">Assigned</button>
+      <button class="tab-btn bg-yellow-100 text-yellow-800 px-4 py-2 rounded font-semibold" data-tab="postponed">Postponed</button>
+      <button class="tab-btn bg-teal-100 text-teal-800 px-4 py-2 rounded font-semibold" data-tab="done">Meeting Done</button>
+      <button class="tab-btn bg-red-100 text-red-800 px-4 py-2 rounded font-semibold" data-tab="rejected">Rejected</button>
+      <button class="tab-btn bg-gray-200 text-gray-800 px-4 py-2 rounded font-semibold" data-tab="all">All Appointments</button>
+    </div>
+
+    <!-- Search by Tracking ID -->
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center gap-2">
+      <input type="text" id="search-id" placeholder="Search by Tracking ID..." class="border px-3 py-2 rounded w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <button id="search-btn" class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-900 transition font-semibold">Search</button>
+      <button id="clear-search-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition font-semibold">Clear</button>
+    </div>
+
+    <div id="appointments-list" class="space-y-4"></div>
+    <div id="no-appointments" class="text-center text-gray-500 mt-8 hidden">
+      No appointments found in this category.
+    </div>
+  </main>
+
+  <footer class="bg-slate-800 text-white text-center py-4 mt-10">
+    <section class="text-center">
+      <p>&copy; 2025 Aldardasha House - All rights reserved.</p>
+    </section>
+  </footer>
+
+  <script>
+let appointments = [];
+let currentTab = 'pending';
+let searchTrackingId = '';
+
+const tabList = [
+  { key: 'pending', label: 'Pending', color: 'bg-green-100 text-green-800' },
+  { key: 'approved', label: 'Approved', color: 'bg-blue-100 text-blue-800' },
+  { key: 'assigned', label: 'Assigned', color: 'bg-indigo-100 text-indigo-800' },
+  { key: 'postponed', label: 'Postponed', color: 'bg-yellow-100 text-yellow-800' },
+  { key: 'done', label: 'Meeting Done', color: 'bg-teal-100 text-teal-800' },
+  { key: 'rejected', label: 'Rejected', color: 'bg-red-100 text-red-800' },
+  { key: 'all', label: 'All Appointments', color: 'bg-gray-200 text-gray-800' }
+];
+
+// Render Tabs
+document.querySelector('.flex.flex-wrap').innerHTML = tabList.map(tab =>
+  `<button class="tab-btn ${tab.color} px-4 py-2 rounded font-semibold" data-tab="${tab.key}">${tab.label}</button>`
+).join('');
+
+// Main render function
+function renderAppointments(tab = 'pending', searchId = '') {
+  const list = document.getElementById('appointments-list');
+  list.innerHTML = '';
+  let filtered = [];
+  if (tab === 'all') {
+    filtered = appointments;
+  } else {
+    filtered = appointments.filter(a => a.status === tab);
+  }
+  if (searchId) {
+    filtered = filtered.filter(a => a.trackingID && a.trackingID.toLowerCase().includes(searchId.toLowerCase()));
+  }
+  if (filtered.length === 0) {
+    document.getElementById('no-appointments').classList.remove('hidden');
+    return;
+  } else {
+    document.getElementById('no-appointments').classList.add('hidden');
+  }
+  filtered.forEach(app => {
+    const card = document.createElement('div');
+    card.className = "bg-gray-50 border rounded p-4 flex flex-col md:flex-row md:items-start md:justify-between shadow";
+    card.innerHTML = `
+      <div class="mb-2 md:mb-0 w-full">
+        <div class="font-bold text-lg text-blue-900 mb-2">Tracking ID: <span class="font-mono">${app.trackingID}</span></div>
+        <div class="text-sm text-gray-500 mb-2">
+          <span class="font-semibold">Submitted At:</span>
+          ${app.submitted_at ? new Date(app.submitted_at).toLocaleString() : 'N/A'}
+          ${app.updated_at ? `<br><span class="font-semibold">Last Updated:</span> ${new Date(app.updated_at).toLocaleString()}` : ''}
+        </div>
+        <div class="mb-2">
+          <div class="font-semibold text-purple-700 border-b border-purple-300 mb-1">Section 1: Visitor Details</div>
+          <div><span class="font-semibold">Name:</span> ${app.visitor_name || ''}</div>
+          <div><span class="font-semibold">Contact:</span> ${app.contact || ''}</div>
+          <div><span class="font-semibold">Email:</span> ${app.email || ''}</div>
+          <div><span class="font-semibold">Address:</span> ${app.address || ''}</div>
+        </div>
+        <div class="mb-2">
+          <div class="font-semibold text-blue-700 border-b border-blue-300 mb-1">Section 2: Company/Organisation/Firm/Others</div>
+          <div><span class="font-semibold">Type:</span> ${app.company_type || ''}</div>
+          <div><span class="font-semibold">Name:</span> ${app.recipient_name || ''}</div>
+          <div><span class="font-semibold">Email:</span> ${app.recipient_email || ''}</div>
+          <div><span class="font-semibold">Address:</span> ${app.recipient_address || ''}</div>
+        </div>
+        <div class="mb-2">
+          <div class="font-semibold text-green-700 border-b border-green-300 mb-1">Section 3: Meeting Details</div>
+          <div><span class="font-semibold">Purpose:</span> ${app.purpose || ''}</div>
+          <div><span class="font-semibold">Preference:</span> ${app.meeting_pref || ''}</div>
+          <div class="mt-1"><span class="font-semibold">Preferred Slot 1:</span> ${app.date1 || ''} ${app.time1 || ''} ${app.time2 ? ' / ' + app.time2 : ''}</div>
+          <div><span class="font-semibold">Preferred Slot 2:</span> ${app.date2 || ''} ${app.time3 || ''} ${app.time4 ? ' / ' + app.time4 : ''}</div>
+          <div><span class="font-semibold">Extra Addition:</span> ${app.extra || ''}</div>
+        </div>
+        <div class="mb-2">
+          <span class="font-semibold">Status:</span>
+          <span class="uppercase font-bold ${
+            app.status === 'pending' ? 'text-yellow-600' :
+            app.status === 'approved' ? 'text-blue-700' :
+            app.status === 'assigned' ? 'text-indigo-700' :
+            app.status === 'postponed' ? 'text-yellow-700' :
+            app.status === 'done' ? 'text-teal-700' :
+            app.status === 'rejected' ? 'text-red-700' : 'text-gray-700'
+          }">${app.status.replace(/^\w/, c => c.toUpperCase())}</span>
+        </div>
+        ${app.status === 'approved' && app.admin_approved_date ? `
+          <div class="mb-2">
+            <span class="font-semibold text-blue-700">Approved Meeting Date:</span> ${app.admin_approved_date} <span class="font-semibold">Time Slot:</span> ${app.admin_approved_time}
+            <div><span class="font-semibold">Admin Advise:</span> ${app.admin_approved_advise || ''}</div>
+          </div>
+        ` : ''}
+        ${app.status === 'assigned' && app.assigned_person ? `
+          <div class="mb-2">
+            <span class="font-semibold text-indigo-700">Assigned Person:</span> ${app.assigned_person}
+            <div><span class="font-semibold">Meeting Date:</span> ${app.admin_approved_date || ''} <span class="font-semibold">Time Slot:</span> ${app.admin_approved_time || ''}</div>
+            <div><span class="font-semibold">Admin Advise:</span> ${app.admin_approved_advise || ''}</div>
+          </div>
+        ` : ''}
+        ${app.status === 'postponed' && app.postpone_reason ? `
+          <div class="mb-2">
+            <span class="font-semibold text-yellow-700">Postponed:</span> ${app.postpone_reason}
+            <div><span class="font-semibold">Admin Advise:</span> ${app.postpone_advise || ''}</div>
+          </div>
+        ` : ''}
+        ${app.status === 'done' && app.meeting_done_date ? `
+          <div class="mb-2">
+            <span class="font-semibold text-teal-700">Meeting Done:</span>
+            <div><span class="font-semibold">Date:</span> ${app.meeting_done_date} <span class="font-semibold">Time:</span> ${app.meeting_done_time}</div>
+            <div class="font-semibold">Details:</div>
+            <div class="whitespace-pre-line text-gray-800">${app.meeting_done_details || ''}</div>
+            ${app.meeting_done_link ? `<div><a href="${app.meeting_done_link}" target="_blank" class="text-blue-700 underline">Related File/Link</a></div>` : ''}
+          </div>
+        ` : ''}
+        ${app.status === 'rejected' && app.admin_reject_reason ? `
+          <div class="mb-2">
+            <span class="font-semibold text-red-700">Rejection Reason:</span> ${app.admin_reject_reason}
+            <div><span class="font-semibold">Admin Advise:</span> ${app.admin_reject_advise || ''}</div>
+          </div>
+        ` : ''}
+      </div>
+      <div class="flex space-x-2 mt-4 md:mt-0 md:flex-col md:space-x-0 md:space-y-2 min-w-[200px]">
+        ${app.status === 'pending' ? `
+          <button class="approve-btn bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition" data-id="${app.trackingID}">Approve</button>
+          <button class="reject-btn bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800 transition" data-id="${app.trackingID}">Reject</button>
+        ` : ''}
+        ${app.status === 'approved' ? `
+          <button class="assign-btn bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-800 transition" data-id="${app.trackingID}">Assign Person</button>
+          <button class="postpone-btn bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 transition" data-id="${app.trackingID}">Postpone</button>
+        ` : ''}
+        ${app.status === 'assigned' ? `
+          <button class="edit-assign-btn bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-700 transition" data-id="${app.trackingID}">Edit Assignment</button>
+          <button class="postpone-btn bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 transition" data-id="${app.trackingID}">Postpone</button>
+          <button class="done-btn bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-800 transition" data-id="${app.trackingID}">Meeting Done</button>
+        ` : ''}
+        ${app.status === 'done' ? `
+          <button class="edit-done-btn bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700 transition" data-id="${app.trackingID}">Edit Meeting Done</button>
+        ` : ''}
+        ${app.status === 'postponed' ? `
+          <button class="approve-btn bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition" data-id="${app.trackingID}">Approve</button>
+        ` : ''}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('ring', 'ring-offset-2', 'bg-opacity-80'));
+    this.classList.add('ring', 'ring-offset-2', 'bg-opacity-80');
+    currentTab = this.getAttribute('data-tab');
+    renderAppointments(currentTab, searchTrackingId);
+  });
+});
+
+// Approve/Reject/Assign/Postpone/Done handlers with modal forms
+document.addEventListener('click', function(e) {
+  // Approve
+  if (e.target.classList.contains('approve-btn')) {
+    const id = e.target.getAttribute('data-id');
+    showApproveModal(id);
+  }
+  // Reject
+  if (e.target.classList.contains('reject-btn')) {
+    const id = e.target.getAttribute('data-id');
+    showRejectModal(id);
+  }
+  // Assign
+  if (e.target.classList.contains('assign-btn')) {
+    const id = e.target.getAttribute('data-id');
+    showAssignModal(id);
+  }
+  // Postpone
+  if (e.target.classList.contains('postpone-btn')) {
+    const id = e.target.getAttribute('data-id');
+    showPostponeModal(id);
+  }
+  // Meeting Done
+  if (e.target.classList.contains('done-btn')) {
+    const id = e.target.getAttribute('data-id');
+    showDoneModal(id);
+  }
+  // Edit Assignment
+  if (e.target.classList.contains('edit-assign-btn')) {
+    const id = e.target.getAttribute('data-id');
+    showAssignModal(id, true); // pass edit flag
+  }
+  // Edit Meeting Done
+  if (e.target.classList.contains('edit-done-btn')) {
+    const id = e.target.getAttribute('data-id');
+    showDoneModal(id, true); // pass edit flag
+  }
+});
+
+// Approve Modal (uses PATCH to backend)
+function showApproveModal(trackingID) {
+  const modal = document.createElement('div');
+  modal.className = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50";
+  modal.innerHTML = `
+    <div class="bg-white rounded shadow-lg p-6 w-full max-w-md">
+      <h3 class="text-lg font-bold mb-4 text-blue-700">Approve Appointment</h3>
+      <form id="approve-form">
+        <label class="block font-semibold mb-1">Meeting Date:</label>
+        <input type="date" id="admin-approve-date" required class="w-full border px-2 py-1 rounded mb-3">
+        <label class="block font-semibold mb-1">Time Slot:</label>
+        <input type="time" id="admin-approve-time" required class="w-full border px-2 py-1 rounded mb-3">
+        <label class="block font-semibold mb-1">Advise (optional):</label>
+        <textarea id="admin-approve-advise" class="w-full border px-2 py-1 rounded mb-3"></textarea>
+        <div class="flex justify-end space-x-2 mt-4">
+          <button type="button" id="cancel-approve" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-900">Approve</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  applyClockPicker("#admin-approve-time");
+
+  document.getElementById('cancel-approve').onclick = () => modal.remove();
+  document.getElementById('approve-form').onsubmit = function(ev) {
+    ev.preventDefault();
+    const date = document.getElementById('admin-approve-date').value;
+    const time = document.getElementById('admin-approve-time').value;
+    const advise = document.getElementById('admin-approve-advise').value;
+    const now = new Date().toISOString();
+
+    fetch(`https://house-dardasha.onrender.com/api/appointments/${trackingID}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'approved',
+        admin_approved_date: date,
+        admin_approved_time: time,
+        admin_approved_advise: advise,
+        updated_at: now
+      })
+    })
+    .then(res => res.json())
+    .then(() => {
+      modal.remove();
+      fetchAppointments();
+      alert('Appointment #' + trackingID + ' approved.');
+    });
+  };
+}
+
+// Reject Modal (uses PATCH to backend)
+function showRejectModal(trackingID) {
+  const modal = document.createElement('div');
+  modal.className = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50";
+  modal.innerHTML = `
+    <div class="bg-white rounded shadow-lg p-6 w-full max-w-md">
+      <h3 class="text-lg font-bold mb-4 text-red-700">Reject Appointment</h3>
+      <form id="reject-form">
+        <label class="block font-semibold mb-1">Reason for Rejection:</label>
+        <textarea id="admin-reject-reason" required class="w-full border px-2 py-1 rounded mb-3"></textarea>
+        <label class="block font-semibold mb-1">Advise (optional):</label>
+        <textarea id="admin-reject-advise" class="w-full border px-2 py-1 rounded mb-3"></textarea>
+        <div class="flex justify-end space-x-2 mt-4">
+          <button type="button" id="cancel-reject" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-900">Reject</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  document.getElementById('cancel-reject').onclick = () => modal.remove();
+  document.getElementById('reject-form').onsubmit = function(ev) {
+    ev.preventDefault();
+    const reason = document.getElementById('admin-reject-reason').value;
+    const advise = document.getElementById('admin-reject-advise').value;
+    const now = new Date().toISOString();
+
+    fetch(`https://house-dardasha.onrender.com/api/appointments/${trackingID}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'rejected',
+        admin_reject_reason: reason,
+        admin_reject_advise: advise,
+        updated_at: now
+      })
+    })
+    .then(res => res.json())
+    .then(() => {
+      modal.remove();
+      fetchAppointments();
+      alert('Appointment #' + trackingID + ' rejected.');
+    });
+  };
+}
+
+// Assign Modal (uses PATCH to backend)
+function showAssignModal(trackingID, isEdit = false) {
+  const appointment = appointments.find(a => a.trackingID === trackingID);
+  const modal = document.createElement('div');
+  modal.className = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50";
+  modal.innerHTML = `
+    <div class="bg-white rounded shadow-lg p-6 w-full max-w-md">
+      <h3 class="text-lg font-bold mb-4 text-indigo-700">${isEdit ? 'Edit Assigned Person' : 'Assign Person for Meeting'}</h3>
+      <form id="assign-form">
+        <label class="block font-semibold mb-1">Assigned Person:</label>
+        <input type="text" id="assigned-person" required class="w-full border px-2 py-1 rounded mb-3" value="${isEdit && appointment && appointment.assigned_person ? appointment.assigned_person : ''}">
+        <div class="flex justify-end space-x-2 mt-4">
+          <button type="button" id="cancel-assign" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="bg-indigo-700 text-white px-4 py-2 rounded hover:bg-indigo-900">${isEdit ? 'Update' : 'Assign'}</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  document.getElementById('cancel-assign').onclick = () => modal.remove();
+  document.getElementById('assign-form').onsubmit = function(ev) {
+    ev.preventDefault();
+    const person = document.getElementById('assigned-person').value;
+    const now = new Date().toISOString();
+
+    fetch(`https://house-dardasha.onrender.com/api/appointments/${trackingID}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'assigned',
+        assigned_person: person,
+        updated_at: now
+      })
+    })
+    .then(res => res.json())
+    .then(() => {
+      modal.remove();
+      fetchAppointments();
+      alert('Assignment updated for #' + trackingID + '.');
+    });
+  };
+}
+
+// Postpone Modal (uses PATCH to backend)
+function showPostponeModal(trackingID) {
+  const modal = document.createElement('div');
+  modal.className = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50";
+  modal.innerHTML = `
+    <div class="bg-white rounded shadow-lg p-6 w-full max-w-md">
+      <h3 class="text-lg font-bold mb-4 text-yellow-700">Postpone Meeting</h3>
+      <form id="postpone-form">
+        <label class="block font-semibold mb-1">Reason for Postpone:</label>
+        <textarea id="postpone-reason" required class="w-full border px-2 py-1 rounded mb-3"></textarea>
+        <label class="block font-semibold mb-1">Advise (optional):</label>
+        <textarea id="postpone-advise" class="w-full border px-2 py-1 rounded mb-3"></textarea>
+        <div class="flex justify-end space-x-2 mt-4">
+          <button type="button" id="cancel-postpone" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-900">Postpone</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  document.getElementById('cancel-postpone').onclick = () => modal.remove();
+  document.getElementById('postpone-form').onsubmit = function(ev) {
+    ev.preventDefault();
+    const reason = document.getElementById('postpone-reason').value;
+    const advise = document.getElementById('postpone-advise').value;
+    const now = new Date().toISOString();
+
+    fetch(`https://house-dardasha.onrender.com/api/appointments/${trackingID}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'postponed',
+        postpone_reason: reason,
+        postpone_advise: advise,
+        updated_at: now
+      })
+    })
+    .then(res => res.json())
+    .then(() => {
+      modal.remove();
+      fetchAppointments();
+      alert('Appointment #' + trackingID + ' postponed.');
+    });
+  };
+}
+
+// Meeting Done Modal (uses PATCH to backend)
+function showDoneModal(trackingID, isEdit = false) {
+  const appointment = appointments.find(a => a.trackingID === trackingID);
+  const modal = document.createElement('div');
+  modal.className = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50";
+  modal.innerHTML = `
+    <div class="bg-white rounded shadow-lg p-6 w-full max-w-md">
+      <h3 class="text-lg font-bold mb-4 text-teal-700">${isEdit ? 'Edit Meeting Done Details' : 'Mark Meeting as Done'}</h3>
+      <form id="done-form">
+        <label class="block font-semibold mb-1">Meeting Date:</label>
+        <input type="date" id="meeting-done-date" required class="w-full border px-2 py-1 rounded mb-3" value="${isEdit && appointment && appointment.meeting_done_date ? appointment.meeting_done_date : ''}">
+        <label class="block font-semibold mb-1">Meeting Time:</label>
+        <input type="time" id="meeting-done-time" required class="w-full border px-2 py-1 rounded mb-3" value="${isEdit && appointment && appointment.meeting_done_time ? appointment.meeting_done_time : ''}">
+        <label class="block font-semibold mb-1">Meeting Details:</label>
+        <textarea id="meeting-done-details" required class="w-full border px-2 py-1 rounded mb-3">${isEdit && appointment && appointment.meeting_done_details ? appointment.meeting_done_details : ''}</textarea>
+        <label class="block font-semibold mb-1">File/Link (optional):</label>
+        <input type="url" id="meeting-done-link" class="w-full border px-2 py-1 rounded mb-3" placeholder="https://..." value="${isEdit && appointment && appointment.meeting_done_link ? appointment.meeting_done_link : ''}">
+        <div class="flex justify-end space-x-2 mt-4">
+          <button type="button" id="cancel-done" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="bg-teal-700 text-white px-4 py-2 rounded hover:bg-teal-900">${isEdit ? 'Update' : 'Mark Done'}</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  applyClockPicker("#meeting-done-time");
+
+  document.getElementById('cancel-done').onclick = () => modal.remove();
+  document.getElementById('done-form').onsubmit = function(ev) {
+    ev.preventDefault();
+    const date = document.getElementById('meeting-done-date').value;
+    const time = document.getElementById('meeting-done-time').value;
+    const details = document.getElementById('meeting-done-details').value;
+    const link = document.getElementById('meeting-done-link').value;
+    const now = new Date().toISOString();
+
+    fetch(`https://house-dardasha.onrender.com/api/appointments/${trackingID}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'done',
+        meeting_done_date: date,
+        meeting_done_time: time,
+        meeting_done_details: details,
+        meeting_done_link: link,
+        updated_at: now
+      })
+    })
+    .then(res => res.json())
+    .then(() => {
+      modal.remove();
+      fetchAppointments();
+      alert('Meeting Done details updated for #' + trackingID + '.');
+    });
+  };
+}
+
+// Search functionality
+document.getElementById('search-btn').addEventListener('click', function() {
+  searchTrackingId = document.getElementById('search-id').value.trim();
+  renderAppointments(currentTab, searchTrackingId);
+});
+document.getElementById('search-id').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    searchTrackingId = this.value.trim();
+    renderAppointments(currentTab, searchTrackingId);
+  }
+});
+document.getElementById('clear-search-btn').addEventListener('click', function() {
+  document.getElementById('search-id').value = '';
+  searchTrackingId = '';
+  renderAppointments(currentTab, searchTrackingId);
+});
+
+// Logout button (demo)
+document.getElementById('logout-btn').addEventListener('click', function() {
+  window.location.href = 'appointment-admin-login.html';
+});
+
+// Fetch appointments from backend and render
+function fetchAppointments() {
+  fetch('https://house-dardasha.onrender.com/api/appointments')
+    .then(res => res.json())
+    .then(data => {
+      appointments = data;
+      renderAppointments(currentTab, searchTrackingId);
+    });
+}
+
+// Initial render
+fetchAppointments();
+// Highlight the default tab
+document.querySelector('.tab-btn[data-tab="pending"]').classList.add('ring', 'ring-offset-2', 'bg-opacity-80');
+
+// Use Flatpickr for all time inputs in modals
+function applyClockPicker(selector) {
+  flatpickr(selector, {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "h:i K", // 12-hour format with AM/PM
+    time_24hr: true, // set to true for 24hr format if you want
+    minuteIncrement: 15
+  });
+}
+
+/**
+ * Open a Flatpickr clock picker on any input (for admin modals).
+ * @param {string} selector - CSS selector for the input(s)
+ * @param {boolean} [is24hr=true] - Use 24hr format (default true for admin)
+ */
+function openAdminClockPicker(selector, is24hr = true) {
+  flatpickr(selector, {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "h:i K",
+    time_24hr: is24hr,
+    minuteIncrement: 15
+  });
+}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</body>
+</html>
