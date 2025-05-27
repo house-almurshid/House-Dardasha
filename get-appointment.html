@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Form - Aldardasha House</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .form-wrapper {
+      width: 794px;
+      margin: 50px auto;
+      padding: 40px;
+      border: 1px solid #000;
+      background: #fff8ee;
+      box-sizing: border-box;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header .logo {
+      font-size: 24px;
+      font-weight: bold;
+      border: 2px solid black;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .header .house-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .header .subtitle {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .form-title {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+      margin-bottom: 20px;
+      color: purple;
+    }
+
+    .section-label {
+      margin: 20px 0 10px;
+      font-weight: bold;
+      color: blue;
+      border-bottom: 1px solid blue;
+      padding-bottom: 5px;
+    }
+
+    label {
+      font-weight: bold;
+      display: inline-block;
+      margin: 5px 0 2px;
+      color: purple;
+    }
+
+    input, select, textarea {
+      font-family: Arial, sans-serif; /* Ensures consistent font */
+      font-size: 1rem; /* Increases font size to make text and numbers larger */
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #000;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: none; /* Prevents users from resizing the text area */
+    }
+
+    input[type="text"]#visitor-name {
+      text-transform: none;
+    }
+
+    input[type="text"]#address,
+    input[type="text"]#recipient-address {
+      height: 3rem; /* Double the height */
+    }
+
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inline-fields input,
+    .inline-fields select {
+      flex: 1;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .submit-btn {
+      background-color: green;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .reset-btn {
+      background-color: red;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .required {
+      color: red;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+
+    .confirmation {
+      background: #e6ffe6;
+      border: 1px solid #00a000;
+      padding: 24px 16px;
+      border-radius: 8px;
+      margin-top: 32px;
+      text-align: center;
+      font-size: 1.1rem;
+      color: #006600;
+      display: none;
+    }
+
+    .tracking-id {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #007700;
+      margin: 12px 0;
+      letter-spacing: 2px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+</head>
+<body>
+  <div class="form-wrapper">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="logo">LOGO</div>
+      <div class="house-title">ALDARDASHA HOUSE</div>
+      <div class="subtitle">Make an appointment with Aldardasha House Authority</div>
+    </div>
+
+    <!-- Form Section -->
+    <form id="appointment-form">
+      <div class="form-title">All fields marked <span class="required">*</span> must be completed for the form to transmit.</div>
+
+      <div class="section-label">Section:1</div>
+      <label for="visitor-name">NAME: <span class="required">*</span></label>
+      <input type="text" id="visitor-name" name="visitor_name" required>
+
+      <label for="contact">CONTACT: <span class="required">*</span> [10 Digits only]</label>
+      <input type="text" id="contact" name="contact" pattern="\d{10}" required>
+
+      <label for="email">EMAIL: <span class="required">*</span></label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="address">ADDRESS: <span class="required">*</span></label>
+      <textarea id="address" name="address" rows="2" required></textarea>
+
+      <div class="section-label">Section:2 <a>[Only in the case of organizational representation]</a></div>
+      <label for="company-type">COMPANY/ORGANISATION/FIRM/OTHERS:</label>
+      <select id="company-type" name="company_type">
+        <option value="">-- Select --</option>
+        <option>Company</option>
+        <option>Organisation</option>
+        <option>Firm</option>
+        <option>Others</option>
+      </select>
+
+      <label for="recipient-name">NAME (COMPANY/ORGANISATION/FIRM/OTHERS):</label>
+      <input type="text" id="recipient-name" name="recipient_name">
+
+      <label for="recipient-email">EMAIL:</label>
+      <input type="email" id="recipient-email" name="recipient_email">
+
+      <label for="recipient-address">ADDRESS:</label>
+      <textarea id="recipient-address" name="recipient_address" rows="2"></textarea>
+
+      <div class="section-label">Section:3</div>
+      <label for="purpose">MEETING PURPOSE: <span class="required">*</span></label>
+      <input type="text" id="purpose" name="purpose" required>
+
+      <label for="meeting-pref">PREFERENCE [Person or Authority You Wish to Meet]:</label>
+      <input type="text" id="meeting-pref" name="meeting_pref">
+
+      <label>EXPECTED SLOT:</label>
+      <div class="inline-fields">
+        <div>
+          <label for="date1">DATE 1:</label>
+          <input type="date" id="date1" name="date1" required>
+        </div>
+        <div>
+          <label for="time1">TIME SLOT 1:</label>
+          <input type="text" id="time1" name="time1" class="clockpicker" required>
+        </div>
+        <div>
+          <label for="time2">TIME SLOT 2:</label>
+          <input type="text" id="time2" name="time2" class="clockpicker" required>
+        </div>
+      </div>
+
+      <div class="inline-fields">
+        <div>
+          <label for="date2">DATE 2:</label>
+          <input type="date" id="date2" name="date2">
+        </div>
+        <div>
+          <label for="time3">TIME SLOT 1:</label>
+          <input type="text" id="time3" name="time3" class="clockpicker">
+        </div>
+        <div>
+          <label for="time4">TIME SLOT 2:</label>
+          <input type="text" id="time4" name="time4" class="clockpicker">
+        </div>
+      </div>
+
+      <label for="extra">EXTRA ADDITION: <span class="required">*</span></label>
+      <textarea id="extra" name="extra" rows="2" required></textarea>
+
+      <div class="button-row">
+        <button type="reset" class="reset-btn">Reset</button>
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+
+    <div id="confirmation" class="confirmation">
+      <div>Thank you for your appointment request!</div>
+      <div>Your Tracking ID is:</div>
+      <div class="tracking-id" id="tracking-id"></div>
+      <div>Please save this ID to track your appointment status.</div>
+      <a href="track-appointment.html" style="display:inline-block;margin-top:18px;color:#007700;text-decoration:underline;font-weight:bold;">Track Appointment</a>
+    </div>
+
+    <div id="verify-section" style="display:none; margin-top:24px; text-align:center;">
+      <div style="margin-bottom:10px;">
+        A verification code has been sent to your email:
+        <span id="verify-email" style="font-weight:bold; color:#2563eb;"></span>
+        <br>
+        Please enter it below:
+      </div>
+      <input type="text" id="verify-code-input" placeholder="Enter code" maxlength="6" style="padding:8px; font-size:1rem;">
+      <button id="verify-btn" style="padding:8px 18px; font-weight:bold; background:green; color:white; border:none; margin-left:10px;">Verify</button>
+      <div id="verify-error" style="color:red; margin-top:8px;"></div>
+    </div>
+
+    <div class="footer">
+      Copyright 2025 © Aldardasha House<br>
+      Authority Appointment. All Rights Reserved.
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("N5BGPu9yupLaCMCj4"); // Replace with your actual User ID
+    })();
+
+    flatpickr(".clockpicker", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "h:i K", // 12-hour format with AM/PM
+      time_24hr: true, // set to true for 24hr format if you want
+      minuteIncrement: 15 // <-- Set interval to 15 minutes
+    });
+
+    // Email format and domain validation
+    async function verifyEmailDeliverability(email) {
+      // Basic format check (HTML5 already does this)
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return false;
+      }
+      // Optional: Check if domain has MX records (can receive mail)
+      // Using https://open.kickbox.com/ API (free, no key needed)
+      try {
+        const res = await fetch(`https://open.kickbox.com/v1/disposable/${encodeURIComponent(email)}`);
+        const data = await res.json();
+        if (data.disposable === false) {
+          // Not a disposable email, likely valid
+          return true;
+        }
+        return false;
+      } catch (e) {
+        // If API fails, fallback to format check
+        return true;
+      }
+    }
+
+    let generatedCode = ""; // Store the code globally
+
+    // Modify form submit handler:
+    document.getElementById('appointment-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const emailInput = document.getElementById('email');
+      const email = emailInput.value.trim();
+
+      // Verify email
+      const isValid = await verifyEmailDeliverability(email);
+      if (!isValid) {
+        alert("Please enter a valid, non-disposable email address that can receive mail.");
+        emailInput.focus();
+        return;
+      }
+
+      // Generate a 6-digit code
+      generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+      // Send code to user's email using EmailJS
+      emailjs.send(
+        "service_s3lhaf6", // Your Service ID
+        "template_a5xhdud", // Create a new template for verification
+        {
+          to_email: email,
+          code: generatedCode
+        }
+      ).then(function(response) {
+          // Show the email in the verify section
+          document.getElementById('verify-email').textContent = email;
+          document.getElementById('appointment-form').style.display = 'none';
+          document.getElementById('verify-section').style.display = 'block';
+        }, function(error) {
+          alert("Failed to send verification email. Please try again.");
+        });
+    });
+
+    // Handle code verification
+    document.getElementById('verify-btn').onclick = function() {
+      const userCode = document.getElementById('verify-code-input').value.trim();
+      if (userCode === generatedCode) {
+        // Collect form data again
+        const form = document.getElementById('appointment-form');
+        const formData = {};
+        Array.from(form.elements).forEach(el => {
+          if (el.name) formData[el.name] = el.value;
+        });
+
+        // Generate tracking ID
+        function generateTrackingID() {
+          const now = Date.now();
+          const rand = Math.floor(100 + Math.random() * 900);
+          return 'APPT' + now + rand;
+        }
+        const trackingID = generateTrackingID();
+
+        formData.trackingID = trackingID;
+        formData.status = "pending";
+        formData.submitted_at = new Date().toISOString();
+
+        // Prepare email data
+        const emailData = {
+          trackingID: trackingID,
+          visitor_name: formData.visitor_name,
+          contact: formData.contact,
+          email: formData.email,
+          purpose: formData.purpose,
+          date1: formData.date1,
+          time1: formData.time1,
+          time2: formData.time2,
+          date2: formData.date2,
+          time3: formData.time3,
+          time4: formData.time4,
+          extra: formData.extra
+        };
+
+        // Send both emails in parallel
+        Promise.all([
+          emailjs.send(
+            "service_s3lhaf6",
+            "template_dnkz4vx",
+            { ...emailData, to_email: "aldardashahouse@gmail.com" } // Admin
+          ),
+          emailjs.send(
+            "service_s3lhaf6",
+            "template_dnkz4vx",
+            { ...emailData, to_email: formData.email } // Applicant
+          )
+        ]).then(function() {
+          // After emails, submit to backend
+          fetch('http://localhost:5000/api/appointments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          })
+          .then(res => res.json())
+          .then(data => {
+            // Show confirmation, use data.trackingID
+            document.getElementById('verify-section').style.display = 'none';
+            document.getElementById('confirmation').style.display = 'block';
+            document.getElementById('tracking-id').textContent = data.trackingID;
+          })
+          .catch(err => {
+            alert('Failed to submit appointment. Please try again.');
+            console.error(err);
+          });
+        }).catch(function(error) {
+          alert("Failed to send confirmation emails. Please try again or contact support.");
+          console.error(error);
+        });
+      } else {
+        document.getElementById('verify-error').textContent = "Incorrect code. Please check your email and try again.";
+      }
+    };
+  </script>
+</body>
+</html>

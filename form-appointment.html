@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Form - Aldardasha House</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .form-wrapper {
+      width: 794px;
+      margin: 50px auto;
+      padding: 40px;
+      border: 1px solid #000;
+      background: #fff8ee;
+      box-sizing: border-box;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header .logo {
+      font-size: 24px;
+      font-weight: bold;
+      border: 2px solid black;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .header .house-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .header .subtitle {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .form-title {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+      margin-bottom: 20px;
+      color: purple;
+    }
+
+    .section-label {
+      margin: 20px 0 10px;
+      font-weight: bold;
+      color: blue;
+      border-bottom: 1px solid blue;
+      padding-bottom: 5px;
+    }
+
+    label {
+      font-weight: bold;
+      display: inline-block;
+      margin: 5px 0 2px;
+      color: purple;
+    }
+
+    input, select, textarea {
+      font-family: Arial, sans-serif; /* Ensures consistent font */
+      font-size: 1rem; /* Increases font size to make text and numbers larger */
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #000;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: none; /* Prevents users from resizing the text area */
+    }
+
+    input[type="text"]#visitor-name {
+      text-transform: uppercase;
+    }
+
+    input[type="text"]#address,
+    input[type="text"]#recipient-address {
+      height: 3rem; /* Double the height */
+    }
+
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inline-fields input,
+    .inline-fields select {
+      flex: 1;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .submit-btn {
+      background-color: green;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .reset-btn {
+      background-color: red;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .required {
+      color: red;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-wrapper">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="logo">LOGO</div>
+      <div class="house-title">ALDARDASHA HOUSE</div>
+      <div class="subtitle">Make an appointment with Aldardasha House Authority</div>
+    </div>
+
+    <!-- Form Section -->
+    <form id="appointment-form">
+      <div class="form-title">All fields marked <span class="required">*</span> must be completed for the form to transmit.</div>
+
+      <div class="section-label">Section:1</div>
+      <label for="visitor-name">NAME: <span class="required">*</span></label>
+      <input type="text" id="visitor-name" name="visitor_name" required>
+
+      <label for="contact">CONTACT: <span class="required">*</span> [10 Digits only]</label>
+      <input type="text" id="contact" name="contact" pattern="\d{10}" required>
+
+      <label for="email">EMAIL: <span class="required">*</span></label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="address">ADDRESS: <span class="required">*</span></label>
+      <textarea id="address" name="address" rows="2" required></textarea>
+
+      <div class="section-label">Section:2</div>
+      <label for="company-type">COMPANY/ORGANISATION/FIRM/OTHERS:</label>
+      <select id="company-type" name="company_type">
+        <option value="">-- Select --</option>
+        <option>Company</option>
+        <option>Organisation</option>
+        <option>Firm</option>
+        <option>Others</option>
+      </select>
+
+      <label for="recipient-name">NAME (COMPANY/ORGANISATION/FIRM/OTHERS):</label>
+      <input type="text" id="recipient-name" name="recipient_name">
+
+      <label for="recipient-email">EMAIL:</label>
+      <input type="email" id="recipient-email" name="recipient_email">
+
+      <label for="recipient-address">ADDRESS:</label>
+      <textarea id="recipient-address" name="recipient_address" rows="2"></textarea>
+
+      <div class="section-label">Section:3</div>
+      <label for="purpose">MEETING PURPOSE: <span class="required">*</span></label>
+      <input type="text" id="purpose" name="purpose" required>
+
+      <label for="meeting-pref">PREFERENCE [Person or Authority You Wish to Meet]:</label>
+      <input type="text" id="meeting-pref" name="meeting_pref">
+
+      <label>EXPECTED SLOT:</label>
+      <div class="inline-fields">
+        <div>
+          <label for="date1">DATE 1:</label>
+          <input type="date" id="date1" name="date1" required>
+        </div>
+        <div>
+          <label for="time1">TIME SLOT 1:</label>
+          <input type="time" id="time1" name="time1" required>
+        </div>
+        <div>
+          <label for="time2">TIME SLOT 2:</label>
+          <input type="time" id="time2" name="time2" required>
+        </div>
+      </div>
+
+      <div class="inline-fields">
+        <div>
+          <label for="date2">DATE 2:</label>
+          <input type="date" id="date2" name="date2">
+        </div>
+        <div>
+          <label for="time3">TIME SLOT 1:</label>
+          <input type="time" id="time3" name="time3">
+        </div>
+        <div>
+          <label for="time4">TIME SLOT 2:</label>
+          <input type="time" id="time4" name="time4">
+        </div>
+      </div>
+
+      <label for="extra">EXTRA ADDITION: <span class="required">*</span></label>
+      <textarea id="extra" name="extra" rows="2" required></textarea>
+
+      <div class="button-row">
+        <button type="reset" class="reset-btn">Reset</button>
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+
+    <div class="footer">
+      Copyright 2025 © Aldardasha House<br>
+      Authority Appointment. All Rights Reserved.
+    </div>
+  </div>
+</body>
+</html>

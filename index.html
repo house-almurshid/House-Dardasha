@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aldardasha House</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      scroll-padding-top: 4rem; /* Adjust this value based on the height of your sticky tab bar */
+    }
+
+    p {
+      text-align: justify;
+      text-indent: 1em; /* Indent the first line by 1em */
+    }
+  </style>
+</head>
+<body class="bg-gray-1000 text-gray-800 font-sans">
+
+  <header class="bg-slate-800 text-white py-2 text-center shadow">
+    <h1 class="text-4xl font-bold">ALDARDASHA HOUSE</h1>
+    <p class="text-1xl mt-1 text-center">From nothing you may become something.</p>
+    <p class="text-1xl mt-1 text-center">From something you may become everything.</p>
+    <p class="text-1xl mt-2 text-center">Founded by: Abdullah Almurshid, Aksar Ali, Jamil Aktar & Tanbir Ahammed</p>
+  </header>
+
+  <nav class="bg-slate-700 text-white py-3 sticky top-0 z-40">
+    <div class="flex flex-wrap justify-center space-x-4 sm:space-x-8 px-2">
+      <a href="javascript:void(0);" onclick="openCentersModal()" class="hover:underline">Centers</a>
+      <a href="javascript:void(0);" onclick="openModal()" class="hover:underline">Firms</a>
+      <a href="appintment.html" class="hover:underline">Appointment</a>
+      <a href="#gallery" class="hover:underline">Gallery</a>
+      <a href="#events" class="hover:underline">Events</a>
+    </div>
+  </nav>
+  
+  <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+    <section>
+      <h2 class="text-2xl font-bold mb-2 text-slate-800">About Aldardasha House</h2>
+      <p class="text-gray-700 leading-relaxed">
+        Established in January 2024, Aldardasha House is the heart of Dardasha Group Pvt Ltd, serving as its permanent office since March 27, 2025. It symbolizes unity, planning, and the future of our multi-venture group.
+      </p>
+    </section>
+    <section id="library">
+      <h2 class="text-2xl font-bold mb-2 text-slate-800">Aldardasha e-Library</h2>
+      <p class="text-gray-700 leading-relaxed">
+        The e-Library of Aldardasha House is a digital platform that provides access to a wide range of books and resources. It aims to promote reading and knowledge sharing among the community.
+      </p>
+      <div class="text-center mt-2 mb-10">
+        <a class="text-red-600">To visit Aldardasha e-Library please click</a>
+        <a href="elibrary.html" class="text-blue-600 hover:underline" target="_blank">here.</a>
+      </div>
+  
+    <section id="centers">
+      <h2 class="text-2xl font-bold mb-2 text-slate-800">Affiliated Centers</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-1">
+        <li><strong>Youth Centre:</strong> Established in January 2021.</li>
+        <div class="text-center mt-4">
+          <a class="text-red-600">To visit Youth Center please click</a>
+          <a href="youth-centre.html" class="text-blue-600 hover:underline" target="_blank">here.</a>
+        </div>
+        <li><strong>Sports centre:</strong> Established in October 2020.</li>
+        <div class="text-center mt-4">
+          <a class="text-red-600">To visit Sports Center please click</a>
+          <a href="sports-centre.html" class="text-blue-600 hover:underline" target="_blank">here.</a>
+        </div>
+      </ul>
+    </section>
+
+    <section id="Firms">
+      <h2 class="text-2xl font-bold mb-2 text-slate-800">Affiliated Firms</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-1">
+        <li><strong>The Legend Pustika Bhandar:</strong> A firm established in August 2023.</li>
+        <div class="text-center mt-4">
+          <a class="text-red-600">To visit The Legend Pustika Bhandar please click</a>
+          <a href="legend-firm.html" class="text-blue-600 hover:underline" target="_blank">here.</a>
+        </div>
+        <li><strong>Al Iktisaf Media House:</strong> A firm established in October 2023.</li>
+        <div class="text-center mt-4">
+          <a class="text-red-600">To visit Al Iktisaf Media House please click</a>
+          <a href="iktisaf-firm.html" class="text-blue-600 hover:underline" target="_blank">here.</a>
+        </div>
+        <li><strong>Inqalaab Studio:</strong> A firm established in August 2024.</li>
+        <div class="text-center mt-4">
+          <a class="text-red-600">To visit Inqalaab Studio please click</a>
+          <a href="inqalaab-firm.html" class="text-blue-600 hover:underline" target="_blank">here.</a>
+        </div>
+      </ul>
+    </section>
+
+<section id="gallery">
+  <h2 class="text-2xl font-bold mb-4 text-slate-800">Gallery</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <img src="images/bannar 1st.jpg" alt="Gallery Image 1" class="w-full h-48 object-contain rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
+    <img src="images/iftar.webp" alt="Gallery Image 2" class="w-full h-48 object-contain rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
+    <img src="images/tour.jpg" alt="Gallery Image 3" class="w-full h-48 object-contain rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
+    <img src="images/murihouse.jpg" alt="Gallery Image 4" class="w-full h-48 object-cover rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
+    <img src="images/chariftar.jpg" alt="Gallery Image 5" class="w-full h-48 object-cover rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
+    <img src="images/hfront.jpg" alt="Gallery Image 6" class="w-full h-48 object-cover rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
+  </div>
+  <div class="text-center mt-4">
+    <a class="text-green-600">To view more images or go to Gallery</a>
+    <a href="gallery.html" class="text-blue-600 hover:underline" target="_blank">Click</a>
+  </div>
+</section>
+
+<section id="events" class="mt-12">
+  <h2 class="text-2xl font-bold mb-4 text-slate-800">Upcoming Events</h2>
+  <ul class="list-disc list-inside text-gray-700 space-y-2">
+    <li>
+      <strong>Leadership Workshop:</strong> January 15, 2025 - A workshop to develop leadership skills among youth.
+      <a href="attachments/leadership-workshop.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+    <li>
+      <strong>Sports Tournament:</strong> February 10, 2025 - A regional sports event for all age groups.
+      <a href="attachments/sports-tournament.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+    <li>
+      <strong>Community Service Day:</strong> March 5, 2025 - A day dedicated to giving back to the community.
+      <a href="attachments/community-service.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+    <li>
+      <strong>Art Exhibition:</strong> April 20, 2025 - Showcasing creative works by local artists.
+      <a href="attachments/art-exhibition.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+  </ul>
+  <div class="text-center mt-4">
+    <a class="text-green-600">To view more events.</a>
+    <a href="events.html" class="text-blue-600 hover:underline" target="_blank">Click</a>
+  </div>
+</section>
+
+<section id="Appointmanet">
+  <h2 class="text-2xl font-bold mb-2 text-slate-800">Get Appointment</h2>
+  <p class="text-gray-700">
+    To make an Authority Appointment of the House, please click.
+    <a href="appintment.html" class="inline-block bg-blue-800 text-white px-l py-1 rounded hover:bg-blue-600 transition ml-2">Authority Appointment</a>
+  </p>
+</section>
+
+<section id="contact">
+  <h2 class="text-2xl font-bold mb-2 text-slate-800">Contact Details</h2>
+  <p class="text-gray-700">Email: aldardashahouse@gmail.com</p>
+  <p class="text-gray-700">Location: Aldardasha House, Kuchgiria, Bhagwangola, Murshidabad, 742123</p>
+  <div class="text-center mt-4">
+    <a class="text-gray-800">To reach through Google Map please click</a>
+    <a href="https://maps.app.goo.gl/4HGUEaR1Jo6o3P7j9" class="text-blue-600 hover:underline" target="_blank">here.</a>
+  </div>
+</section>
+
+  <section id="links" class="bg-slate-200 text-white text-center py-4 mt-10">
+    <h2 class="text-2xl font-bold mb-2 text-slate-800">Some Links</h2>
+    <div class="text-align mt-4">
+      <a class="text-gray-800">To visit official Facebook page click</a>
+      <a href="https://maps.app.goo.gl/4HGUEaR1Jo6o3P7j9" class="text-blue-600 hover:underline" target="_blank">here.</a>
+    </div>
+  </section>
+  </main>
+  
+  <footer class="bg-slate-800 text-white text-center py-4 mt-10">
+    <!-- Firms Modal -->
+    <div id="cellsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white rounded-lg p-6 w-96 space-y-4">
+        <h2 class="text-2xl font-bold text-slate-800">Affiliated Firms</h2>
+        <ul class="space-y-3">
+          <li><a href="legend-firm.html" class="text-blue-600 hover:underline">The Legend Pustika Bhandar</a></li>
+          <li><a href="iktisaf-firm.html" class="text-blue-600 hover:underline">Al Iktisaf Media House</a></li>
+          <li><a href="inqalaab-firm.html" class="text-blue-600 hover:underline">Inqalaab Studio</a></li>
+        </ul>
+        <button id="closeModal" class="mt-4 bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800">Close</button>
+      </div>
+    </div>
+  
+    <!-- Centers Modal -->
+    <div id="centersModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white rounded-lg p-6 w-96 space-y-4">
+        <h2 class="text-2xl font-bold text-slate-800">Affiliated Centers</h2>
+        <ul class="space-y-3">
+          <li><a href="youth-centre.html" class="text-blue-600 hover:underline">Youth Centre</a></li>
+          <li><a href="sports-centre.html" class="text-blue-600 hover:underline">Sports Centre</a></li>
+        </ul>
+        <button id="closeCentersModal" class="mt-4 bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800">Close</button>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+      <div class="relative">
+        <img id="modalImage" src="" alt="Broad Image" class="max-w-full max-h-screen rounded shadow">
+        <button onclick="closeImageModal()" class="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded hover:bg-gray-200">Close</button>
+      </div>
+    </div>
+    <p class="text-center">&copy; 2025 Aldardasha House | All rights reserved.</p>
+  </footer>
+  
+  <script>
+    const modal = document.getElementById('cellsModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const centersModal = document.getElementById('centersModal');
+    const closeCentersModalBtn = document.getElementById('closeCentersModal');
+  
+    function openModal() {
+      modal.classList.remove('hidden');
+    }
+  
+    function openCentersModal() {
+      centersModal.classList.remove('hidden');
+    }
+  
+    closeModalBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+  
+    closeCentersModalBtn.addEventListener('click', () => {
+      centersModal.classList.add('hidden');
+    });
+  
+    window.addEventListener('click', (e) => {
+      if (e.target == modal) {
+        modal.classList.add('hidden');
+      }
+      if (e.target == centersModal) {
+        centersModal.classList.add('hidden');
+      }
+    });
+
+    function openImageModal(img) {
+      const src = img.src;
+      const modal = document.createElement('div');
+      modal.classList.add('fixed', 'inset-0', 'bg-black', 'bg-opacity-75', 'flex', 'items-center', 'justify-center', 'z-50');
+      modal.innerHTML = `
+        <div class="relative">
+          <img src="${src}" class="max-w-full max-h-full rounded shadow-lg">
+          <button class="absolute top-2 right-2 bg-white text-black rounded-full p-2" onclick="closeImageModal(this)">X</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function closeImageModal(button) {
+      const modal = button.closest('div.fixed');
+      modal.remove();
+    }
+
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+
+    function openImageModal(imageElement) {
+      modalImage.src = imageElement.src; // Set the modal image source to the clicked image
+      imageModal.classList.remove('hidden'); // Show the modal
+    }
+
+    function closeImageModal() {
+      imageModal.classList.add('hidden'); // Hide the modal
+      modalImage.src = ''; // Clear the modal image source
+    }
+
+    // Close the modal when clicking outside the image
+    window.addEventListener('click', (e) => {
+      if (e.target === imageModal) {
+        closeImageModal();
+      }
+    });
+  </script>
+  
+</body>
+</html>

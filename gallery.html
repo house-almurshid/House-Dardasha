@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery - Aldardasha House</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      background-color: #1e293b; /* Same as index.html */
+      color: white; /* White text color */
+      text-align: center;
+      padding: 2px 0;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background-color: #333;
+      padding: 10px 0;
+    }
+
+    .tab {
+      color: white;
+      padding: 10px 20px;
+      cursor: pointer;
+      text-align: center;
+      flex: 1;
+    }
+
+    .tab:hover {
+      background-color: #555;
+    }
+
+    .tab.active {
+      background-color: #007bff;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background-color: white;
+      border: 1px solid #ddd;
+      margin: 20px auto;
+      max-width: 800px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .gallery-grid img, .gallery-grid video {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 5px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .gallery-grid video {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .document-list a {
+      display: block;
+      margin: 10px 0;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .document-list a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background-color: #1e293b; /* Same as index.html */
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: 20px;
+    }
+
+    .back-to-house {
+      display: inline-block;
+      background-color: #1e40af; /* Blue background */
+      color: white; /* White text */
+      padding: 5px 10px; /* Padding for size */
+      border-radius: 5px; /* Rounded corners */
+      text-decoration: none; /* Remove underline */
+      font-weight: bold; /* Bold text */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+      margin-top: 0.3cm; /* Add 1 cm space above the button */
+    }
+
+    .back-to-house:hover {
+      background-color: #2563eb; /* Lighter blue on hover */
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="text-center">GALLERY-ALDARDASHA HOUSE</h1>
+  </header>
+  
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('photos')">Photos</div>
+    <div class="tab" onclick="showTab('videos')">Videos</div>
+    <div class="tab" onclick="showTab('documents')">Documents</div>
+  </div>
+
+  <!-- Back to House Button -->
+  <div class="text-center">
+    <a href="index.html" class="back-to-house">
+      ← Back to House
+    </a>
+  </div>
+
+  <!-- Tab Content -->
+  <div id="photos" class="tab-content active">
+    <h2>Photos</h2>
+    <div class="gallery-grid">
+      <img src="images/photo1.JPG" alt="Photo 1" onclick="openImageModal(this)">
+      <img src="images/photo2.jpg" alt="Photo 2" onclick="openImageModal(this)">
+      <img src="images/photo3.jpg" alt="Photo 3" onclick="openImageModal(this)">
+      <img src="images/photo4.jpg" alt="Photo 4" onclick="openImageModal(this)">
+    </div>
+  </div>
+
+  <div id="videos" class="tab-content">
+    <h2>Videos</h2>
+    <div class="gallery-grid">
+      <video ondblclick="openVideoModal(this)" controls>
+        <source src="videos/Video1.MP4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <video ondblclick="openVideoModal(this)" controls>
+        <source src="videos/video2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <div id="documents" class="tab-content">
+    <h2>Documents</h2>
+    <div class="document-list">
+      <a href="documents/document1.pdf" target="_blank">Document 1 (PDF)</a>
+      <a href="documents/document2.docx" target="_blank">Document 2 (Word)</a>
+      <a href="documents/document3.pdf" target="_blank">Document 3 (PDF)</a>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="modal-close" onclick="closeModal()">×</span>
+    <img id="modalImage" class="modal-content" src="" alt="Modal Image">
+  </div>
+
+  <!-- Video Modal -->
+  <div id="videoModal" class="modal" onclick="closeModal()">
+    <span class="modal-close" onclick="closeModal()">×</span>
+    <video id="modalVideo" class="modal-content" controls></video>
+  </div>
+
+   <!-- Footer -->
+   <footer>
+    Copyright 2025 © Aldardasha House<br>
+    All Rights Reserved.
+  </footer>
+  
+
+  <script>
+    function showTab(tabId) {
+      // Remove active class from all tabs
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      // Add active class to the clicked tab
+      document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      // Show the selected tab content
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function openImageModal(image) {
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      modalImage.src = image.src;
+      modal.style.display = 'flex';
+    }
+
+    function openVideoModal(video) {
+      const modal = document.getElementById('videoModal');
+      const modalVideo = document.getElementById('modalVideo');
+      modalVideo.src = video.querySelector('source').src;
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      const imageModal = document.getElementById('imageModal');
+      const videoModal = document.getElementById('videoModal');
+      imageModal.style.display = 'none';
+      videoModal.style.display = 'none';
+      document.getElementById('modalVideo').src = ''; // Stop video playback
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eLibrary - Aldardasha House</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    p {
+      text-align: justify;
+      text-indent: 1em; /* Indent the first line by 1em */
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <header class="bg-slate-800 text-white py-2 text-center shadow">
+    <h1 class="text-3xl font-bold">e-LIBRARY - ALDARDASHA HOUSE</h1>
+    <p class="text-1g mt-1 text-center">Digitalization of reading</p>
+  </header>
+
+  <!-- Back to House Button -->
+  <div class="max-w-4xl mx-auto px-2 py-2">
+    <a href="index.html" class="inline-block bg-blue-800 text-white px-2 py-1 rounded hover:bg-blue-600 transition">← Back to House</a>
+  </div>
+
+  <!-- Book List Section -->
+  <main class="max-w-4xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-4 text-slate-800">Select Category</h2>
+
+    <!-- Tab Navigation -->
+    <div class="flex space-x-2 mb-6">
+      <button id="tab-books" class="px-4 py-2 rounded-t bg-green-800 text-white font-semibold focus:outline-none cursor-pointer">Books</button>
+      <button id="tab-articles" class="px-4 py-2 rounded-t bg-yellow-400 text-gray-800 font-semibold focus:outline-none cursor-pointer">Articles</button>
+      <button id="tab-story" class="px-4 py-2 rounded-t bg-yellow-400 text-gray-800 font-semibold focus:outline-none cursor-pointer">Story</button>
+    </div>
+
+    <!-- Book List Content -->
+    <div id="tab-content-books">
+      <div class="flex items-center text-center mb-4 bg-green-300 p-2 rounded">
+    <h1 class="text-2xl font-semibold text-black mr-4 mb-0">Available Books</h1>
+    <p class="mb-0 text-center text-black">Explore our collection of books. Click on the "Read" button to access the book.</p>
+  </div>
+      <ul class="space-y-4">
+        <li class="bg-white rounded shadow-lg p-4 pt-4 flex items-center justify-between relative sm:pt-4">
+            <span class="font-arial font-bold text-yellow-700 sm:bg-gray-200 px-2 py-lg rounded text-sm
+                sm:static sm:mr-4 absolute left-2 top-2  z-10 mr-0">BK001</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg mt-1 sm:mt-0">The Problems of Philosophy</span>
+            <span class="text-gray-600">by Bertrand Russell</span>
+          </div>
+          <a href="bkooaartofreading.html" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <li class="bg-white rounded shadow-lg p-4 flex items-center justify-between">
+          <span class="font-arial bg-gray-200 px-2 py-1 rounded text-sm mr-4">BK002</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">Desert Stories</span>
+            <span class="text-gray-600">by Fatima Al Zahra</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <li class="bg-white rounded shadow-lg p-4 pt-4 flex items-center justify-between relative sm:pt-4">
+            <span class="font-arial font-bold text-yellow-700 sm:bg-gray-200 px-2 py-lg rounded text-sm
+                sm:static sm:mr-4 absolute left-2 top-2  z-10 mr-0">BK003</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg mt-1 sm:mt-0">Ar Raheequl Makhtum (Bangla)</span>
+            <span class="text-gray-600">by Safiur Rahaman Al Mubarakpuri</span>
+          </div>
+          <a href="bkooaartofreading.html" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <li class="bg-white rounded shadow-lg p-4 pt-4 flex items-center justify-between relative sm:pt-4">
+            <span class="font-arial font-bold text-yellow-700 sm:bg-gray-200 px-2 py-lg rounded text-sm
+                sm:static sm:mr-4 absolute left-2 top-2 z-10 mr-0">BK004</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg mt-2 sm:mt-0">তাফসীরে আহসানুল বায়ান</span>
+            <span class="text-gray-600">হাফিজ ইউসুফ</span>
+          </div>
+          <a href="bkooaartofreading.html" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <!-- Add more books as needed -->
+      </ul>
+    </div>
+
+    <!-- Articles Tab Content -->
+    <div id="tab-content-articles" class="hidden">
+      <div class="flex items-center text-center mb-4 bg-green-300 p-2 rounded">
+    <h1 class="text-2xl font-semibold text-black mr-4 mb-0">Available Articles</h1>
+    <p class="mb-0 text-center text-black">Explore our collection of Articles. Click on the "Read" button to access the article.</p>
+  </div>
+      <ul class="space-y-4">
+        <li class="bg-white rounded shadow-lg p-4 flex items-center justify-between">
+          <span class="font-Kalpurush-Regular bg-gray-200 px-2 py-1 rounded text-sm mr-4">AC001</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">The Corruption Reigns</span>
+            <span class="text-gray-600">by A. almurshid</span>
+          </div>
+          <a href="bkooaartofreading.html" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <li class="bg-white rounded shadow-lg p-4 flex items-center justify-between">
+          <span class="font-arial bg-gray-200 px-2 py-1 rounded text-sm mr-4">AC002</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">The Realty of Democratic Rule</span>
+            <span class="text-gray-600">by Jamil Aktar</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <li class="bg-white rounded shadow p-4 flex items-center justify-between">
+          <span class="font-mono bg-gray-200 px-2 py-1 rounded text-sm mr-4">AC003</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">Feminism in Light of Islam</span>
+            <span class="text-gray-600">by R. Salma</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <li class="bg-white rounded shadow p-4 flex items-center justify-between">
+          <span class="font-mono bg-gray-200 px-2 py-1 rounded text-sm mr-4">AC004</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">Social Justice</span>
+            <span class="text-gray-600">by Aksar Ali</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+
+        <li class="bg-white rounded shadow p-4 flex items-center justify-between">
+          <span class="font-mono bg-gray-200 px-2 py-1 rounded text-sm mr-4">AC005</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">আধুনিক বাংলা সমাজ ও অতীত</span>
+            <span class="text-gray-600">নুঃ ফারিহা</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+
+        <li class="bg-white rounded shadow p-4 flex items-center justify-between">
+          <span class="font-mono bg-gray-200 px-2 py-1 rounded text-sm mr-4">AC006</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">The Sweetness of Arabic Poetry</span>
+            <span class="text-gray-600">by M. Alam</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+
+        <!-- Add more articles as needed -->
+      </ul>
+    </div>
+
+    <!-- Story Tab Content -->
+    <div id="tab-content-story" class="hidden">
+      <div class="flex items-center text-center mb-4 bg-green-300 p-2 rounded">
+    <h1 class="text-2xl font-semibold text-black mr-4 mb-0">Available Stories</h1>
+    <p class="mb-0 text-center text-black">Explore our collection of Stories. Click on the "Read" button to access the story.</p>
+  </div>
+      <ul class="space-y-4">
+        <li class="bg-white rounded shadow-lg p-4 flex items-center justify-between">
+          <span class="font-Kalpurush-Regular bg-gray-200 px-2 py-1 rounded text-sm mr-4">ST001</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">A Crow Caws</span>
+            <span class="text-gray-600">by A. Begum</span>
+          </div>
+          <a href="bkooaartofreading.html" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+        <li class="bg-white rounded shadow-lg p-4 flex items-center justify-between">
+          <span class="font-arial bg-gray-200 px-2 py-1 rounded text-sm mr-4">ST002</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">A Dream Young</span>
+            <span class="text-gray-600">by T. Ghosh</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+
+        <li class="bg-white rounded shadow-lg p-4 flex items-center justify-between">
+          <span class="font-arial bg-gray-200 px-2 py-1 rounded text-sm mr-4">ST002</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">Where River Vanish</span>
+            <span class="text-gray-600">by T. Ahammed</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+
+        <li class="bg-white rounded shadow-lg p-4 flex items-center justify-between">
+          <span class="font-arial bg-gray-200 px-2 py-1 rounded text-sm mr-4">ST002</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+            <span class="font-medium text-lg">একটি বিড়ালের জীবন</span>
+            <span class="text-gray-600">কাইফ হাসান</span>
+          </div>
+          <a href="#" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Read</a>
+        </li>
+
+        <!-- Add more stories as needed -->
+      </ul>
+    </div>
+  </main>
+
+  <footer class="bg-slate-800 text-white text-center py-4 mt-10">
+    <section class="text-center">
+      <p>&copy; 2025 Aldardasha House - All rights reserved.</p>
+    </section>
+  </footer>
+
+  <script>
+    // Simple tab switching
+    document.getElementById('tab-books').onclick = function() {
+      setTab('books');
+    };
+    document.getElementById('tab-articles').onclick = function() {
+      setTab('articles');
+    };
+    document.getElementById('tab-story').onclick = function() {
+      setTab('story');
+    };
+    function setTab(tab) {
+      // Tab content
+      document.getElementById('tab-content-books').classList.toggle('hidden', tab !== 'books');
+      document.getElementById('tab-content-articles').classList.toggle('hidden', tab !== 'articles');
+      document.getElementById('tab-content-story').classList.toggle('hidden', tab !== 'story');
+      // Tab buttons
+      document.getElementById('tab-books').className = tab === 'books'
+        ? 'px-4 py-2 rounded-t bg-green-800 text-white font-semibold focus:outline-none'
+        : 'px-4 py-2 rounded-t bg-yellow-400 text-gray-800 font-semibold focus:outline-none';
+      document.getElementById('tab-articles').className = tab === 'articles'
+        ? 'px-4 py-2 rounded-t bg-green-800 text-white font-semibold focus:outline-none'
+        : 'px-4 py-2 rounded-t bg-yellow-400 text-gray-800 font-semibold focus:outline-none';
+      document.getElementById('tab-story').className = tab === 'story'
+        ? 'px-4 py-2 rounded-t bg-green-800 text-white font-semibold focus:outline-none'
+        : 'px-4 py-2 rounded-t bg-yellow-400 text-gray-800 font-semibold focus:outline-none';
+    }
+  </script>
+</body>
+</html>

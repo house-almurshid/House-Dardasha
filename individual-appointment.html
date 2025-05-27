@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Individual Appointment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <header class="bg-slate-800 text-white py-4 text-center shadow">
+    <h1 class="text-2xl font-bold">Individual Appointment Form</h1>
+  </header>
+
+  <!-- Back to House Button -->
+  <div class="max-w-4xl mx-auto px-2 py-2">
+    <a href="index.html" class="inline-block bg-blue-800 text-white px-2 py-1 rounded hover:bg-blue-600 transition">←Back to House</a>
+  </div>
+
+  <main class="max-w-4xl mx-auto px-4 py-10">
+    <?php if (isset($_GET['success'])): ?>
+  <div class="max-w-4xl mx-auto px-4 py-2 bg-green-100 text-green-800 rounded">
+    Your appointment request has been submitted successfully!
+  </div>
+<?php endif; ?>
+    <form action="submit-individual-appointment.php" method="POST" class="space-y-6">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+        <input type="text" id="name" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" id="email" name="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+      <div>
+        <label for="date" class="block text-sm font-medium text-gray-700">Preferred Date</label>
+        <input type="date" id="date" name="date" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+      <div>
+        <label for="individuals" class="block text-sm font-medium text-gray-700">Select Individual(s)</label>
+        <select id="individuals" name="individuals[]" multiple required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+          <option value="Abdullah Almurshid">Abdullah Almurshid</option>
+          <option value="Aksar Ali">Aksar Ali</option>
+          <option value="Jamil Aktar">Jamil Aktar</option>
+          <option value="Tanbir Ahammed">Tanbir Ahammed</option>
+        </select>
+        <p class="text-sm text-gray-500 mt-1">Hold down the Ctrl (Windows) or Command (Mac) key to select multiple individuals.</p>
+      </div>
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+        <textarea id="message" name="message" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+      </div>
+      <button type="submit" class="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Submit</button>
+    </form>
+  </main>
+</body>
+</html>
