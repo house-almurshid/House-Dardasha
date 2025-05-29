@@ -507,6 +507,18 @@ document.getElementById('appointment-form').addEventListener('submit', async fun
           document.getElementById('verify-section').style.display = 'none';
           document.getElementById('confirmation').style.display = 'block';
           document.getElementById('tracking-id').textContent = data.trackingID;
+
+          // Send emails in the background (no need to wait)
+          emailjs.send(
+            "service_s3lhaf6",
+            "template_dnkz4vx",
+            { ...emailData, to_email: "aldardashahouse@gmail.com" }
+          );
+          emailjs.send(
+            "service_s3lhaf6",
+            "template_dnkz4vx",
+            { ...emailData, to_email: formData.email }
+          );
         })
         .catch(err => {
           alert('Failed to submit appointment. Please try again.');
