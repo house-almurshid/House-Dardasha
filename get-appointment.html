@@ -241,7 +241,7 @@
       <div class="inline-fields">
         <div>
           <label for="date1">DATE 1:</label>
-          <input type="date" id="date1" name="date1" required>
+          <input type="text" id="date1" name="date1" class="date-picker" required placeholder="DD-MM-YYYY">
         </div>
         <div>
           <label for="time1">TIME SLOT 1:</label>
@@ -256,7 +256,7 @@
       <div class="inline-fields">
         <div>
           <label for="date2">DATE 2:</label>
-          <input type="date" id="date2" name="date2">
+          <input type="text" id="date2" name="date2" class="date-picker" placeholder="DD-MM-YYYY">
         </div>
         <div>
           <label for="time3">TIME SLOT 1:</label>
@@ -315,6 +315,10 @@ flatpickr(".clockpicker", {
   dateFormat: "h:i K",
   time_24hr: true,
   minuteIncrement: 15
+});
+flatpickr(".date-picker", {
+  dateFormat: "d-m-Y", // DD-MM-YYYY
+  allowInput: true
 });
 
 async function verifyEmailDeliverability(email) {
@@ -485,55 +489,37 @@ document.getElementById('appointment-form').addEventListener('submit', async fun
         extra: formData.extra
       };
 
-      Promise.all([
-        emailjs.send(
-          "service_s3lhaf6",
-          "template_dnkz4vx",
-          { ...emailData, to_email: "aldardashahouse@gmail.com" }
-        ),
-        emailjs.send(
-          "service_s3lhaf6",
-          "template_dnkz4vx",
-          { ...emailData, to_email: formData.email }
-        )
-      ]).then(function() {
-        fetch('https://house-dardasha.onrender.com/api/appointments', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        })
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('verify-section').style.display = 'none';
-          document.getElementById('confirmation').style.display = 'block';
-          document.getElementById('tracking-id').textContent = data.trackingID;
+      fetch('https://house-dardasha.onrender.com/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+      })
+      .then(res => res.json())
+      .then(data => {
+      document.getElementById('verify-section').style.display = 'none';
+      document.getElementById('confirmation').style.display = 'block';
+      document.getElementById('tracking-id').textContent = data.trackingID;
 
-          // Send emails in the background (no need to wait)
-          emailjs.send(
-            "service_s3lhaf6",
-            "template_dnkz4vx",
-            { ...emailData, to_email: "aldardashahouse@gmail.com" }
-          );
-          emailjs.send(
-            "service_s3lhaf6",
-            "template_dnkz4vx",
-            { ...emailData, to_email: formData.email }
-          );
-        })
-        .catch(err => {
-          alert('Failed to submit appointment. Please try again.');
-          btn.disabled = false;
-          btn.classList.remove('confirm-btn-disabled');
-          console.error(err);
-        });
-      }).catch(function(error) {
-        alert("Failed to send confirmation emails. Please try again or contact support.");
-        btn.disabled = false;
-        btn.classList.remove('confirm-btn-disabled');
-        console.error(error);
+      // Send emails in the background (no need to wait)
+      emailjs.send(
+      "service_s3lhaf6",
+      "template_dnkz4vx",
+      { ...emailData, to_email: "aldardashahouse@gmail.com" }
+      );
+      emailjs.send(
+      "service_s3lhaf6",
+      "template_dnkz4vx",
+      { ...emailData, to_email: formData.email }
+      );
+      })
+      .catch(err => {
+      alert('Failed to submit appointment. Please try again.');
+      btn.disabled = false;
+      btn.classList.remove('confirm-btn-disabled');
+      console.error(err);
       });
-    };
-  }, 100);
+      };
+    }, 100);
 });
 </script>
 </body>
