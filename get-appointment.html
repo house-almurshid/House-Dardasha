@@ -13,7 +13,7 @@
     }
 
     .form-wrapper {
-      width: 794px;
+      width: 750px;
       margin: 50px auto;
       padding: 40px;
       border: 1px solid #000;
@@ -181,6 +181,24 @@
       transform: scale(0.97);
       transition: filter 0.1s, transform 0.1s;
     }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+    .form-row label {
+      min-width: 220px;
+      margin: 0;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      flex: 1;
+    }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
@@ -199,45 +217,72 @@
       <div class="form-title">All fields marked <span class="required">*</span> must be completed for the form to transmit.</div>
 
       <div class="section-label">Section:1</div>
-      <label for="visitor-name">NAME: <span class="required">*</span></label>
-      <input type="text" id="visitor-name" name="visitor_name" required>
+      <div class="form-row">
+        <label for="visitor-name">NAME: <span class="required">*</span></label>
+        <input type="text" id="visitor-name" name="visitor_name" required>
+      </div>
 
-      <label for="contact">CONTACT: <span class="required">*</span> [10 Digits only]</label>
-      <input type="text" id="contact" name="contact" pattern="\d{10}" required>
+      <div class="form-row">
+        <label for="contact">CONTACT: <span class="required">*</span> [10 Digits only]</label>
+        <input type="text" id="contact" name="contact" pattern="\d{10}" required>
+      </div>
 
-      <label for="email">EMAIL: <span class="required">*</span></label>
-      <input type="email" id="email" name="email" required>
+      <div class="form-row">
+        <label for="email">EMAIL: <span class="required">*</span></label>
+        <input type="email" id="email" name="email" required>
+      </div>
 
-      <label for="address">ADDRESS: <span class="required">*</span></label>
-      <textarea id="address" name="address" rows="2" required></textarea>
+      <div class="form-row">
+        <label for="address">ADDRESS: <span class="required">*</span></label>
+        <textarea id="address" name="address" rows="2" required></textarea>
+      </div>
 
       <div class="section-label">Section:2 <a>[Only in the case of organizational representation]</a></div>
-      <label for="company-type">COMPANY/ORGANISATION/FIRM/OTHERS:</label>
-      <select id="company-type" name="company_type">
-        <option value="">-- Select --</option>
-        <option>Company</option>
-        <option>Organisation</option>
-        <option>Firm</option>
-        <option>Others</option>
-      </select>
+      <div class="form-row">
+        <label for="company-type">ORGANISATION TYPE</label>
+        <select id="company-type" name="company_type">
+          <option value="">-- Select --</option>
+          <option>Company</option>
+          <option>Organisation</option>
+          <option>Firm</option>
+          <option>Others</option>
+        </select>
+      </div>
 
-      <label for="recipient-name">NAME (COMPANY/ORGANISATION/FIRM/OTHERS):</label>
-      <input type="text" id="recipient-name" name="recipient_name">
+      <div class="form-row">
+        <label for="recipient-name">ORGANISATION NAME:</label>
+        <input type="text" id="recipient-name" name="recipient_name">
+      </div>
 
-      <label for="recipient-email">EMAIL:</label>
-      <input type="email" id="recipient-email" name="recipient_email">
+      <div class="form-row">
+        <label for="recipient-email">EMAIL:</label>
+        <input type="email" id="recipient-email" name="recipient_email">
+      </div>
 
-      <label for="recipient-address">ADDRESS:</label>
-      <textarea id="recipient-address" name="recipient_address" rows="2"></textarea>
+      <div class="form-row">
+        <label for="recipient-address">ADDRESS:</label>
+        <textarea id="recipient-address" name="recipient_address" rows="2"></textarea>
+      </div>
 
       <div class="section-label">Section:3</div>
-      <label for="purpose">MEETING PURPOSE: <span class="required">*</span></label>
-      <input type="text" id="purpose" name="purpose" required>
+      <div class="form-row">
+        <label for="purpose">MEETING PURPOSE: <span class="required">*</span></label>
+        <input type="text" id="purpose" name="purpose" required>
+      </div>
 
-      <label for="meeting-pref">PREFERENCE [Person or Authority You Wish to Meet]:</label>
-      <input type="text" id="meeting-pref" name="meeting_pref">
+      <div class="form-row">
+        <label for="meeting-pref">PREFERENCE:</label>
+        <div style="flex:1;">
+          <input type="text" id="meeting-pref" name="meeting_pref" style="width:100%;">
+          <div style="font-size: 0.95em; color: #555; margin-top: 2px;">
+            [Person or Authority You Wish to Meet]
+          </div>
+        </div>
+      </div>
 
-      <label>EXPECTED SLOT:</label>
+      <div class="form-row">
+        <label>EXPECTED SLOT:</label>
+      </div>
       <div class="inline-fields">
         <div>
           <label for="date1">DATE 1:</label>
@@ -268,8 +313,10 @@
         </div>
       </div>
 
-      <label for="extra">EXTRA ADDITION: <span class="required">*</span></label>
-      <textarea id="extra" name="extra" rows="2" required></textarea>
+      <div class="form-row" style="margin-top:20px;">
+        <label for="extra">EXTRA ADDITION: <span class="required">*</span></label>
+        <textarea id="extra" name="extra" rows="2" required></textarea>
+      </div>
 
       <div class="button-row">
         <button type="reset" class="reset-btn">Reset</button>
