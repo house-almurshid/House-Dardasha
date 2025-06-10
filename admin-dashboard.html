@@ -14,7 +14,8 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       padding: 32px 24px;
     }
-    h2 { color: #2563eb; text-align: center; }
+    h1 { color: #029b0a; 
+      text-align: center; }
     .logout-btn {
       float: right;
       background: #fc0303;
@@ -30,16 +31,47 @@
       border-top: 1px solid #eee;
       padding-top: 24px;
     }
+    .tab-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 4px 4px 0 0;
+      padding: 10px 28px;
+      margin-right: 8px;
+      font-family: sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+      border-bottom: 3px solid transparent;
+      outline: none;
+      font-size: 1.08rem;
+      position: relative;
+      top: 2px;
+    }
+    .tab-btn:hover {
+      background: #1746a0;
+    }
+    .tab-btn.selected {
+      background: #fff;
+      color: #2563eb;
+      border-bottom: 3px solid #2563eb;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.10);
+      z-index: 2;
+    }
+    .tab-btn:focus {
+      outline: 2px solid #2563eb;
+    }
   </style>
 </head>
 <body>
   <div class="dashboard-container">
     <button class="logout-btn" id="logout-btn">Logout</button>
-    <h2>Admin Dashboard</h2>
-    <div class="section">
-      <h3>Welcome, Admin!</h3>
-      <p>This is your dashboard. Here you can manage events, gallery, documents, and appointments.</p>
-      <!-- Add management sections here -->
+    <h1>Aldardasha House Admin Dashboard</h1>
+    <div style="margin-bottom:24px;">
+      <button class="tab-btn selected" id="tab-events">Manage Events</button>
+      <button class="tab-btn" id="tab-gallery">Manage Gallery</button>
+      <button class="tab-btn" id="tab-appointments">Manage Appointments</button>
     </div>
     <div class="section" id="events-section">
       <h3>Manage Events</h3>
@@ -49,6 +81,15 @@
         <button type="submit" style="padding:6px 14px;">Add Event</button>
       </form>
       <ul id="events-list"></ul>
+    </div>
+    <div class="section" id="gallery-section" style="display:none;">
+      <h3>Manage Gallery</h3>
+      <p>Gallery management coming soon...</p>
+    </div>
+    <div class="section" id="appointments-section" style="display:none;">
+      <h3>Manage Appointments</h3>
+      <p>To manage appointments please go to Appointment Management dashboard.</p>
+      <p><a href="appointment-admin-dashboard.html" style="color:#2563eb; text-decoration:underline;">Go to Appointment Management</a></p>
     </div>
   </div>
   <script>
@@ -62,6 +103,27 @@
       localStorage.removeItem('adminToken');
       window.location.href = 'admin-login.html';
     };
+
+    // Tab switching logic with selected class
+    const tabButtons = [
+      document.getElementById('tab-events'),
+      document.getElementById('tab-gallery'),
+      document.getElementById('tab-appointments')
+    ];
+    const sections = [
+      document.getElementById('events-section'),
+      document.getElementById('gallery-section'),
+      document.getElementById('appointments-section')
+    ];
+
+    tabButtons.forEach((btn, idx) => {
+      btn.onclick = function() {
+        tabButtons.forEach((b, i) => {
+          b.classList.toggle('selected', i === idx);
+          sections[i].style.display = i === idx ? '' : 'none';
+        });
+      };
+    });
 
     // --- Events Management ---
     const eventsList = document.getElementById('events-list');

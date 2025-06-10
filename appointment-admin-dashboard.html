@@ -16,8 +16,7 @@
   </header>
 
   <nav class="max-w-4xl mx-auto flex justify-between items-center px-2 py-4">
-    <a href="appintment.html" class="inline-block bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-600 transition">← Back to Portal</a>
-    <button id="logout-btn" class="inline-block bg-red-600 text-white px-3 py-1 rounded hover:bg-red-800 transition">Logout</button>
+    <a href="admin-dashboard.html" class="inline-block bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-600 transition">← Back to Admin Dashboard</a>
   </nav>
 
   <main class="max-w-4xl mx-auto bg-white rounded shadow p-6 mt-4">
@@ -51,6 +50,10 @@
   </footer>
 
   <script>
+    // Redirect to login if not authenticated
+    if (!localStorage.getItem('adminToken')) {
+      window.location.href = 'admin-login.html';
+    }
 let appointments = [];
 let currentTab = 'pending';
 let searchTrackingId = '';
@@ -529,9 +532,6 @@ document.getElementById('clear-search-btn').addEventListener('click', function()
 });
 
 // Logout button (demo)
-document.getElementById('logout-btn').addEventListener('click', function() {
-  window.location.href = 'appointment-admin-login.html';
-});
 
 // Fetch appointments from backend and render
 function fetchAppointments() {
