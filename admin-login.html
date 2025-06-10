@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - Aldardasha House</title>
+  <style>
+    body { background: #f4f6fa; font-family: Arial, sans-serif; }
+    .header {
+      background: #1e293b;
+      color: #fff;
+      padding: 2px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    .login-container {
+      max-width: 350px;
+      margin: 80px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 32px 24px;
+    }
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #2563eb;
+    }
+    .login-container label {
+      font-weight: bold;
+      margin-bottom: 6px;
+      display: block;
+      color: #333;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 18px;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .login-container .password-wrapper {
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .login-container .toggle-password {
+      position: absolute;
+      right: 8px;
+      top: 35%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fc0303;
+      font-size: 1em;
+      padding: 0 4px;
+      height: 28px;
+      line-height: 1;
+    }
+    .login-container button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .login-container .error {
+      color: #d32f2f;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Aldardasha House Website</h1>
+  </div>
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <div id="login-error" class="error"></div>
+    <form id="admin-login-form" autocomplete="off">
+      <label for="username">Username</label>
+      <input type="text" id="username" required autocomplete="username" />
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" required autocomplete="current-password" />
+        <button type="button" id="toggle-password" class="toggle-password" tabindex="-1">Show</button>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+    <form id="otp-form" style="display:none;">
+      <label for="otp">Enter OTP</label>
+      <input type="text" id="otp" maxlength="6" required autocomplete="one-time-code" />
+      <button type="submit">Verify OTP</button>
+      <div id="otp-info" style="color:gray; font-size:0.95em; margin-top:8px;"></div>
+      <div id="otp-error" class="error"></div>
+    </form>
+  </div>
+  <script>
+let generatedOTP = "";
+
+document.getElementById('admin-login-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const loginBtn = this.querySelector('button[type="submit"]');
+  loginBtn.disabled = true;
+  const originalText = loginBtn.textContent;
+  loginBtn.textContent = "Processing...";
+
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const errorDiv = document.getElementById('login-error');
+  errorDiv.textContent = '';
+
+  try {
+    const res = await fetch('http://localhost:10000/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (res.ok && data.token) {
+      // Step 1 success: generate OTP (for demo, show on page)
+      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      document.getElementById('otp-info').textContent = "Your OTP is: " + generatedOTP;
+      // Hide login, show OTP form
+      document.getElementById('admin-login-form').style.display = "none";
+      document.getElementById('otp-form').style.display = "block";
+      // Optionally, store token for use after OTP
+      localStorage.setItem('pendingAdminToken', data.token);
+    } else {
+      errorDiv.textContent = data.message || 'Login failed. Please check your credentials.';
+    }
+  } catch (err) {
+    errorDiv.textContent = 'Network error. Please try again.';
+  }
+  loginBtn.disabled = false;
+  loginBtn.textContent = originalText;
+};
+
+// OTP verification
+document.getElementById('otp-form').onsubmit = function(e) {
+  e.preventDefault();
+  const otpBtn = this.querySelector('button[type="submit"]');
+  otpBtn.disabled = true;
+  const originalText = otpBtn.textContent;
+  otpBtn.textContent = "Verifying...";
+
+  const otp = document.getElementById('otp').value.trim();
+  const otpError = document.getElementById('otp-error');
+  otpError.textContent = '';
+  if (otp === generatedOTP) {
+    // OTP correct: finalize login
+    localStorage.setItem('adminToken', localStorage.getItem('pendingAdminToken'));
+    localStorage.removeItem('pendingAdminToken');
+    window.location.href = 'admin-dashboard.html';
+  } else {
+    otpError.textContent = "Invalid OTP. Please try again.";
+    otpBtn.disabled = false;
+    otpBtn.textContent = originalText;
+  }
+};
+
+// Password show/hide toggle
+const passwordInput = document.getElementById('password');
+const toggleBtn = document.getElementById('toggle-password');
+toggleBtn.addEventListener('click', function(e) {
+  e.preventDefault();
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    toggleBtn.textContent = "Hide";
+  } else {
+    passwordInput.type = "password";
+    toggleBtn.textContent = "Show";
+  }
+});
+  </script>
+</body>
+</html>

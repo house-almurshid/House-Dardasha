@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Aldardasha House</title>
+  <style>
+    body { background: #f4f6fa; font-family: Arial, sans-serif; }
+    .dashboard-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 32px 24px;
+    }
+    h2 { color: #2563eb; text-align: center; }
+    .logout-btn {
+      float: right;
+      background: #fc0303;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .section {
+      margin-top: 32px;
+      border-top: 1px solid #eee;
+      padding-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <button class="logout-btn" id="logout-btn">Logout</button>
+    <h2>Admin Dashboard</h2>
+    <div class="section">
+      <h3>Welcome, Admin!</h3>
+      <p>This is your dashboard. Here you can manage events, gallery, documents, and appointments.</p>
+      <!-- Add management sections here -->
+    </div>
+    <div class="section" id="events-section">
+      <h3>Manage Events</h3>
+      <form id="add-event-form" style="margin-bottom:18px;">
+        <input type="text" id="event-title" placeholder="Event Title" required style="width:60%;padding:6px;">
+        <input type="date" id="event-date" required style="padding:6px;">
+        <button type="submit" style="padding:6px 14px;">Add Event</button>
+      </form>
+      <ul id="events-list"></ul>
+    </div>
+  </div>
+  <script>
+    // Redirect to login if not authenticated
+    if (!localStorage.getItem('adminToken')) {
+      window.location.href = 'admin-login.html';
+    }
+
+    // Logout functionality
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('adminToken');
+      window.location.href = 'admin-login.html';
+    };
+
+    // --- Events Management ---
+    const eventsList = document.getElementById('events-list');
+    const addEventForm = document.getElementById('add-event-form');
+
+    async function fetchEvents() {
+      eventsList.innerHTML = "<li>Loading...</li>";
+      const res = await fetch('https://house-dardasha.onrender.com/api/events', {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
+      });
+      const data = await res.json();
+      eventsList.innerHTML = '';
+      if (Array.isArray(data)) {
+        data.forEach(ev => {
+          const li = document.createElement('li');
+          li.textContent = `${ev.title} (${ev.date}) `;
+          const delBtn = document.createElement('button');
+          delBtn.textContent = "Delete";
+          delBtn.style.marginLeft = "10px";
+          delBtn.onclick = async () => {
+            await fetch(`https://house-dardasha.onrender.com/api/events/${ev._id}`, {
+              method: 'DELETE',
+              headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
+            });
+            fetchEvents();
+          };
+          li.appendChild(delBtn);
+          eventsList.appendChild(li);
+        });
+      } else {
+        eventsList.innerHTML = "<li>No events found.</li>";
+      }
+    }
+
+    addEventForm.onsubmit = async function(e) {
+      e.preventDefault();
+      const title = document.getElementById('event-title').value.trim();
+      const date = document.getElementById('event-date').value;
+      if (!title || !date) return;
+      await fetch('https://house-dardasha.onrender.com/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('adminToken')
+        },
+        body: JSON.stringify({ title, date })
+      });
+      addEventForm.reset();
+      fetchEvents();
+    };
+
+    fetchEvents();
+  </script>
+</body>
+</html>
