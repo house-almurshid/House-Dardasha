@@ -115,6 +115,93 @@
         padding: 8px 8px;
       }
     }
+    .add-event-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+      margin-top: 4px;
+    }
+    .add-event-btn:hover {
+      background: #1746a0;
+    }
+    .event-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .event-list li {
+      background: #f4f6fa;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(37,99,235,0.06);
+      margin-bottom: 14px;
+      padding: 16px 18px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+    .event-list li strong {
+      color: #2563eb;
+      font-size: 1.1rem;
+    }
+    .event-list li .event-date {
+      color: #029b0a;
+      font-size: 0.98rem;
+      font-weight: 500;
+    }
+    .event-list li .event-details {
+      color: #333;
+      font-size: 0.97rem;
+      margin-bottom: 4px;
+    }
+    .event-list li button {
+      align-self: flex-end;
+      background: #fc0303;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 16px;
+      font-size: 0.97rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+    .event-list li button:hover {
+      background: #a30000;
+    }
+    .read-more-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 16px;
+      font-size: 0.97rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+      margin-right: 8px;
+    }
+    .read-more-btn:hover {
+      background: #1746a0;
+    }
+    @media (max-width: 600px) {
+      #add-event-form {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .event-list li {
+        padding: 12px 8px 10px 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -129,14 +216,18 @@
       </div>
     </div>
     <div class="section" id="events-section">
-      <h3>Add Events</h3>
-      <form id="add-event-form" style="margin-bottom:18px;">
-        <input type="text" id="event-title" placeholder="Event Title" required style="width:60%;padding:6px;">
-        <input type="date" id="event-date" required style="padding:6px;">
-        <textarea id="event-details" placeholder="Event Details" required style="width:100%;padding:6px;min-height:60px;margin-top:8px;"></textarea>
-        <button type="submit" style="padding:6px 14px;">Add Event</button>
+      <h3 style="font-size:1.3rem;color:#2563eb;margin-bottom:18px;">Add Event</h3>
+      <form id="add-event-form" style="margin-bottom:24px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;">
+        <input type="text" id="event-title" placeholder="Event Title" required
+          style="flex:2 1 180px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;">
+        <input type="date" id="event-date" required
+          style="flex:1 1 120px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;">
+        <textarea id="event-details" placeholder="Event Details" required
+          style="flex:3 1 240px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;min-height:44px;"></textarea>
+        <input type="file" id="event-file" accept=".pdf,.jpg,.jpeg,.png" style="flex:1 1 180px;" required>
+        <button type="submit" class="add-event-btn">Add Event</button>
       </form>
-      <ul id="events-list"></ul>
+      <ul id="events-list" class="event-list"></ul>
     </div>
     <div class="section" id="gallery-section" style="display:none;">
       <h3>Manage Gallery</h3>
@@ -213,10 +304,14 @@
       if (Array.isArray(data)) {
         data.forEach(ev => {
           const li = document.createElement('li');
-          li.innerHTML = `<strong>${ev.title}</strong> (${ev.date})<br><span style="color:#555;">${ev.details || ''}</span> `;
+          li.innerHTML = `
+            <strong>${ev.title}</strong>
+            <span class="event-date">${formatDate(ev.date)}</span>
+            <div class="event-details">${ev.details || ''}</div>
+            ${ev.fileUrl ? `<button class="read-more-btn" onclick="window.open('${ev.fileUrl}', '_blank')">Read More</button>` : ''}
+          `;
           const delBtn = document.createElement('button');
           delBtn.textContent = "Delete";
-          delBtn.style.marginLeft = "10px";
           delBtn.onclick = async () => {
             await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
               method: 'DELETE',
@@ -237,18 +332,39 @@
       const title = document.getElementById('event-title').value.trim();
       const date = document.getElementById('event-date').value;
       const details = document.getElementById('event-details').value.trim();
-      if (!title || !date || !details) return;
+      const fileInput = document.getElementById('event-file');
+      const file = fileInput.files[0];
+
+      if (!title || !date || !details || !file) return;
+      if (!['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'].includes(file.type) || file.size > 307200) {
+        alert('File must be PDF/JPG/PNG and less than 300 KB.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('date', date);
+      formData.append('details', details);
+      formData.append('file', file);
+
       await fetch('https://house-dardasha-admin.onrender.com/api/events', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + localStorage.getItem('adminToken')
         },
-        body: JSON.stringify({ title, date, details })
+        body: formData
       });
       addEventForm.reset();
       fetchEvents();
     };
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      if (isNaN(date)) return dateStr;
+      const options = { year: 'numeric', month: 'long', day: '2-digit' };
+      const dayName = date.toLocaleDateString(undefined, { weekday: 'long' });
+      return `${date.toLocaleDateString(undefined, options)} (${dayName})`;
+    }
 
     fetchEvents();
   </script>
