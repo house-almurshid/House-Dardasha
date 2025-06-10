@@ -10,7 +10,10 @@ const fs = require('fs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const dir = path.join(__dirname, '..', 'uploads');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+      console.log('Uploads folder created:', dir);
+    }
     cb(null, dir);
   },
   filename: function (req, file, cb) {
