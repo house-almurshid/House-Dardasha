@@ -69,7 +69,7 @@
 
     async function fetchEvents() {
       eventsList.innerHTML = "<li>Loading...</li>";
-      const res = await fetch('https://house-dardasha.onrender.com/api/events', {
+      const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
       });
       const data = await res.json();
@@ -82,7 +82,7 @@
           delBtn.textContent = "Delete";
           delBtn.style.marginLeft = "10px";
           delBtn.onclick = async () => {
-            await fetch(`https://house-dardasha.onrender.com/api/events/${ev._id}`, {
+            await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
               method: 'DELETE',
               headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
             });
@@ -101,7 +101,7 @@
       const title = document.getElementById('event-title').value.trim();
       const date = document.getElementById('event-date').value;
       if (!title || !date) return;
-      await fetch('https://house-dardasha.onrender.com/api/events', {
+      await fetch('https://house-dardasha-admin.onrender.com/api/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
