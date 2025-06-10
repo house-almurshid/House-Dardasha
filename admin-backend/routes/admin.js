@@ -11,9 +11,9 @@ router.post('/login', async (req, res) => {
   const isMatch = await admin.comparePassword(password);
   if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
   const token = jwt.sign(
-    { id: admin._id, isAdmin: true },
+    { id: admin._id, username: admin.username, isAdmin: true },
     process.env.JWT_SECRET,
-    { expiresIn: '1d' }
+    { expiresIn: '1h' } // expires in 1 hour
   );
   res.json({ token });
 });

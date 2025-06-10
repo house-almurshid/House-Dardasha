@@ -13,11 +13,21 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       padding: 32px 24px;
+      position: relative;
+      /* Add extra top padding for the logout button */
+      padding-top: 70px;
     }
-    h1 { color: #029b0a; 
-      text-align: center; }
+    h1 {
+      color: #029b0a;
+      text-align: center;
+      margin: 0 0 24px 0;
+      font-size: 2rem;
+      word-break: break-word;
+    }
     .logout-btn {
-      float: right;
+      position: absolute;
+      top: 24px;
+      right: 24px;
       background: #fc0303;
       color: #fff;
       border: none;
@@ -25,42 +35,85 @@
       padding: 6px 16px;
       font-weight: bold;
       cursor: pointer;
+      z-index: 10;
+    }
+    @media (max-width: 600px) {
+      .dashboard-container {
+        padding-top: 60px; /* slightly less for mobile */
+      }
+      .logout-btn {
+        top: 12px;
+        right: 12px;
+        padding: 6px 10px;
+        font-size: 0.95rem;
+      }
+      h1 {
+        font-size: 1.2rem;
+        padding: 0 8px;
+        margin-top: 0;
+      }
     }
     .section {
       margin-top: 32px;
       border-top: 1px solid #eee;
       padding-top: 24px;
     }
+    /* Tab Button Styles (like e-library) */
+    .tab-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      justify-content: flex-start;
+    }
     .tab-btn {
-      background: #2563eb;
-      color: #fff;
+      /* Remove flex and min-width for natural sizing */
+      text-align: center;
+      padding: 10px 16px;
       border: none;
-      border-radius: 4px 4px 0 0;
-      padding: 10px 28px;
-      margin-right: 8px;
-      font-family: sans-serif;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 6px rgba(37,99,235,0.08);
-      border-bottom: 3px solid transparent;
-      outline: none;
+      border-radius: 0.75rem 0.75rem 0 0;
+      font-weight: 600;
       font-size: 1.08rem;
+      background: #fbbf24; /* amber-400 */
+      color: #1e293b;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+      outline: none;
       position: relative;
       top: 2px;
     }
-    .tab-btn:hover {
-      background: #1746a0;
-    }
     .tab-btn.selected {
-      background: #fff;
-      color: #2563eb;
-      border-bottom: 3px solid #2563eb;
+      background: #2563eb; /* blue-700 */
+      color: #fff;
       box-shadow: 0 4px 12px rgba(37,99,235,0.10);
       z-index: 2;
     }
+    .tab-btn:hover:not(.selected) {
+      background: #fde68a; /* lighter amber */
+      color: #1e293b;
+    }
     .tab-btn:focus {
       outline: 2px solid #2563eb;
+    }
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.2rem;
+        padding: 0 8px;
+      }
+      .logout-btn {
+        top: 12px;
+        right: 12px;
+        padding: 6px 10px;
+        font-size: 0.95rem;
+      }
+      .tab-btn-group {
+        gap: 4px;
+      }
+      .tab-btn {
+        font-size: 0.95rem;
+        padding: 8px 8px;
+      }
     }
   </style>
 </head>
@@ -69,9 +122,11 @@
     <button class="logout-btn" id="logout-btn">Logout</button>
     <h1>Aldardasha House Admin Dashboard</h1>
     <div style="margin-bottom:24px;">
-      <button class="tab-btn selected" id="tab-events">Manage Events</button>
-      <button class="tab-btn" id="tab-gallery">Manage Gallery</button>
-      <button class="tab-btn" id="tab-appointments">Manage Appointments</button>
+      <div class="tab-btn-group">
+        <button class="tab-btn selected" id="tab-events">Events</button>
+        <button class="tab-btn" id="tab-gallery">Gallery</button>
+        <button class="tab-btn" id="tab-appointments">Appointments</button>
+      </div>
     </div>
     <div class="section" id="events-section">
       <h3>Manage Events</h3>
@@ -96,6 +151,24 @@
     // Redirect to login if not authenticated
     if (!localStorage.getItem('adminToken')) {
       window.location.href = 'admin-login.html';
+    }
+
+    function parseJwt(token) {
+     try {
+    return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+    return null;
+    }
+    }
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+    const payload = parseJwt(token);
+    if (!payload || (payload.exp * 1000 < Date.now())) {
+    localStorage.removeItem('adminToken');
+    window.location.href = 'admin-login.html';
+    }
+    } else {
+    window.location.href = 'admin-login.html';
     }
 
     // Logout functionality
