@@ -129,10 +129,11 @@
       </div>
     </div>
     <div class="section" id="events-section">
-      <h3>Manage Events</h3>
+      <h3>Add Events</h3>
       <form id="add-event-form" style="margin-bottom:18px;">
         <input type="text" id="event-title" placeholder="Event Title" required style="width:60%;padding:6px;">
         <input type="date" id="event-date" required style="padding:6px;">
+        <textarea id="event-details" placeholder="Event Details" required style="width:100%;padding:6px;min-height:60px;margin-top:8px;"></textarea>
         <button type="submit" style="padding:6px 14px;">Add Event</button>
       </form>
       <ul id="events-list"></ul>
@@ -212,7 +213,7 @@
       if (Array.isArray(data)) {
         data.forEach(ev => {
           const li = document.createElement('li');
-          li.textContent = `${ev.title} (${ev.date}) `;
+          li.innerHTML = `<strong>${ev.title}</strong> (${ev.date})<br><span style="color:#555;">${ev.details || ''}</span> `;
           const delBtn = document.createElement('button');
           delBtn.textContent = "Delete";
           delBtn.style.marginLeft = "10px";
@@ -235,14 +236,15 @@
       e.preventDefault();
       const title = document.getElementById('event-title').value.trim();
       const date = document.getElementById('event-date').value;
-      if (!title || !date) return;
+      const details = document.getElementById('event-details').value.trim();
+      if (!title || !date || !details) return;
       await fetch('https://house-dardasha-admin.onrender.com/api/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + localStorage.getItem('adminToken')
         },
-        body: JSON.stringify({ title, date })
+        body: JSON.stringify({ title, date, details })
       });
       addEventForm.reset();
       fetchEvents();

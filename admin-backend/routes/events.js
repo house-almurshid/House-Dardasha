@@ -11,9 +11,11 @@ router.get('/', adminAuth, async (req, res) => {
 
 // Add new event
 router.post('/', adminAuth, async (req, res) => {
-  const { title, date } = req.body;
-  if (!title || !date) return res.status(400).json({ message: 'Title and date required' });
-  const event = new Event({ title, date });
+  const { title, date, details } = req.body;
+  if (!title || !date || !details) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
+  const event = new Event({ title, date, details });
   await event.save();
   res.json({ message: 'Event added', event });
 });
