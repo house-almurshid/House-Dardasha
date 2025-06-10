@@ -118,7 +118,7 @@ document.getElementById('admin-login-form').onsubmit = async function(e) {
   errorDiv.textContent = '';
 
   try {
-    const res = await fetch('http://localhost:10000/api/admin/login', {
+    const res = await fetch('https://house-dardasha.onrender.com/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
