@@ -16,7 +16,7 @@
   </header>
 
   <nav class="max-w-4xl mx-auto flex justify-between items-center px-2 py-4">
-    <a href="admin-files/admin-dashboard.html" class="inline-block bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-600 transition">← Admin Dashboard</a>
+    <a href="admin-dashboard.html" class="inline-block bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-600 transition">← Admin Dashboard</a>
   </nav>
 
   <main class="max-w-4xl mx-auto bg-white rounded shadow p-6 mt-4">
@@ -52,7 +52,7 @@
   <script>
     // Redirect to login if not authenticated
     if (!localStorage.getItem('adminToken')) {
-      window.location.href = 'admin-files/admin-login.html';
+      window.location.href = 'admin-login.html';
     }
     function parseJwt(token) {
      try {
@@ -66,10 +66,10 @@
     const payload = parseJwt(token);
     if (!payload || (payload.exp * 1000 < Date.now())) {
     localStorage.removeItem('adminToken');
-    window.location.href = 'admin-files/admin-login.html';
+    window.location.href = 'admin-login.html';
     }
     } else {
-    window.location.href = 'admin-files/admin-login.html';
+    window.location.href = 'admin-login.html';
     }
 
 let appointments = [];

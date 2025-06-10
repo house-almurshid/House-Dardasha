@@ -144,13 +144,13 @@
     <div class="section" id="appointments-section" style="display:none;">
       <h3>Manage Appointments</h3>
       <p>To manage appointments please go to Appointment Management dashboard.</p>
-      <p><a href="admin-files/appointment-admin-dashboard.html" style="color:#2563eb; text-decoration:underline;">Go to Appointment Management</a></p>
+      <p><a href="appointment-admin-dashboard.html" style="color:#2563eb; text-decoration:underline;">Go to Appointment Management</a></p>
     </div>
   </div>
   <script>
     // Redirect to login if not authenticated
     if (!localStorage.getItem('adminToken')) {
-      window.location.href = 'admin-files/admin-login.html';
+      window.location.href = 'admin-login.html';
     }
 
     function parseJwt(token) {
@@ -165,16 +165,16 @@
     const payload = parseJwt(token);
     if (!payload || (payload.exp * 1000 < Date.now())) {
     localStorage.removeItem('adminToken');
-    window.location.href = 'admin-files/admin-login.html';
+    window.location.href = 'admin-login.html';
     }
     } else {
-    window.location.href = 'admin-files/admin-login.html';
+    window.location.href = 'admin-login.html';
     }
 
     // Logout functionality
     document.getElementById('logout-btn').onclick = function() {
       localStorage.removeItem('adminToken');
-      window.location.href = 'admin-files/admin-login.html';
+      window.location.href = 'admin-login.html';
     };
 
     // Tab switching logic with selected class
