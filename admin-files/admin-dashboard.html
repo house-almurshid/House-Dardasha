@@ -224,9 +224,11 @@
           style="flex:1 1 120px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;">
         <textarea id="event-details" placeholder="Event Details" required
           style="flex:3 1 240px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;min-height:44px;"></textarea>
-        <input type="file" id="event-file" accept=".pdf,.jpg,.jpeg,.png" style="flex:1 1 180px;" required>
-        <button type="submit" class="add-event-btn">Add Event</button>
+        <input type="file" id="event-file" accept=".pdf,.jpg,.jpeg,.png" style="flex:1 1 180px;">
+        <button type="button" id="upload-file-btn" class="add-event-btn">Upload File</button>
+        <button type="submit" class="add-event-btn" disabled id="add-event-btn">Add Event</button>
       </form>
+      <div id="file-preview" style="margin-bottom:16px;"></div>
       <ul id="events-list" class="event-list"></ul>
     </div>
     <div class="section" id="gallery-section" style="display:none;">
@@ -327,34 +329,79 @@
       }
     }
 
-    addEventForm.onsubmit = async function(e) {
-      e.preventDefault();
-      const title = document.getElementById('event-title').value.trim();
-      const date = document.getElementById('event-date').value;
-      const details = document.getElementById('event-details').value.trim();
+    let uploadedFileUrl = "";
+
+    document.getElementById('upload-file-btn').onclick = async function() {
       const fileInput = document.getElementById('event-file');
       const file = fileInput.files[0];
+      const preview = document.getElementById('file-preview');
+      const addBtn = document.getElementById('add-event-btn');
 
-      if (!title || !date || !details || !file) return;
+      preview.innerHTML = "";
+      addBtn.disabled = true;
+      uploadedFileUrl = "";
+
+      if (!file) {
+        preview.textContent = "Please select a file first.";
+        return;
+      }
       if (!['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'].includes(file.type) || file.size > 307200) {
-        alert('File must be PDF/JPG/PNG and less than 300 KB.');
+        preview.textContent = "File must be PDF/JPG/PNG and less than 300 KB.";
         return;
       }
 
+      // Upload file to backend
       const formData = new FormData();
-      formData.append('title', title);
-      formData.append('date', date);
-      formData.append('details', details);
       formData.append('file', file);
 
-      await fetch('https://house-dardasha-admin.onrender.com/api/events', {
+      preview.textContent = "Uploading...";
+      const res = await fetch('https://house-dardasha-admin.onrender.com/api/events/upload', {
         method: 'POST',
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('adminToken')
         },
         body: formData
       });
+      const data = await res.json();
+      if (data.fileUrl) {
+        uploadedFileUrl = data.fileUrl;
+        addBtn.disabled = false;
+        // Show preview
+        if (file.type.startsWith('image/')) {
+          preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:180px;max-height:120px;border:1px solid #bbb;border-radius:6px;">`;
+        } else if (file.type === 'application/pdf') {
+          preview.innerHTML = `<a href="${uploadedFileUrl}" target="_blank">Preview PDF</a>`;
+        } else {
+          preview.textContent = "File uploaded.";
+        }
+      } else {
+        preview.textContent = "Upload failed.";
+      }
+    };
+
+    addEventForm.onsubmit = async function(e) {
+      e.preventDefault();
+      const title = document.getElementById('event-title').value.trim();
+      const date = document.getElementById('event-date').value;
+      const details = document.getElementById('event-details').value.trim();
+      const addBtn = document.getElementById('add-event-btn');
+
+      if (!title || !date || !details || !uploadedFileUrl) return;
+
+      addBtn.disabled = true;
+
+      await fetch('https://house-dardasha-admin.onrender.com/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('adminToken')
+        },
+        body: JSON.stringify({ title, date, details, fileUrl: uploadedFileUrl })
+      });
       addEventForm.reset();
+      document.getElementById('file-preview').innerHTML = "";
+      uploadedFileUrl = "";
+      addBtn.disabled = false;
       fetchEvents();
     };
 

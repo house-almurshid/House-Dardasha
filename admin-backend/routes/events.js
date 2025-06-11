@@ -41,6 +41,8 @@ router.get('/', adminAuth, async (req, res) => {
 
 // Add new event
 router.post('/', adminAuth, upload.single('file'), async (req, res) => {
+  console.log('BODY:', req.body);
+  console.log('FILE:', req.file);
   const { title, date, details } = req.body;
   if (!title || !date || !details) {
     return res.status(400).json({ message: 'All fields are required.' });
@@ -58,6 +60,13 @@ router.post('/', adminAuth, upload.single('file'), async (req, res) => {
 router.delete('/:id', adminAuth, async (req, res) => {
   await Event.findByIdAndDelete(req.params.id);
   res.json({ message: 'Event deleted' });
+});
+
+// Upload file
+router.post('/upload', adminAuth, upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ message: 'No file uploaded.' });
+  const fileUrl = `/api/events/uploads/${req.file.filename}`;
+  res.json({ fileUrl });
 });
 
 module.exports = router;
