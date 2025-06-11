@@ -14,7 +14,6 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       padding: 32px 24px;
       position: relative;
-      /* Add extra top padding for the logout button */
       padding-top: 70px;
     }
     h1 {
@@ -39,7 +38,7 @@
     }
     @media (max-width: 600px) {
       .dashboard-container {
-        padding-top: 60px; /* slightly less for mobile */
+        padding-top: 60px;
       }
       .logout-btn {
         top: 12px;
@@ -58,7 +57,6 @@
       border-top: 1px solid #eee;
       padding-top: 24px;
     }
-    /* Tab Button Styles (like e-library) */
     .tab-btn-group {
       display: flex;
       flex-wrap: wrap;
@@ -67,14 +65,13 @@
       justify-content: flex-start;
     }
     .tab-btn {
-      /* Remove flex and min-width for natural sizing */
       text-align: center;
       padding: 10px 16px;
       border: none;
       border-radius: 0.75rem 0.75rem 0 0;
       font-weight: 600;
       font-size: 1.08rem;
-      background: #fbbf24; /* amber-400 */
+      background: #fbbf24;
       color: #1e293b;
       cursor: pointer;
       transition: background 0.2s, color 0.2s, box-shadow 0.2s;
@@ -84,13 +81,13 @@
       top: 2px;
     }
     .tab-btn.selected {
-      background: #2563eb; /* blue-700 */
+      background: #2563eb;
       color: #fff;
       box-shadow: 0 4px 12px rgba(37,99,235,0.10);
       z-index: 2;
     }
     .tab-btn:hover:not(.selected) {
-      background: #fde68a; /* lighter amber */
+      background: #fde68a;
       color: #1e293b;
     }
     .tab-btn:focus {
@@ -115,93 +112,6 @@
         padding: 8px 8px;
       }
     }
-    .add-event-btn {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 24px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 6px rgba(37,99,235,0.08);
-      margin-top: 4px;
-    }
-    .add-event-btn:hover {
-      background: #1746a0;
-    }
-    .event-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .event-list li {
-      background: #f4f6fa;
-      border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(37,99,235,0.06);
-      margin-bottom: 14px;
-      padding: 16px 18px 12px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      position: relative;
-    }
-    .event-list li strong {
-      color: #2563eb;
-      font-size: 1.1rem;
-    }
-    .event-list li .event-date {
-      color: #029b0a;
-      font-size: 0.98rem;
-      font-weight: 500;
-    }
-    .event-list li .event-details {
-      color: #333;
-      font-size: 0.97rem;
-      margin-bottom: 4px;
-    }
-    .event-list li button {
-      align-self: flex-end;
-      background: #fc0303;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 6px 16px;
-      font-size: 0.97rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 4px;
-    }
-    .event-list li button:hover {
-      background: #a30000;
-    }
-    .read-more-btn {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 6px 16px;
-      font-size: 0.97rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 4px;
-      margin-right: 8px;
-    }
-    .read-more-btn:hover {
-      background: #1746a0;
-    }
-    @media (max-width: 600px) {
-      #add-event-form {
-        flex-direction: column;
-        gap: 8px;
-      }
-      .event-list li {
-        padding: 12px 8px 10px 8px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -216,21 +126,13 @@
       </div>
     </div>
     <div class="section" id="events-section">
-      <h3 style="font-size:1.3rem;color:#2563eb;margin-bottom:18px;">Add Event</h3>
-      <form id="add-event-form" style="margin-bottom:24px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;">
-        <input type="text" id="event-title" placeholder="Event Title" required
-          style="flex:2 1 180px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;">
-        <input type="date" id="event-date" required
-          style="flex:1 1 120px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;">
-        <textarea id="event-details" placeholder="Event Details" required
-          style="flex:3 1 240px;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:1rem;min-height:44px;"></textarea>
-        <input type="file" id="event-file" accept=".pdf,.jpg,.jpeg,.png" style="flex:1 1 180px;">
-        <button type="button" id="upload-file-btn" class="add-event-btn">Upload File</button>
-        <button type="submit" class="add-event-btn" disabled id="add-event-btn">Add Event</button>
-      </form>
-      <div id="file-preview" style="margin-bottom:16px;"></div>
-      <ul id="events-list" class="event-list"></ul>
-      <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
+      <h3>Manage Events</h3>
+      <p>To manage events please go to the Event Management dashboard.</p>
+      <p>
+        <a href="admin-event.html" style="color:#2563eb; text-decoration:underline;">
+          Go to Event Management
+        </a>
+      </p>
     </div>
     <div class="section" id="gallery-section" style="display:none;">
       <h3>Manage Gallery</h3>
@@ -239,7 +141,11 @@
     <div class="section" id="appointments-section" style="display:none;">
       <h3>Manage Appointments</h3>
       <p>To manage appointments please go to Appointment Management dashboard.</p>
-      <p><a href="appointment-admin-dashboard.html" style="color:#2563eb; text-decoration:underline;">Go to Appointment Management</a></p>
+      <p>
+        <a href="appointment-admin-dashboard.html" style="color:#2563eb; text-decoration:underline;">
+          Go to Appointment Management
+        </a>
+      </p>
     </div>
   </div>
   <script>
@@ -249,21 +155,21 @@
     }
 
     function parseJwt(token) {
-     try {
-    return JSON.parse(atob(token.split('.')[1]));
-    } catch (e) {
-    return null;
-    }
+      try {
+        return JSON.parse(atob(token.split('.')[1]));
+      } catch (e) {
+        return null;
+      }
     }
     const token = localStorage.getItem('adminToken');
     if (token) {
-    const payload = parseJwt(token);
-    if (!payload || (payload.exp * 1000 < Date.now())) {
-    localStorage.removeItem('adminToken');
-    window.location.href = 'admin-login.html';
-    }
+      const payload = parseJwt(token);
+      if (!payload || (payload.exp * 1000 < Date.now())) {
+        localStorage.removeItem('adminToken');
+        window.location.href = 'admin-login.html';
+      }
     } else {
-    window.location.href = 'admin-login.html';
+      window.location.href = 'admin-login.html';
     }
 
     // Logout functionality
@@ -292,152 +198,6 @@
         });
       };
     });
-
-    // --- Events Management ---
-    const eventsList = document.getElementById('events-list');
-    const addEventForm = document.getElementById('add-event-form');
-
-    async function fetchEvents() {
-      eventsList.innerHTML = "<li>Loading...</li>";
-      const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
-      });
-      const data = await res.json();
-      eventsList.innerHTML = '';
-      if (Array.isArray(data)) {
-        data.forEach(ev => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <strong>${ev.title}</strong>
-            <span class="event-date">${formatDate(ev.date)}</span>
-            <div class="event-details">${ev.details || ''}</div>
-            ${ev.fileUrl ? `<button class="read-more-btn" onclick="window.open('${ev.fileUrl}', '_blank')">Read More</button>` : ''}
-          `;
-          const delBtn = document.createElement('button');
-          delBtn.textContent = "Delete";
-          delBtn.onclick = async () => {
-            await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
-              method: 'DELETE',
-              headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
-            });
-            fetchEvents();
-          };
-          li.appendChild(delBtn);
-          eventsList.appendChild(li);
-        });
-      } else {
-        eventsList.innerHTML = "<li>No events found.</li>";
-      }
-    }
-
-    let uploadedFileUrl = "";
-
-    document.getElementById('upload-file-btn').onclick = async function() {
-      const fileInput = document.getElementById('event-file');
-      const file = fileInput.files[0];
-      const preview = document.getElementById('file-preview');
-      const addBtn = document.getElementById('add-event-btn');
-      const progressBar = document.getElementById('upload-progress');
-
-      preview.innerHTML = "";
-      addBtn.disabled = true;
-      uploadedFileUrl = "";
-
-      if (!file) {
-        preview.textContent = "Please select a file first.";
-        return;
-      }
-      if (!['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'].includes(file.type) || file.size > 307200) {
-        preview.textContent = "File must be PDF/JPG/PNG and less than 300 KB.";
-        return;
-      }
-
-      // Show progress bar
-      progressBar.style.display = "block";
-      progressBar.value = 0;
-
-      // Upload file with progress
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://house-dardasha-admin.onrender.com/api/events/upload', true);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('adminToken'));
-
-      xhr.upload.onprogress = function(e) {
-        if (e.lengthComputable) {
-          const percent = Math.round((e.loaded / e.total) * 100);
-          progressBar.value = percent;
-          preview.textContent = `Uploading... ${percent}%`;
-        }
-      };
-
-      xhr.onload = function() {
-        progressBar.style.display = "none";
-        if (xhr.status === 200) {
-          const data = JSON.parse(xhr.responseText);
-          if (data.fileUrl) {
-            uploadedFileUrl = data.fileUrl;
-            addBtn.disabled = false;
-            // Show preview
-            if (file.type.startsWith('image/')) {
-              preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:180px;max-height:120px;border:1px solid #bbb;border-radius:6px;">`;
-            } else if (file.type === 'application/pdf') {
-              preview.innerHTML = `<a href="${uploadedFileUrl}" target="_blank">Preview PDF</a>`;
-            } else {
-              preview.textContent = "File uploaded.";
-            }
-          } else {
-            preview.textContent = "Upload failed.";
-          }
-        } else {
-          preview.textContent = "Upload failed.";
-        }
-      };
-
-      xhr.onerror = function() {
-        progressBar.style.display = "none";
-        preview.textContent = "Upload failed.";
-      };
-
-      xhr.send(formData);
-    };
-
-    addEventForm.onsubmit = async function(e) {
-      e.preventDefault();
-      const title = document.getElementById('event-title').value.trim();
-      const date = document.getElementById('event-date').value;
-      const details = document.getElementById('event-details').value.trim();
-      const addBtn = document.getElementById('add-event-btn');
-
-      if (!title || !date || !details || !uploadedFileUrl) return;
-
-      addBtn.disabled = true;
-
-      await fetch('https://house-dardasha-admin.onrender.com/api/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('adminToken')
-        },
-        body: JSON.stringify({ title, date, details, fileUrl: uploadedFileUrl })
-      });
-      addEventForm.reset();
-      document.getElementById('file-preview').innerHTML = "";
-      uploadedFileUrl = "";
-      addBtn.disabled = false;
-      fetchEvents();
-    };
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr);
-      if (isNaN(date)) return dateStr;
-      const options = { year: 'numeric', month: 'long', day: '2-digit' };
-      const dayName = date.toLocaleDateString(undefined, { weekday: 'long' });
-      return `${date.toLocaleDateString(undefined, options)} (${dayName})`;
-    }
-
-    fetchEvents();
   </script>
 </body>
 </html>

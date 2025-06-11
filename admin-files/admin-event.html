@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Management - Aldardasha House</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    body { background: #f4f6fa; font-family: Arial, sans-serif; }
+    .dashboard-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 32px 24px;
+      position: relative;
+      padding-top: 70px;
+    }
+    h1 { 
+      color: #029b0a; 
+      text-align: center; 
+      margin: 0 0 24px 0; 
+      font-size: 2rem; 
+      word-break: break-word;
+    }
+    .logout-btn {
+      position: absolute; 
+      top: 24px; 
+      right: 24px;
+      background: #fc0303; 
+      color: #fff; 
+      border: none; 
+      border-radius: 4px;
+      padding: 6px 16px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      z-index: 10;
+    }
+    .return-btn {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+      z-index: 10;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    .return-btn:hover { background: #1746a0; }
+    .add-event-btn { background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 10px 24px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s, box-shadow 0.2s; box-shadow: 0 2px 6px rgba(37,99,235,0.08); margin-top: 4px; }
+    .add-event-btn:hover { background: #1746a0; }
+    .event-list { list-style: none; padding: 0; margin: 0; }
+    .event-list li {
+  position: relative;
+  background: #f4f6fa;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(37,99,235,0.06);
+  margin-bottom: 14px;
+  padding: 16px 18px 36px 18px; /* extra bottom padding for delete button */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+    .event-list li strong { color: #2563eb; font-size: 1.1rem; }
+    .event-list li .event-date { color: #029b0a; font-size: 0.98rem; font-weight: 500; }
+    .event-list li .event-details { color: #333; font-size: 0.97rem; margin-bottom: 4px; }
+    .event-list li button { align-self: flex-end; color: #fff; border: none; border-radius: 4px; padding: 6px 12px; font-family: Arial, Helvetica, sans-serif; font-size: 0.97rem; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
+    .event-list li button:hover { background: #a30000; }
+    .read-more-btn {
+  position: absolute;
+  background: #2563eb;
+  top: 12px;
+  right: 14px;
+  margin: 0;
+  z-index: 1;
+}
+    .delete-btn {
+  position: absolute;
+  background: #fc0303;
+  bottom: 12px;
+  right: 14px;
+  margin: 0;
+  z-index: 1;
+}
+    .read-more-btn { background: #2563eb; color: #fff; border: none; border-radius: 4px; padding: 6px 16px; font-size: 0.97rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 4px; margin-right: 8px; }
+    .read-more-btn:hover { background: #1746a0; }
+    #add-event-form label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #2563eb;
+      margin-top: 12px;
+    }
+    #add-event-form input,
+    #add-event-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      background: #f9fafb;
+      transition: border 0.2s;
+    }
+    #add-event-form input:focus,
+    #add-event-form textarea:focus {
+      border: 1.5px solid #2563eb;
+      outline: none;
+      background: #fff;
+    }
+    #add-event-form textarea {
+      min-height: 44px;
+      resize: vertical;
+    }
+    .date-input {
+      /* Modern date picker look */
+      background: #f9fafb;
+      color: #222;
+    }
+    .date-input:focus {
+      background: #fff;
+    }
+    .file-upload-row {
+  display: flex;
+  align-items: stretch; /* ensures both children fill the row height */
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.file-upload-row input[type="file"] {
+  flex: 1 1 auto;
+  padding: 0 12px;
+  font-size: 1rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  background: #f9fafb;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.file-upload-row .file-upload-btn {
+  border-radius: 6px;
+  margin: 0;
+  padding: 0 18px;
+  height: 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  min-width: 0;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  background: #2563eb;
+  color: #fff;
+  border: 1px solid #2563eb;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: none;
+}
+
+.file-upload-row .file-upload-btn:hover {
+  background: #1746a0;
+}
+
+@media (max-width: 600px) {
+  .file-upload-row {
+    flex-direction: row;
+  }
+  .file-upload-row input[type="file"] {
+    font-size: 0.97rem;
+    padding: 10px 4px;
+    height: 44px;
+  }
+  .file-upload-row .file-upload-btn {
+    font-size: 0.97rem;
+    padding: 0 12px;
+    height: 30px;
+  }
+}
+    @media (max-width: 800px) {
+      .dashboard-container {
+        padding: 16px 4vw 24px 4vw;
+        padding-top: 100px;
+      }
+      .logout-btn, .return-btn {
+        padding: 8px 10px;
+        font-size: 1rem;
+      }
+      h1 {
+        font-size: 1.3rem;
+        margin-top: 12px;
+      }
+    }
+    @media (max-width: 600px) {
+      .dashboard-container {
+        padding: 8px 2vw 16px 2vw;
+        padding-top: 120px;
+      }
+      .logout-btn, .return-btn {
+        padding: 8px 8px;
+        font-size: 0.97rem;
+        /* Keep them in corners, but smaller */
+      }
+      .logout-btn {
+        top: 12px;
+        right: 8px;
+      }
+      .return-btn {
+        top: 12px;
+        left: 8px;
+      }
+      h1 {
+        font-size: 1.1rem;
+        padding: 0 4px;
+        margin-top: 36px;
+      }
+      #add-event-form {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      #add-event-form input,
+      #add-event-form textarea {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        font-size: 1rem;
+      }
+      .event-list li {
+        padding: 12px 8px 10px 8px;
+      }
+    }
+
+    #file-preview {
+  color: #ff1818; /* Material red */
+  font-size: 0.98rem;
+  margin-bottom: 8px;
+  min-height: 20px;
+}
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <button class="logout-btn" id="logout-btn">Logout</button>
+    <a href="admin-dashboard.html" class="return-btn">Dashboard</a>
+    <h1>Event Management</h1>
+    <div class="section" id="events-section">
+      <h3 style="font-size:1.3rem;color:#2563eb;margin-bottom:18px;">Add Event</h3>
+      <form id="add-event-form" style="margin-bottom:24px;">
+        <label for="event-title">Event Title</label>
+        <input type="text" id="event-title" required placeholder="Event Title">
+
+        <label for="event-date">Event Date</label>
+        <input type="text" id="event-date" class="date-picker" required placeholder="Select date">
+
+        <label for="event-details">Event Details</label>
+        <textarea id="event-details" required placeholder="Event Details"></textarea>
+
+        <label for="event-file">Attach File (PDF/JPG/PNG, max 300KB)</label>
+        <div class="file-upload-row">
+          <input type="file" id="event-file" accept=".pdf,.jpg,.jpeg,.png">
+          <button type="button" id="upload-file-btn" class="add-event-btn file-upload-btn">Upload</button>
+        </div>
+        <div id="file-preview" style="margin-bottom:16px;"></div>
+        <button type="submit" class="add-event-btn" disabled id="add-event-btn" style="margin-top:10px;">Add Event</button>
+      </form>
+      <div id="file-preview" style="margin-bottom:16px;"></div>
+      <ul id="events-list" class="event-list"></ul>
+      <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
+    </div>
+  </div>
+  <script>
+    // --- Copy all event management JS here (authentication, fetchEvents, upload, add, delete, preview, etc.) ---
+    // Redirect to login if not authenticated
+    if (!localStorage.getItem('adminToken')) {
+      window.location.href = 'admin-login.html';
+    }
+
+    function parseJwt(token) {
+      try {
+        return JSON.parse(atob(token.split('.')[1]));
+      } catch (e) {
+        return null;
+      }
+    }
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      const payload = parseJwt(token);
+      if (!payload || (payload.exp * 1000 < Date.now())) {
+        localStorage.removeItem('adminToken');
+        window.location.href = 'admin-login.html';
+      }
+    } else {
+      window.location.href = 'admin-login.html';
+    }
+
+    // Logout functionality
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('adminToken');
+      window.location.href = 'admin-login.html';
+    };
+
+    // --- Events Management ---
+    const eventsList = document.getElementById('events-list');
+    const addEventForm = document.getElementById('add-event-form');
+
+    async function fetchEvents() {
+      eventsList.innerHTML = "<li>Loading...</li>";
+      const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
+      });
+      const data = await res.json();
+      eventsList.innerHTML = '';
+      if (Array.isArray(data)) {
+        data.forEach(ev => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <strong>${ev.title}</strong>
+            <span class="event-date">${formatDate(ev.date)}</span>
+            <div class="event-details">${ev.details || ''}</div>
+            ${ev.fileUrl ? `<button class="read-more-btn" onclick="window.open('${ev.fileUrl}', '_blank')">Read More</button>` : ''}
+          `;
+          const delBtn = document.createElement('button');
+          delBtn.textContent = "Delete";
+          delBtn.className = "delete-btn";
+          delBtn.onclick = async () => {
+            await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
+              method: 'DELETE',
+              headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
+            });
+            fetchEvents();
+          };
+          li.appendChild(delBtn);
+          eventsList.appendChild(li);
+        });
+      } else {
+        eventsList.innerHTML = "<li>No events found.</li>";
+      }
+    }
+
+    let uploadedFileUrl = "";
+
+    document.getElementById('upload-file-btn').onclick = async function() {
+      const fileInput = document.getElementById('event-file');
+      const file = fileInput.files[0];
+      const preview = document.getElementById('file-preview');
+      const addBtn = document.getElementById('add-event-btn');
+      const progressBar = document.getElementById('upload-progress');
+
+      preview.innerHTML = "";
+      addBtn.disabled = true;
+      uploadedFileUrl = "";
+
+      if (!file) {
+        preview.textContent = "Please select a file first.";
+        return;
+      }
+      if (!['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'].includes(file.type) || file.size > 307200) {
+        preview.textContent = "File must be PDF/JPG/PNG and less than 300 KB.";
+        return;
+      }
+
+      // Show progress bar
+      progressBar.style.display = "block";
+      progressBar.value = 0;
+
+      // Upload file with progress
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://house-dardasha-admin.onrender.com/api/events/upload', true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('adminToken'));
+
+      xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progressBar.value = percent;
+          preview.textContent = `Uploading... ${percent}%`;
+        }
+      };
+
+      xhr.onload = function() {
+        progressBar.style.display = "none";
+        if (xhr.status === 200) {
+          const data = JSON.parse(xhr.responseText);
+          if (data.fileUrl) {
+            uploadedFileUrl = data.fileUrl;
+            addBtn.disabled = false;
+            // Show preview
+            if (file.type.startsWith('image/')) {
+              preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:180px;max-height:120px;border:1px solid #bbb;border-radius:6px;">`;
+            } else if (file.type === 'application/pdf') {
+              preview.innerHTML = `<a href="${uploadedFileUrl}" target="_blank">Preview PDF</a>`;
+            } else {
+              preview.textContent = "File uploaded.";
+            }
+          } else {
+            preview.textContent = "Upload failed.";
+          }
+        } else {
+          preview.textContent = "Upload failed.";
+        }
+      };
+
+      xhr.onerror = function() {
+        progressBar.style.display = "none";
+        preview.textContent = "Upload failed.";
+      };
+
+      xhr.send(formData);
+    };
+
+    addEventForm.onsubmit = async function(e) {
+      e.preventDefault();
+      const title = document.getElementById('event-title').value.trim();
+      const date = document.getElementById('event-date').value;
+      const details = document.getElementById('event-details').value.trim();
+      const addBtn = document.getElementById('add-event-btn');
+
+      if (!title || !date || !details || !uploadedFileUrl) return;
+
+      addBtn.disabled = true;
+
+      await fetch('https://house-dardasha-admin.onrender.com/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('adminToken')
+        },
+        body: JSON.stringify({ title, date, details, fileUrl: uploadedFileUrl })
+      });
+      addEventForm.reset();
+      document.getElementById('file-preview').innerHTML = "";
+      uploadedFileUrl = "";
+      addBtn.disabled = false;
+      fetchEvents();
+    };
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      if (isNaN(date)) return dateStr;
+      const options = { year: 'numeric', month: 'long', day: '2-digit' };
+      const dayName = date.toLocaleDateString(undefined, { weekday: 'long' });
+      return `${date.toLocaleDateString(undefined, options)} (${dayName})`;
+    }
+
+    fetchEvents();
+  </script>
+  <script>
+    flatpickr(".date-picker", {
+      dateFormat: "d-m-Y",
+      allowInput: true
+    });
+  </script>
+</body>
+</html>
