@@ -230,6 +230,7 @@
       </form>
       <div id="file-preview" style="margin-bottom:16px;"></div>
       <ul id="events-list" class="event-list"></ul>
+      <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
     </div>
     <div class="section" id="gallery-section" style="display:none;">
       <h3>Manage Gallery</h3>
@@ -336,6 +337,7 @@
       const file = fileInput.files[0];
       const preview = document.getElementById('file-preview');
       const addBtn = document.getElementById('add-event-btn');
+      const progressBar = document.getElementById('upload-progress');
 
       preview.innerHTML = "";
       addBtn.disabled = true;
@@ -350,33 +352,55 @@
         return;
       }
 
-      // Upload file to backend
+      // Show progress bar
+      progressBar.style.display = "block";
+      progressBar.value = 0;
+
+      // Upload file with progress
       const formData = new FormData();
       formData.append('file', file);
 
-      preview.textContent = "Uploading...";
-      const res = await fetch('https://house-dardasha-admin.onrender.com/api/events/upload', {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('adminToken')
-        },
-        body: formData
-      });
-      const data = await res.json();
-      if (data.fileUrl) {
-        uploadedFileUrl = data.fileUrl;
-        addBtn.disabled = false;
-        // Show preview
-        if (file.type.startsWith('image/')) {
-          preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:180px;max-height:120px;border:1px solid #bbb;border-radius:6px;">`;
-        } else if (file.type === 'application/pdf') {
-          preview.innerHTML = `<a href="${uploadedFileUrl}" target="_blank">Preview PDF</a>`;
-        } else {
-          preview.textContent = "File uploaded.";
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://house-dardasha-admin.onrender.com/api/events/upload', true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('adminToken'));
+
+      xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progressBar.value = percent;
+          preview.textContent = `Uploading... ${percent}%`;
         }
-      } else {
+      };
+
+      xhr.onload = function() {
+        progressBar.style.display = "none";
+        if (xhr.status === 200) {
+          const data = JSON.parse(xhr.responseText);
+          if (data.fileUrl) {
+            uploadedFileUrl = data.fileUrl;
+            addBtn.disabled = false;
+            // Show preview
+            if (file.type.startsWith('image/')) {
+              preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:180px;max-height:120px;border:1px solid #bbb;border-radius:6px;">`;
+            } else if (file.type === 'application/pdf') {
+              preview.innerHTML = `<a href="${uploadedFileUrl}" target="_blank">Preview PDF</a>`;
+            } else {
+              preview.textContent = "File uploaded.";
+            }
+          } else {
+            preview.textContent = "Upload failed.";
+          }
+        } else {
+          preview.textContent = "Upload failed.";
+        }
+      };
+
+      xhr.onerror = function() {
+        progressBar.style.display = "none";
         preview.textContent = "Upload failed.";
-      }
+      };
+
+      xhr.send(formData);
     };
 
     addEventForm.onsubmit = async function(e) {
