@@ -2,36 +2,28 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const adminAuth = require('../middleware/adminAuth');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 
-// Set up multer storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const dir = path.join(__dirname, '..', 'uploads');
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-      console.log('Uploads folder created:', dir);
-    }
-    cb(null, dir);
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + ext);
-  }
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: 'aldardashahouse',
+  api_key: '624543795867867',
+  api_secret: '7NY8UzkVzv4JpKjuilak91QCPkk'
 });
-const upload = multer({
-  storage,
-  limits: { fileSize: 307200 }, // 300 KB
-  fileFilter: (req, file, cb) => {
-    const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
-    cb(null, allowed.includes(file.mimetype));
+
+// Set up storage for multer to use Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'events', // Cloudinary folder name
+    allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+    resource_type: 'auto'
   }
 });
 
-// Serve uploaded files statically
-router.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+const upload = multer({ storage });
 
 // Get all events
 router.get('/', adminAuth, async (req, res) => {
@@ -49,7 +41,7 @@ router.post('/', adminAuth, upload.single('file'), async (req, res) => {
   }
   let fileUrl = '';
   if (req.file) {
-    fileUrl = `/api/events/uploads/${req.file.filename}`;
+    fileUrl = req.file.path; // Cloudinary URL
   }
   const event = new Event({ title, date, details, fileUrl });
   await event.save();
@@ -65,7 +57,7 @@ router.delete('/:id', adminAuth, async (req, res) => {
 // Upload file
 router.post('/upload', adminAuth, upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded.' });
-  const fileUrl = `/uploads/${req.file.filename}`;
+  const fileUrl = req.file.path; // This is the Cloudinary URL
   res.json({ fileUrl });
 });
 
