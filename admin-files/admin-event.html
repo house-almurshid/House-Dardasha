@@ -409,9 +409,9 @@
             addBtn.disabled = false;
             // Show preview
             if (file.type === 'application/pdf') {
-              preview.innerHTML = `<iframe src="${uploadedFileUrl}" style="width:100%;height:200px;border:1px solid #bbb;border-radius:6px;"></iframe>`;
+              preview.innerHTML = `<iframe src="${uploadedFileUrl}" style="width:100%;height:400px;border:1px solid #bbb;border-radius:6px;"></iframe>`;
             } else if (file.type.startsWith('image/')) {
-              preview.innerHTML = `<iframe src="${uploadedFileUrl}" style="width:100%;height:200px;border:1px solid #bbb;border-radius:6px;"></iframe>`;
+              preview.innerHTML = `<iframe src="${uploadedFileUrl}" style="width:100%;height:400px;border:1px solid #bbb;border-radius:6px;"></iframe>`;
             } else {
               preview.textContent = "File uploaded.";
             }
