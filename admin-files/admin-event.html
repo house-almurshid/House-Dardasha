@@ -428,7 +428,7 @@
             // Show preview
             if (file.type === 'application/pdf') {
               const gviewUrl = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(uploadedFileUrl)}`;
-              preview.innerHTML = `<iframe src="${gviewUrl}" style="max-width:50%;height:50%;border:1px solid #bbb;border-radius:6px;"></iframe>`;
+              preview.innerHTML = `<iframe src="${gviewUrl}" style="max-width:80%;height:50%;border:1px solid #bbb;border-radius:6px;"></iframe>`;
             } else if (file.type.startsWith('image/')) {
               preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:30%;height:100%;border:1px solid #bbb;border-radius:6px;">`;
             } else {
