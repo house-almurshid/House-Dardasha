@@ -18,13 +18,16 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     let resourceType = 'image';
+    let public_id = Date.now() + '-' + file.originalname.replace(/\.[^/.]+$/, "");
     if (file.mimetype === 'application/pdf') {
       resourceType = 'raw';
+      public_id += '.pdf'; // Ensure .pdf extension
     }
     return {
       folder: 'events',
       allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
-      resource_type: resourceType
+      resource_type: resourceType,
+      public_id: public_id
     };
   }
 });
