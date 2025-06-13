@@ -2,40 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const adminAuth = require('../middleware/adminAuth');
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
+const ImageKit = require('imagekit');
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: 'aldardashahouse',
-  api_key: '624543795867867',
-  api_secret: '7NY8UzkVzv4JpKjuilak91QCPkk'
+const upload = multer({ storage: multer.memoryStorage() });
+
+const imagekit = new ImageKit({
+  publicKey: "public_LnwB1ARWQI1my8HYBQwQJbet/WE=",
+  privateKey: "private_04ATe/zjw6DbNQxtVDrtnttx7MM=",
+  urlEndpoint: "https://ik.imagekit.io/aldardashahouse"
 });
-
-// Set up storage for multer to use Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-    let resourceType = 'image';
-    let format = undefined;
-    let public_id = Date.now() + '-' + file.originalname.replace(/\.[^/.]+$/, "");
-    if (file.mimetype === 'application/pdf') {
-      resourceType = 'raw';
-      format = 'pdf'; // Explicitly set format
-      public_id += '.pdf'; // Ensure .pdf extension
-    }
-    return {
-      folder: 'events',
-      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
-      resource_type: resourceType,
-      public_id,
-      format
-    };
-  }
-});
-
-const upload = multer({ storage });
 
 // Get all events
 router.get('/', adminAuth, async (req, res) => {
@@ -61,9 +37,20 @@ router.delete('/:id', adminAuth, async (req, res) => {
 });
 
 // Upload file
-router.post('/upload', adminAuth, upload.single('file'), (req, res) => {
+router.post('/upload', adminAuth, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded.' });
-  res.json({ fileUrl: req.file.path }); // This is the direct Cloudinary URL
+
+  try {
+    const uploadResponse = await imagekit.upload({
+      file: req.file.buffer, // Buffer from multer memory storage
+      fileName: req.file.originalname,
+      folder: "/events"
+    });
+
+    res.json({ fileUrl: uploadResponse.url });
+  } catch (err) {
+    res.status(500).json({ message: 'Upload failed.', error: err.message });
+  }
 });
 
 module.exports = router;
