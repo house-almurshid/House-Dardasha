@@ -16,10 +16,16 @@ cloudinary.config({
 // Set up storage for multer to use Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'events', // Cloudinary folder name
-    allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
-    resource_type: 'auto'
+  params: async (req, file) => {
+    let resourceType = 'image';
+    if (file.mimetype === 'application/pdf') {
+      resourceType = 'raw';
+    }
+    return {
+      folder: 'events',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+      resource_type: resourceType
+    };
   }
 });
 
