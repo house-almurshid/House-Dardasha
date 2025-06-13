@@ -83,10 +83,11 @@
   border-radius: 6px;
   box-shadow: 0 1px 4px rgba(37,99,235,0.06);
   margin-bottom: 14px;
-  padding: 16px 18px 36px 18px; /* extra bottom padding for delete button */
+  padding: 36px 90px 56px 18px; /* top, right, bottom, left */
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-height: 120px; /* ensures enough height for buttons */
 }
     .event-list li strong { color: #2563eb; font-size: 1.1rem; }
     .event-list li .event-date { color: #029b0a; font-size: 0.98rem; font-weight: 500; }
@@ -352,9 +353,10 @@
       if (Array.isArray(data)) {
         data.forEach(ev => {
           const li = document.createElement('li');
+          const formattedDate = formatDate(ev.date);
           li.innerHTML = `
             <strong>${ev.title}</strong>
-            <span class="event-date">${formatDate(ev.date)}</span>
+            <span class="event-date">${formattedDate}</span>
             <div class="event-details">${ev.details || ''}</div>
           `;
           if (ev.fileUrl) {
@@ -499,9 +501,12 @@
     function formatDate(dateStr) {
       const date = new Date(dateStr);
       if (isNaN(date)) return dateStr;
-      const options = { year: 'numeric', month: 'long', day: '2-digit' };
-      const dayName = date.toLocaleDateString(undefined, { weekday: 'long' });
-      return `${date.toLocaleDateString(undefined, options)} (${dayName})`;
+      const options = { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' };
+      // "01 January, 2025 (Wednesday)"
+      const formatted = date.toLocaleDateString('en-US', options);
+      // Move weekday to parentheses at the end
+      const [weekday, ...rest] = formatted.split(', ');
+      return `${rest.join(', ')} (${weekday})`;
     }
 
     fetchEvents();
