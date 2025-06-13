@@ -18,16 +18,19 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     let resourceType = 'image';
+    let format = undefined;
     let public_id = Date.now() + '-' + file.originalname.replace(/\.[^/.]+$/, "");
     if (file.mimetype === 'application/pdf') {
       resourceType = 'raw';
+      format = 'pdf'; // Explicitly set format
       public_id += '.pdf'; // Ensure .pdf extension
     }
     return {
       folder: 'events',
       allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
       resource_type: resourceType,
-      public_id: public_id
+      public_id,
+      format
     };
   }
 });
@@ -60,8 +63,7 @@ router.delete('/:id', adminAuth, async (req, res) => {
 // Upload file
 router.post('/upload', adminAuth, upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded.' });
-  const fileUrl = req.file.path; // This is the Cloudinary URL
-  res.json({ fileUrl });
+  res.json({ fileUrl: req.file.path }); // This is the direct Cloudinary URL
 });
 
 module.exports = router;
