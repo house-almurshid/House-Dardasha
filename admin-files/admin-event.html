@@ -332,8 +332,14 @@
             <strong>${ev.title}</strong>
             <span class="event-date">${formatDate(ev.date)}</span>
             <div class="event-details">${ev.details || ''}</div>
-            ${ev.fileUrl ? `<button class="read-more-btn" onclick="window.open('${ev.fileUrl}', '_blank')">Read More</button>` : ''}
           `;
+          if (ev.fileUrl) {
+            const readMoreBtn = document.createElement('button');
+            readMoreBtn.textContent = "Read More";
+            readMoreBtn.className = "read-more-btn";
+            readMoreBtn.onclick = () => window.open(ev.fileUrl, '_blank');
+            li.appendChild(readMoreBtn);
+          }
           const delBtn = document.createElement('button');
           delBtn.textContent = "Delete";
           delBtn.className = "delete-btn";

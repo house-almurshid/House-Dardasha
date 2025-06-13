@@ -32,16 +32,10 @@ router.get('/', adminAuth, async (req, res) => {
 });
 
 // Add new event
-router.post('/', adminAuth, upload.single('file'), async (req, res) => {
-  console.log('BODY:', req.body);
-  console.log('FILE:', req.file);
-  const { title, date, details } = req.body;
+router.post('/', adminAuth, async (req, res) => {
+  const { title, date, details, fileUrl } = req.body;
   if (!title || !date || !details) {
     return res.status(400).json({ message: 'All fields are required.' });
-  }
-  let fileUrl = '';
-  if (req.file) {
-    fileUrl = req.file.path; // Cloudinary URL
   }
   const event = new Event({ title, date, details, fileUrl });
   await event.save();
