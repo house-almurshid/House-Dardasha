@@ -93,7 +93,7 @@
 .event-actions {
   position: absolute;
   left: 8px;
-  right: 0;
+  right: 8px;
   bottom: 8px;
   display: flex;
   justify-content: space-between;
@@ -532,15 +532,23 @@ eventsList.appendChild(li);
     };
 
     function formatDate(dateStr) {
-      const date = new Date(dateStr);
-      if (isNaN(date)) return dateStr;
-      const options = { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' };
-      // "01 January, 2025 (Wednesday)"
-      const formatted = date.toLocaleDateString('en-US', options);
-      // Move weekday to parentheses at the end
-      const [weekday, ...rest] = formatted.split(', ');
-      return `${rest.join(', ')} (${weekday})`;
-    }
+      // Expected input: '14-08-2025'
+        const parts = dateStr.split('-'); // ['14', '08', '2025']
+        if (parts.length !== 3) return dateStr;
+
+        const [day, month, year] = parts;
+        const date = new Date(`${year}-${month}-${day}`); // '2025-08-14'
+
+        if (isNaN(date)) return dateStr;
+
+        const options = { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' };
+        const formatted = date.toLocaleDateString('en-US', options);
+
+        // Move weekday to parentheses at the end
+        const [weekday, ...rest] = formatted.split(', ');
+        return `${rest.join(', ')} (${weekday})`;
+      }
+
 
     fetchEvents();
   </script>
