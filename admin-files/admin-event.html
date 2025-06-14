@@ -83,30 +83,59 @@
   border-radius: 6px;
   box-shadow: 0 1px 4px rgba(37,99,235,0.06);
   margin-bottom: 14px;
-  padding: 36px 90px 56px 18px; /* top, right, bottom, left */
+  padding: 24px 18px 56px 18px; /* extra bottom padding for buttons */
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-height: 120px; /* ensures enough height for buttons */
+  min-height: 120px;
 }
+
+.event-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 18px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.event-actions button {
+  pointer-events: auto;
+  min-width: 100px;
+}
+
+.delete-btn {
+  background: #fc0303;
+  color: #fff;
+}
+
+.read-more-btn {
+  background: #2563eb;
+  color: #fff;
+}
+
     .event-list li strong { color: #2563eb; font-size: 1.1rem; }
     .event-list li .event-date { color: #029b0a; font-size: 0.98rem; font-weight: 500; }
-    .event-list li .event-details { color: #333; font-size: 0.97rem; margin-bottom: 4px; }
+    .event-list li .event-details { color: #333; font-size: 0.97rem; margin-bottom: 50px; }
     .event-list li button { align-self: flex-end; color: #fff; border: none; border-radius: 4px; padding: 6px 12px; font-family: Arial, Helvetica, sans-serif; font-size: 0.97rem; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
     .event-list li button:hover { background: #a30000; }
+    
     .read-more-btn {
   position: absolute;
   background: #2563eb;
-  top: 12px;
-  right: 14px;
+  bottom: 2px;
+  right: 36px;
   margin: 0;
   z-index: 1;
 }
     .delete-btn {
   position: absolute;
   background: #fc0303;
-  bottom: 12px;
-  right: 14px;
+  bottom: 2px;
+  left: 12px;
   margin: 0;
   z-index: 1;
 }
@@ -359,25 +388,31 @@
             <span class="event-date">${formattedDate}</span>
             <div class="event-details">${ev.details || ''}</div>
           `;
-          if (ev.fileUrl) {
-            const readMoreBtn = document.createElement('button');
-            readMoreBtn.textContent = "Read More";
-            readMoreBtn.className = "read-more-btn";
-            readMoreBtn.onclick = () => window.open(ev.fileUrl, '_blank');
-            li.appendChild(readMoreBtn);
-          }
-          const delBtn = document.createElement('button');
-          delBtn.textContent = "Delete";
-          delBtn.className = "delete-btn";
-          delBtn.onclick = async () => {
-            await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
-              method: 'DELETE',
-              headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
-            });
-            fetchEvents();
-          };
-          li.appendChild(delBtn);
-          eventsList.appendChild(li);
+          const actionsDiv = document.createElement('div');
+actionsDiv.className = 'event-actions';
+
+const delBtn = document.createElement('button');
+delBtn.textContent = "Delete";
+delBtn.className = "delete-btn";
+delBtn.onclick = async () => {
+  await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
+    method: 'DELETE',
+    headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
+  });
+  fetchEvents();
+};
+actionsDiv.appendChild(delBtn);
+
+if (ev.fileUrl) {
+  const readMoreBtn = document.createElement('button');
+  readMoreBtn.textContent = "Read More";
+  readMoreBtn.className = "read-more-btn";
+  readMoreBtn.onclick = () => window.open(ev.fileUrl, '_blank');
+  actionsDiv.appendChild(readMoreBtn);
+}
+
+li.appendChild(actionsDiv);
+eventsList.appendChild(li);
         });
       } else {
         eventsList.innerHTML = "<li>No events found.</li>";
