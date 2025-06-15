@@ -8,57 +8,92 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
-    body { background: #f4f6fa; font-family: Arial, sans-serif; }
-    .dashboard-container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      padding: 32px 24px;
-      position: relative;
-      padding-top: 70px;
+    html, body {
+      overflow-x: hidden;
     }
-    h1 { 
-      color: #029b0a; 
-      text-align: center; 
-      margin: 0 0 24px 0; 
-      font-size: 2rem; 
-      word-break: break-word;
+
+    body { 
+      background: #f4f6fa; 
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
     }
-    .logout-btn {
-      position: absolute; 
-      top: 24px; 
-      right: 24px;
-      background: #fc0303; 
-      color: #fff; 
-      border: none; 
-      border-radius: 4px;
-      padding: 6px 16px; 
-      font-weight: bold; 
-      cursor: pointer; 
-      z-index: 10;
-    }
-    .return-btn {
-      position: absolute;
-      top: 24px;
-      left: 24px;
-      background: #2563eb;
+    .header {
+      background: #1e293b;
       color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 18px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 6px rgba(37,99,235,0.08);
-      z-index: 10;
-      text-decoration: none;
-      display: inline-block;
+      padding: 2px 0;
       text-align: center;
+      font-size: 1rem;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      box-sizing: border-box;
     }
-    .return-btn:hover { background: #1746a0; }
+    .top-buttons {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0;
+      margin: 20px 0 0 0; /* 20px above, -20px to cancel extra space */
+    }
+
+    .top-buttons .container-aligned {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+
+      .logout-btn,
+      .return-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        transition: background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+      }
+
+      .logout-btn {
+        background-color: #dc2626; /* Red */  
+      }
+      .logout-btn:hover {
+        background-color: #b91c1c;
+      }
+
+      .return-btn {
+        background-color: #2563eb; /* Blue */
+      }
+      .return-btn:hover {
+        background-color: #1746a0;
+      }
+
+    .add-event-form {
+  max-width: 800px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 32px 24px;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  }
+    @media (max-width: 600px) {
+      .add-event-form {
+        width: 460px;
+      }
+      .header {
+        font-size: 0.7rem;
+      }
+    }
     .add-event-btn { 
       background: #2563eb; 
       color: #fff; 
@@ -76,6 +111,22 @@
       margin-right: auto;
     }
     .add-event-btn:hover { background: #1746a0; }
+
+    .ongoing-event {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 32px 24px;
+      position: relative;
+      box-sizing: border-box;
+    }
+    @media (max-width: 600px) {
+      .ongoing-event {
+        width: 460px;
+      }
+    }
     .event-list { list-style: none; padding: 0; margin: 0; }
     .event-list li {
   position: relative;
@@ -246,43 +297,8 @@
     text-align: center;
   }
 }
+    
     @media (max-width: 600px) {
-      .dashboard-container {
-        padding: 16px 4vw 24px 4vw;
-        padding-top: 100px;
-      }
-      .logout-btn, .return-btn {
-        padding: 8px 10px;
-        font-size: 1rem;
-      }
-      h1 {
-        font-size: 1.3rem;
-        margin-top: 12px;
-      }
-    }
-    @media (max-width: 600px) {
-      .dashboard-container {
-        padding: 8px 2vw 16px 2vw;
-        padding-top: 120px;
-      }
-      .logout-btn, .return-btn {
-        padding: 8px 8px;
-        font-size: 0.97rem;
-        /* Keep them in corners, but smaller */
-      }
-      .logout-btn {
-        top: 12px;
-        right: 8px;
-      }
-      .return-btn {
-        top: 12px;
-        left: 8px;
-      }
-      h1 {
-        font-size: 1.1rem;
-        padding: 0 4px;
-        margin-top: 36px;
-      }
       #add-event-form {
         flex-direction: column;
         gap: 10px;
@@ -314,15 +330,35 @@
   color: #388e3c; /* Green for success/info */
 }
 
+    footer {
+      background: #1e293b;
+      color: #fff;
+      padding: 16px 0;
+      text-align: center;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    footer p {
+      margin: 0;
+    }
+
   </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <button class="logout-btn" id="logout-btn">Logout</button>
+  <header class="header">
+    <h1>Aldardasha House - Event Management</h1>
+  </header>
+  <div class="top-buttons">
+  <div class="container-aligned">
     <a href="admin-dashboard.html" class="return-btn">Dashboard</a>
-    <h1>Event Management</h1>
-    <div class="section" id="events-section">
-      <h3 style="font-size:1.3rem;color:#2563eb;margin-bottom:18px;">Add Event</h3>
+    <button id="logout-btn" class="logout-btn">Logout</button>
+  </div>
+</div>
+
+<div class="add-event-form">
+  <div class="section" id="add-event-section">
+    <h2 style="font-size:1.3rem;color:#02a086; text-align: center; margin-top: 0; margin-bottom:18px;">Add a New Event</h2>
       <form id="add-event-form" style="margin-bottom:24px;">
         <label for="event-title">Event Title</label>
         <input type="text" id="event-title" required placeholder="Event Title">
@@ -341,10 +377,21 @@
         <div id="file-preview" style="margin-bottom:16px;"></div>
         <button type="submit" class="add-event-btn" disabled id="add-event-btn" style="margin-top:10px;">Add Event</button>
       </form>
+  </div>
+</div>
+  <div class="ongoing-event" id="ongoing-event-section">
+    <h2 style="font-size:1.3rem;color:#02a086; text-align: center; margin-top: 0; margin-bottom:18px;">Ongoing Events</h2>
+    <div class="ongoing-event-list-container">
       <ul id="events-list" class="event-list"></ul>
       <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
     </div>
   </div>
+
+
+  <footer>
+    <p>&copy; 2025 Aldardasha House - All rights reserved.</p>
+  </footer>
+
   <script>
     // --- Copy all event management JS here (authentication, fetchEvents, upload, add, delete, preview, etc.) ---
     // Redirect to login if not authenticated
