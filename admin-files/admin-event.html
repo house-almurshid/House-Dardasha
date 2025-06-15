@@ -84,11 +84,13 @@
   }
     @media (max-width: 600px) {
       .add-event-form,
-  .ongoing-event,
-  .container-aligned {
-    width: 90vw;
-    padding: 0 4vw;
-    }
+      .ongoing-event,
+      .container-aligned {
+        width: 90vw;
+      }
+      .header {
+        font-size: 0.7rem;
+      }
   }
     .add-event-btn { 
       background: #2563eb; 
@@ -119,10 +121,20 @@
       position: relative;
       box-sizing: border-box;
     }
+    .archived-event {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 32px 24px;
+      position: relative;
+      box-sizing: border-box;
+    }
     @media (max-width: 600px) {
-      .ongoing-event {
+      .ongoing-event,
+      .archived-event {
         width: 90vw;
-    padding: 0 4vw;
       }
     }
     
@@ -380,13 +392,15 @@
   <div class="ongoing-event" id="ongoing-event-section">
     <h2 style="font-size:1.3rem;color:#02a086; text-align: center; margin-top: 0; margin-bottom:18px;">Ongoing Events</h2>
     <div class="ongoing-event-list-container">
-      <ul id="events-list" class="event-list"></ul>
+      <ul id="ongoing-events-list" class="event-list"></ul>
       <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
     </div>
   </div>
   <div class="archived-event"style="display:none;">
     <div class="archived-event-list-container">
       <h2 style="font-size:1.3rem;color:#02a086; text-align: center; margin-top: 0; margin-bottom:18px;">Archived Events</h2>
+      <ul id="archived-events-list" class="event-list"></ul>
+      <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
     </div>
   </div>
 
@@ -430,51 +444,92 @@
     const addEventForm = document.getElementById('add-event-form');
 
     async function fetchEvents() {
-      eventsList.innerHTML = "<li>Loading...</li>";
-      const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
-      });
-      const data = await res.json();
-      eventsList.innerHTML = '';
-      if (Array.isArray(data)) {
-        data.forEach(ev => {
-          const li = document.createElement('li');
-          const formattedDate = formatDate(ev.date);
-          li.innerHTML = `
-            <strong>${ev.title}</strong>
-            <span class="event-date">${formattedDate}</span>
-            <div class="event-details">${ev.details || ''}</div>
-          `;
-          const actionsDiv = document.createElement('div');
-actionsDiv.className = 'event-actions';
+  const ongoingList = document.getElementById("ongoing-events-list");
+  const archivedList = document.getElementById("archived-events-list");
 
-const delBtn = document.createElement('button');
-delBtn.textContent = "Delete";
-delBtn.className = "delete-btn";
-delBtn.onclick = async () => {
-  await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
-    method: 'DELETE',
+  ongoingList.innerHTML = "<li>Loading...</li>";
+  archivedList.innerHTML = "";
+
+  const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
     headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
   });
-  fetchEvents();
-};
-actionsDiv.appendChild(delBtn);
+  const data = await res.json();
+  data.sort((a, b) => {
+  const [da, ma, ya] = a.date.split('-');
+  const [db, mb, yb] = b.date.split('-');
+  const dateA = new Date(`${ya}-${ma}-${da}`);
+  const dateB = new Date(`${yb}-${mb}-${db}`);
+  return dateB - dateA; // Descending
+});
+  ongoingList.innerHTML = '';
 
-if (ev.fileUrl) {
-  const readMoreBtn = document.createElement('button');
-  readMoreBtn.textContent = "Read More";
-  readMoreBtn.className = "read-more-btn";
-  readMoreBtn.onclick = () => window.open(ev.fileUrl, '_blank');
-  actionsDiv.appendChild(readMoreBtn);
+  if (!Array.isArray(data)) {
+    ongoingList.innerHTML = "<li>No events found.</li>";
+    return;
+  }
+
+  const now = new Date();
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(now.getDate() - 7);
+  const twoWeeksAhead = new Date();
+  twoWeeksAhead.setDate(now.getDate() + 14);
+
+  data.forEach(ev => {
+    const parts = ev.date.split('-'); // expected format: dd-mm-yyyy
+    if (parts.length !== 3) return;
+
+    const [dd, mm, yyyy] = parts;
+    const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
+
+    const li = document.createElement("li");
+    const formattedDate = formatDate(ev.date);
+    li.innerHTML = `
+      <strong>${ev.title}</strong>
+      <span class="event-date">${formattedDate}</span>
+      <div class="event-details">${ev.details || ''}</div>
+    `;
+
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "event-actions";
+
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Delete";
+    delBtn.className = "delete-btn";
+    delBtn.onclick = async () => {
+      await fetch(`https://house-dardasha-admin.onrender.com/api/events/${ev._id}`, {
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
+      });
+      fetchEvents();
+    };
+    actionsDiv.appendChild(delBtn);
+
+    if (ev.fileUrl) {
+      const readMoreBtn = document.createElement("button");
+      readMoreBtn.textContent = "Read More";
+      readMoreBtn.className = "read-more-btn";
+      readMoreBtn.onclick = () => window.open(ev.fileUrl, '_blank');
+      actionsDiv.appendChild(readMoreBtn);
+    }
+
+    li.appendChild(actionsDiv);
+
+    if (eventDate >= oneWeekAgo) {
+      ongoingList.appendChild(li);
+    } else if (eventDate < oneWeekAgo) {
+      document.querySelector(".archived-event").style.display = "block";
+      archivedList.appendChild(li);
+    }
+  });
+
+  if (!ongoingList.children.length) {
+    ongoingList.innerHTML = "<li>No ongoing events.</li>";
+  }
+  if (!archivedList.children.length) {
+    archivedList.innerHTML = "<li>No archived events yet.</li>";
+  }
 }
 
-li.appendChild(actionsDiv);
-eventsList.appendChild(li);
-        });
-      } else {
-        eventsList.innerHTML = "<li>No events found.</li>";
-      }
-    }
 
     let uploadedFileUrl = "";
 
