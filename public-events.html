@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aldardasha House - Public Events</title>
+  <style>
+    body {
+      background: #f4f6fa;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background: #1e293b;
+      color: #fff;
+      text-align: center;
+      padding: 16px 0;
+    }
+    h1, h2 {
+      margin: 0 0 12px;
+    }
+    .section {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    ul.event-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li.event {
+      background: #e7f6d5;
+      margin-bottom: 12px;
+      padding: 16px;
+      border-radius: 6px;
+    }
+    .archived-event li {
+      background: #fbd5d5;
+    }
+    .event strong {
+      font-size: 1.2rem;
+      color: #2563eb;
+    }
+    .event .event-date {
+      color: #8802b1;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .event .event-details {
+      color: #333;
+      font-size: 1rem;
+    }
+    .event .read-more-btn {
+      margin-top: 10px;
+      display: inline-block;
+      background: #2563eb;
+      color: #fff;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .event .read-more-btn:hover {
+      background: #1746a0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Aldardasha House Events</h1>
+</header>
+
+<div class="section ongoing-events">
+  <h2>Ongoing Events</h2>
+  <ul id="ongoing-events" class="event-list"></ul>
+</div>
+
+<div class="section archived-event">
+  <h2>Archived Events</h2>
+  <ul id="archived-events" class="event-list"></ul>
+</div>
+
+<footer>
+  <p>&copy; 2025 Aldardasha House - All rights reserved.</p>
+</footer>
+
+<script>
+function formatDate(dateStr) {
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const [dd, mm, yyyy] = parts;
+  const date = new Date(`${yyyy}-${mm}-${dd}`);
+  const options = { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' };
+  const formatted = date.toLocaleDateString('en-US', options);
+  const [weekday, ...rest] = formatted.split(', ');
+  return `${rest.join(', ')} (${weekday})`;
+}
+
+async function fetchEvents() {
+  const ongoingEl = document.getElementById('ongoing-events');
+  const archivedEl = document.getElementById('archived-events');
+
+  ongoingEl.innerHTML = '<li>Loading...</li>';
+  archivedEl.innerHTML = '';
+
+  try {
+    const res = await fetch('https://house-dardasha-admin.onrender.com/api/events/public');
+
+    const events = await res.json();
+
+    if (!Array.isArray(events)) {
+      ongoingEl.innerHTML = '<li>No events found.</li>';
+      return;
+    }
+
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    ongoingEl.innerHTML = '';
+    archivedEl.innerHTML = '';
+
+    events.sort((a, b) => {
+      const [da, ma, ya] = a.date.split('-');
+      const [db, mb, yb] = b.date.split('-');
+      return new Date(`${yb}-${mb}-${db}`) - new Date(`${ya}-${ma}-${da}`);
+    });
+
+    events.forEach(ev => {
+      const [dd, mm, yyyy] = ev.date.split('-');
+      const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
+      const listItem = document.createElement('li');
+      listItem.className = 'event';
+      listItem.innerHTML = `
+        <strong>${ev.title}</strong>
+        <span class="event-date">${formatDate(ev.date)}</span>
+        <div class="event-details">${ev.details || ''}</div>
+        ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="read-more-btn" target="_blank">Read More</a>` : ''}
+      `;
+
+      if (eventDate >= oneWeekAgo) {
+        ongoingEl.appendChild(listItem);
+      } else {
+        archivedEl.appendChild(listItem);
+      }
+    });
+
+    if (!ongoingEl.children.length) {
+      ongoingEl.innerHTML = '<li>No ongoing events.</li>';
+    }
+    if (!archivedEl.children.length) {
+      archivedEl.innerHTML = '<li>No archived events.</li>';
+    }
+
+  } catch (err) {
+    ongoingEl.innerHTML = '<li>Failed to load events.</li>';
+    archivedEl.innerHTML = '';
+    console.error(err);
+  }
+}
+
+fetchEvents();
+</script>
+
+</body>
+</html>

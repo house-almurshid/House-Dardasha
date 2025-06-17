@@ -54,3 +54,12 @@ router.post('/upload', adminAuth, upload.single('file'), async (req, res) => {
 });
 
 module.exports = router;
+// Public route for public-events.html
+router.get('/public', async (req, res) => {
+  try {
+    const events = await Event.find().sort({ date: 1 });
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch public events.' });
+  }
+});
