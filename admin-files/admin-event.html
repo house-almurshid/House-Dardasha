@@ -449,6 +449,8 @@
     const eventsList = document.getElementById('events-list');
     const addEventForm = document.getElementById('add-event-form');
 
+let lastAddedEventId = null; // Store the ID of the last added event
+let scrollToNewEvent = false; // Flag to scroll to the new event
     async function fetchEvents() {
   const ongoingList = document.getElementById("ongoing-events-list");
   const archivedList = document.getElementById("archived-events-list");
@@ -488,6 +490,7 @@
     const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
 
     const li = document.createElement("li");
+
     const formattedDate = formatDate(ev.date);
     li.innerHTML = `
       <strong>${ev.title}</strong>
@@ -535,8 +538,7 @@
     archivedList.innerHTML = "<li>No archived events yet.</li>";
   }
 }
-
-
+    // Track uploaded file URL
     let uploadedFileUrl = "";
 
     document.getElementById('upload-file-btn').onclick = async function() {
@@ -626,31 +628,36 @@
     };
 
     addEventForm.onsubmit = async function(e) {
-      e.preventDefault();
-      const title = document.getElementById('event-title').value.trim();
-      const date = document.getElementById('event-date').value;
-      const details = document.getElementById('event-details').value.trim();
-      const addBtn = document.getElementById('add-event-btn');
+  e.preventDefault();
+  const title = document.getElementById('event-title').value.trim();
+  const date = document.getElementById('event-date').value;
+  const details = document.getElementById('event-details').value.trim();
+  const addBtn = document.getElementById('add-event-btn');
 
-      if (!title || !date || !details || !uploadedFileUrl) return;
+  if (!title || !date || !details || !uploadedFileUrl) return;
 
-      addBtn.disabled = true;
+  addBtn.disabled = true;
 
-      await fetch('https://house-dardasha-admin.onrender.com/api/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('adminToken')
-        },
-        body: JSON.stringify({ title, date, details, fileUrl: uploadedFileUrl })
-      });
-      addEventForm.reset();
-      document.getElementById('file-preview').innerHTML = "";
-      uploadedFileUrl = "";
-      addBtn.disabled = false;
-      fetchEvents();
-    };
+  const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('adminToken')
+    },
+    body: JSON.stringify({ title, date, details, fileUrl: uploadedFileUrl })
+  });
+  const result = await res.json();
 
+  addEventForm.reset();
+  document.getElementById('file-preview').innerHTML = "";
+  uploadedFileUrl = "";
+  addBtn.disabled = false;
+
+  // ✅ Wait for events to be rendered before showing modal
+  showSuccessModal();
+};
+
+    // Format date to "14 August 2025 (Thursday)"
     function formatDate(dateStr) {
       // Expected input: '14-08-2025'
         const parts = dateStr.split('-'); // ['14', '08', '2025']
@@ -678,5 +685,29 @@
       allowInput: true
     });
   </script>
+
+  <!-- Success Modal -->
+<div id="success-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+  <div style="background:white; padding:24px 32px; border-radius:12px; text-align:center; max-width:320px; box-shadow:0 6px 24px rgba(0,0,0,0.2);">
+    <h2 style="color:#10b981; margin-bottom:12px;">🎉 Added</h2>
+    <p style="font-size:1rem; color:#333;">The event has been added successfully!</p>
+    <button onclick="closeSuccessModal()" style="margin-top:20px; background:#2563eb; color:white; padding:10px 20px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">OK</button>
+  </div>
+</div>
+<script>
+  // Show success modal after adding an event
+  function showSuccessModal() {
+    document.getElementById("success-modal").style.display = "flex";
+  }
+
+  function closeSuccessModal() {
+    document.getElementById("success-modal").style.display = "none";
+  }
+
+  function closeSuccessModal() {
+  const modal = document.getElementById("success-modal");
+  modal.style.display = "none";
+}
+</script>
 </body>
 </html>
