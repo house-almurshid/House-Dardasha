@@ -5,72 +5,170 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Aldardasha House - Public Events</title>
   <style>
-    body {
-      background: #f4f6fa;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+  /* ====== Mobile-First Base Styles ====== */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #f4f6fa;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0 12px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  header, footer {
+    background: #1e293b;
+    color: #fff;
+    text-align: center;
+    padding: 16px 0;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    margin: 0 0 12px;
+    color: #1e293b;
+  }
+
+  .section {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  ul.event-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li.event {
+    background: #e7f6d5;
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease;
+  }
+
+  li.event:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  }
+
+  .archived-event li {
+    background: #fbd5d5;
+  }
+
+  .event strong {
+    font-size: 1.1rem;
+    color: #2563eb;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .event .event-date {
+    color: #8802b1;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+
+  .event .event-details {
+    color: #333;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .read-more-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: #fff;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+
+  .read-more-btn:hover {
+    background: #1746a0;
+  }
+
+  .read-more-btn:active {
+    transform: scale(0.96);
+  }
+
+  /* ====== Pagination Styling ====== */
+  #archived-pagination {
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  #archived-pagination button {
+    margin: 4px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+
+  #archived-pagination button:hover {
+    background: #1746a0;
+  }
+
+  #archived-pagination button:active {
+    transform: scale(0.95);
+  }
+
+  #archived-pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  footer p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* ====== Responsive Breakpoints ====== */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.3rem;
     }
-    header, footer {
-      background: #1e293b;
-      color: #fff;
-      text-align: center;
-      padding: 16px 0;
+
+    h2 {
+      font-size: 1.1rem;
     }
-    h1, h2 {
-      margin: 0 0 12px;
-    }
-    .section {
-      max-width: 800px;
-      margin: 20px auto;
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    ul.event-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    li.event {
-      background: #e7f6d5;
-      margin-bottom: 12px;
-      padding: 16px;
-      border-radius: 6px;
-    }
-    .archived-event li {
-      background: #fbd5d5;
-    }
+
     .event strong {
-      font-size: 1.2rem;
-      color: #2563eb;
-    }
-    .event .event-date {
-      color: #8802b1;
-      font-weight: 500;
-      display: block;
-      margin-bottom: 4px;
-    }
-    .event .event-details {
-      color: #333;
       font-size: 1rem;
     }
-    .event .read-more-btn {
-      margin-top: 10px;
-      display: inline-block;
-      background: #2563eb;
-      color: #fff;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: bold;
+
+    .read-more-btn,
+    #archived-pagination button {
+      padding: 6px 10px;
+      font-size: 0.85rem;
     }
-    .event .read-more-btn:hover {
-      background: #1746a0;
-    }
-  </style>
+  }
+</style>
+
 </head>
 <body>
 
@@ -86,6 +184,7 @@
 <div class="section archived-event">
   <h2>Archived Events</h2>
   <ul id="archived-events" class="event-list"></ul>
+  <div id="archived-pagination" style="text-align:center; margin-top:16px;"></div>
 </div>
 
 <footer>
@@ -93,6 +192,7 @@
 </footer>
 
 <script>
+// Function to format date from dd-mm-yyyy to a more readable format
 function formatDate(dateStr) {
   const parts = dateStr.split('-');
   if (parts.length !== 3) return dateStr;
@@ -104,16 +204,81 @@ function formatDate(dateStr) {
   return `${rest.join(', ')} (${weekday})`;
 }
 
+const archivedPerPage = 10;
+let archivedEvents = [];
+let currentPage = 1;
+
+function renderArchivedPagination() {
+  const paginationEl = document.getElementById("archived-pagination");
+  paginationEl.innerHTML = "";
+
+  const totalPages = Math.ceil(archivedEvents.length / archivedPerPage);
+  if (totalPages <= 1) return;
+
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "« Prev";
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.onclick = () => goToPage(currentPage - 1);
+  paginationEl.appendChild(prevBtn);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.disabled = i === currentPage;
+    btn.onclick = () => goToPage(i);
+    paginationEl.appendChild(btn);
+  }
+
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next »";
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.onclick = () => goToPage(currentPage + 1);
+  paginationEl.appendChild(nextBtn);
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderArchivedEvents();
+  renderArchivedPagination();
+}
+
+function renderArchivedEvents() {
+  const archivedEl = document.getElementById('archived-events');
+  archivedEl.innerHTML = "";
+
+  const start = (currentPage - 1) * archivedPerPage;
+  const end = start + archivedPerPage;
+  const pageEvents = archivedEvents.slice(start, end);
+
+  if (!pageEvents.length) {
+    archivedEl.innerHTML = '<li>No archived events.</li>';
+    return;
+  }
+
+  pageEvents.forEach(ev => {
+    const listItem = document.createElement('li');
+    listItem.className = 'event';
+    listItem.innerHTML = `
+      <strong>${ev.title}</strong>
+      <span class="event-date">${formatDate(ev.date)}</span>
+      <div class="event-details">${ev.details || ''}</div>
+      ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="read-more-btn" target="_blank">Read More</a>` : ''}
+    `;
+    archivedEl.appendChild(listItem);
+  });
+}
+
 async function fetchEvents() {
   const ongoingEl = document.getElementById('ongoing-events');
   const archivedEl = document.getElementById('archived-events');
+  const paginationEl = document.getElementById('archived-pagination');
 
   ongoingEl.innerHTML = '<li>Loading...</li>';
   archivedEl.innerHTML = '';
+  paginationEl.innerHTML = '';
 
   try {
     const res = await fetch('https://house-dardasha-admin.onrender.com/api/events/public');
-
     const events = await res.json();
 
     if (!Array.isArray(events)) {
@@ -126,7 +291,7 @@ async function fetchEvents() {
     oneWeekAgo.setDate(now.getDate() - 7);
 
     ongoingEl.innerHTML = '';
-    archivedEl.innerHTML = '';
+    archivedEvents = [];
 
     events.sort((a, b) => {
       const [da, ma, ya] = a.date.split('-');
@@ -137,6 +302,7 @@ async function fetchEvents() {
     events.forEach(ev => {
       const [dd, mm, yyyy] = ev.date.split('-');
       const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
+
       const listItem = document.createElement('li');
       listItem.className = 'event';
       listItem.innerHTML = `
@@ -149,14 +315,17 @@ async function fetchEvents() {
       if (eventDate >= oneWeekAgo) {
         ongoingEl.appendChild(listItem);
       } else {
-        archivedEl.appendChild(listItem);
+        archivedEvents.push(ev);
       }
     });
 
     if (!ongoingEl.children.length) {
       ongoingEl.innerHTML = '<li>No ongoing events.</li>';
     }
-    if (!archivedEl.children.length) {
+
+    if (archivedEvents.length) {
+      goToPage(1);
+    } else {
       archivedEl.innerHTML = '<li>No archived events.</li>';
     }
 
@@ -169,6 +338,5 @@ async function fetchEvents() {
 
 fetchEvents();
 </script>
-
 </body>
 </html>
