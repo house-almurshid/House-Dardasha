@@ -20,11 +20,13 @@
   }
 
   header, footer {
-    background: #1e293b;
-    color: #fff;
-    text-align: center;
-    padding: 16px 0;
-  }
+  background: #1e293b;
+  color: #fff;
+  text-align: center;
+  padding: 14px 0;
+  margin-left: -12px;
+  margin-right: -12px;
+}
 
   h1 {
     font-size: 1.6rem;
@@ -32,10 +34,41 @@
   }
 
   h2 {
-    font-size: 1.3rem;
+    font-size: 1.8rem;
     margin: 0 0 12px;
-    color: #1e293b;
+    color: #d46904;
+    text-align: center;
+    font: bold 1.2rem Arial;
+    text-wight: 600;
   }
+
+  .top-left-return {
+  max-width: 800px;
+  margin: 5px auto 0 auto;
+  padding: 0 8px;
+  text-align: left;
+}
+
+.return-home-btn {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.return-home-btn:hover {
+  background: #1746a0;
+}
+
+.return-home-btn:active {
+  transform: scale(0.96);
+}
 
   .section {
     width: 100%;
@@ -45,6 +78,7 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: justify;
   }
 
   ul.event-list {
@@ -62,7 +96,10 @@
   }
 
   li.event:hover {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 6px rgba(90, 7, 243, 0.815);
+  }
+  li.event:active {
+    box-shadow: 0 2px 8px rgb(243, 4, 16);
   }
 
   .archived-event li {
@@ -93,7 +130,7 @@
     display: inline-block;
     background: #2563eb;
     color: #fff;
-    padding: 8px 14px;
+    padding: 4px 10px;
     border: none;
     border-radius: 6px;
     text-decoration: none;
@@ -109,6 +146,10 @@
   .read-more-btn:active {
     transform: scale(0.96);
   }
+
+  .read-more-wrapper {
+  text-align: right;
+}
 
   /* ====== Pagination Styling ====== */
   #archived-pagination {
@@ -163,7 +204,7 @@
 
     .read-more-btn,
     #archived-pagination button {
-      padding: 6px 10px;
+      padding: 4px 8px;
       font-size: 0.85rem;
     }
   }
@@ -175,6 +216,10 @@
 <header>
   <h1>Aldardasha House Events</h1>
 </header>
+
+<div class="top-left-return">
+  <a href="index.html" class="return-home-btn">← Home</a>
+</div>
 
 <div class="section ongoing-events">
   <h2>Ongoing Events</h2>
@@ -262,7 +307,7 @@ function renderArchivedEvents() {
       <strong>${ev.title}</strong>
       <span class="event-date">${formatDate(ev.date)}</span>
       <div class="event-details">${ev.details || ''}</div>
-      ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="read-more-btn" target="_blank">Read More</a>` : ''}
+      ${ev.fileUrl ? `<div class="read-more-wrapper"><a href="${ev.fileUrl}" class="read-more-btn" target="_blank">View</a></div>` : ''}
     `;
     archivedEl.appendChild(listItem);
   });
@@ -309,7 +354,7 @@ async function fetchEvents() {
         <strong>${ev.title}</strong>
         <span class="event-date">${formatDate(ev.date)}</span>
         <div class="event-details">${ev.details || ''}</div>
-        ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="read-more-btn" target="_blank">Read More</a>` : ''}
+        ${ev.fileUrl ? `<div class="read-more-wrapper"><a href="${ev.fileUrl}" class="read-more-btn" target="_blank">View</a></div>` : ''}
       `;
 
       if (eventDate >= oneWeekAgo) {
