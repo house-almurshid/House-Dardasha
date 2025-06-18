@@ -73,9 +73,19 @@ footer p {
   margin-left: auto;
   margin-right: auto;
 }
+.add-event-btn:disabled,
+.file-upload-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 .add-event-btn:hover,
 .file-upload-btn:hover {
   background: #1746a0;
+}
+.add-event-btn:active,
+.file-upload-btn:active {
+  transform: scale(0.95);
 }
 
 /* ---------------------- Layout Containers ---------------------- */
@@ -92,7 +102,7 @@ footer p {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 0;
   box-sizing: border-box;
 }
 .add-event-form,
@@ -105,6 +115,9 @@ footer p {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 24px;
   box-sizing: border-box;
+}
+.add-event-form {
+  padding-bottom: 1px;
 }
 .event-section-header {
   font-size: 1.3rem;
@@ -130,6 +143,7 @@ footer p {
   border-radius: 6px;
   font-size: 1rem;
   margin-bottom: 12px;
+  box-sizing: border-box;
   background: #f9fafb;
   transition: border 0.2s;
 }
@@ -204,6 +218,9 @@ footer p {
 .event-list li:hover {
   box-shadow: 0 2px 8px rgba(90, 7, 243, 0.815);
 }
+.event-list li:active {
+  box-shadow: 0 1px 4px rgba(90, 7, 243, 0.815);
+}
 .event-list li strong {
   color: #2563eb;
   font-size: 1.1rem;
@@ -222,7 +239,7 @@ footer p {
 /* ---------------------- Event Actions ---------------------- */
 .event-actions {
   position: absolute;
-  left: 30px;
+  left: 16px;
   right: 12px;
   bottom: 8px;
   display: flex;
@@ -238,28 +255,49 @@ footer p {
 .delete-btn {
   position: absolute;
   background: #fc0303;
-  bottom: 0;
-  left: 0;
-  color: #fff;
+  bottom: 0px;
+  left: 0px;
+  margin: 0;
+  z-index: 1;
   border: none;
   border-radius: 4px;
-  padding: 6px 12px;
+  padding: 6px 16px;
+  font-size: 0.97rem;
+  font-weight: bold;
+  color: #fff;
   cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(252,3,3,0.08);
 }
 .read-more-btn {
   position: absolute;
   background: #2563eb;
-  bottom: 0;
-  right: 0;
-  color: #fff;
+  bottom: 0px;
+  right: 0px;
+  margin: 0;
+  z-index: 1;
   border: none;
   border-radius: 4px;
   padding: 6px 16px;
+  font-size: 0.97rem;
   font-weight: bold;
+  color: #fff;
   cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+
 }
 .read-more-btn:hover {
   background: #1746a0;
+}
+.read-more-btn:active {
+  transform: scale(0.95);
+}
+.delete-btn:hover {
+  background: #b91c1c;
+}
+.delete-btn:active {
+  transform: scale(0.95);
 }
 
 /* ---------------------- File Preview ---------------------- */
@@ -284,6 +322,10 @@ footer p {
   .container-aligned {
     width: 90vw;
   }
+  .ongoing-event,
+  .archived-event {
+    padding: 12px;
+  }
   .header {
     font-size: 0.6rem;
   }
@@ -291,65 +333,65 @@ footer p {
     flex-direction: row;
   }
   .file-upload-row input[type="file"] {
-    font-size: 0.97rem;
-    padding: 10px 4px;
-    height: 44px;
+    font-size: 0.95rem;
+    padding: 10px;
+    height: auto;
   }
   .file-upload-row .file-upload-btn {
     font-size: 0.97rem;
-    padding: 0 12px;
-    height: 40px;
-    justify-content: center;
+    padding: 10px 4px;
+    height: 44px;
     text-align: center;
   }
   .event-list li {
     padding: 12px 8px 10px 8px;
   }
   .event-details {
-    font-size: 0.97rem;
-    margin-bottom: 50px;
+    font-size: 1rem;
+    margin-bottom: 40px;
   }
   .event-actions {
-    left: 0;
-    right: 0;
+    left: 0px;
+    right: 0px;
+    display: flex;
+    bottom: 8px;
     justify-content: space-between;
   }
   .delete-btn {
     left: 8px;
   }
+  .read-more-btn {
+    right: 4px;
+  }
 }
 
-        /* ====== Pagination Styling ====== */
-  #archived-pagination {
-    margin-top: 16px;
-    text-align: center;
-  }
-
-  #archived-pagination button {
-    margin: 4px;
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
-  }
-
-  #archived-pagination button:hover {
-    background: #1746a0;
-  }
-
-  #archived-pagination button:active {
-    transform: scale(0.95);
-  }
-
-  #archived-pagination button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
+/* ====== Pagination Styling ====== */
+#archived-pagination {
+  margin-top: 16px;
+  text-align: center;
+}
+#archived-pagination button {
+  margin: 4px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+#archived-pagination button:hover {
+  background: #1746a0;
+}
+#archived-pagination button:active {
+  transform: scale(0.95);
+}
+#archived-pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
 
 </style>
 
@@ -384,7 +426,6 @@ footer p {
           <button type="button" id="upload-file-btn" class="add-event-btn file-upload-btn">Upload</button>
         </div>
         <div id="file-preview" style="margin-bottom:16px;"></div>
-<progress id="upload-progress" value="0" max="100" style="display:none; width:100%; height:14px; border-radius:6px; margin-top:6px;"></progress>
         <button type="submit" class="add-event-btn" disabled id="add-event-btn" style="margin-top:10px;">Add Event</button>
       </form>
   </div>
@@ -394,11 +435,13 @@ footer p {
   <div class="ongoing-event">
     <h2 class="event-section-header">🟢 Ongoing Events</h2>
     <ul id="ongoing-events-list" class="event-list"></ul>
+    <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
   </div>
 
   <div class="archived-event" id="archived-event-section">
   <h2 class="event-section-header">🔴 Archived Events</h2>
   <ul id="archived-events-list" class="event-list"></ul>
+  <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
   <div id="archived-pagination" style="text-align:center; margin-top:16px;"></div> <!-- ✅ Add this -->
 </div>
 
@@ -491,35 +534,35 @@ footer p {
         }
       };
 
-      xhr.onload = function() {
-        progressBar.style.display = "none";
-        if (xhr.status === 200) {
-          const data = JSON.parse(xhr.responseText);
-          if (data.fileUrl) {
-            uploadedFileUrl = data.fileUrl;
-            addBtn.disabled = false;
-            // Show preview
-            if (file.type === 'application/pdf') {
-              const gviewUrl = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(uploadedFileUrl)}`;
-              preview.innerHTML = `<iframe src="${gviewUrl}" style="max-width:80%;height:400px;border:1px solid #bbb;border-radius:6px;"></iframe>`;
-            } else if (file.type.startsWith('image/')) {
-              preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:30%;height:100%;border:1px solid #bbb;border-radius:6px;">`;
-            } else {
-              // For file uploaded
-              preview.textContent = "File uploaded.";
-              preview.className = "success";
-            }
-          } else {
-            // For upload failed
-            preview.textContent = "Upload failed.";
-            preview.className = "error";
-          }
+      xhr.onload = function () {
+  progressBar.style.display = "none";
+  try {
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      if (data.fileUrl) {
+        uploadedFileUrl = data.fileUrl;
+        addBtn.disabled = false;
+        preview.textContent = "Upload successful!";
+        preview.className = "success";
+        if (file.type.startsWith("image/")) {
+          preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:30%;">`;
         } else {
-          // For upload failed
-          preview.textContent = "Upload failed.";
-          preview.className = "error";
+          const gview = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(uploadedFileUrl)}`;
+          preview.innerHTML = `<iframe src="${gview}" style="width:80%; height:400px;"></iframe>`;
         }
-      };
+      } else {
+        throw new Error("No fileUrl returned");
+      }
+    } else {
+      throw new Error(`Upload failed with status ${xhr.status}`);
+    }
+  } catch (err) {
+    console.error("Upload Error:", err.message, xhr.responseText);
+    preview.textContent = "Upload failed. Check console.";
+    preview.className = "error";
+    alert("Upload failed. See console for details.");
+  }
+};
 
       xhr.onerror = function() {
         progressBar.style.display = "none";
@@ -560,6 +603,9 @@ footer p {
   // ✅ Wait for events to be rendered before showing modal
   showSuccessModal();
 };
+// Fetch and render events on page load 
+fetchEvents();
+</script>
 
  <!-- Success Modal -->
 <div id="success-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
@@ -569,7 +615,7 @@ footer p {
     <button onclick="closeSuccessModal()" style="margin-top:20px; background:#2563eb; color:white; padding:10px 20px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">OK</button>
   </div>
 </div>
-
+<script>
   // Show success modal after adding an event
   function showSuccessModal() {
     document.getElementById("success-modal").style.display = "flex";
@@ -583,9 +629,6 @@ footer p {
   const modal = document.getElementById("success-modal");
   modal.style.display = "none";
 }
-
-  // Fetch and render events on page load 
-fetchEvents();
 </script>
 
 <script>
