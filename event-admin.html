@@ -653,17 +653,15 @@ fetchEvents();
     }
     function formatDate(dateStr) {
   if (!dateStr || typeof dateStr !== "string") return "Invalid Date";
-  const parts = dateStr.split('-');
-  if (parts.length !== 3) return "Invalid Date";
-  const [dd, mm, yyyy] = parts;
+  const [dd, mm, yyyy] = dateStr.split('-');
   const d = new Date(`${yyyy}-${mm}-${dd}`);
   if (isNaN(d)) return "Invalid Date";
-  return d.toLocaleDateString('en-US', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    weekday: 'long'
-  });
+
+  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  const datePart = d.toLocaleDateString('en-US', options); // "August 14, 2025"
+  const weekday = d.toLocaleDateString('en-US', { weekday: 'long' }); // "Thursday"
+
+  return `${datePart} (${weekday})`; // "August 14, 2025 (Thursday)" "If want to 14 August 2025 (Thursday) then change un-US to en-GB"
 }
 
     // ---------------------- Event Rendering ----------------------

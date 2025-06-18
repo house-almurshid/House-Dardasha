@@ -215,7 +215,19 @@
     left: 8px;
   }
 }
-    .read-more-btn { background: #2563eb; color: #fff; border: none; border-radius: 4px; padding: 6px 16px; font-size: 0.97rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 4px; margin-right: 8px; }
+    .read-more-btn { 
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 16px;
+      font-size: 0.97rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+      margin-right: 8px;
+    }
     .read-more-btn:hover { background: #1746a0; }
     #add-event-form label {
       display: block;
@@ -418,7 +430,7 @@
     // --- Copy all event management JS here (authentication, fetchEvents, upload, add, delete, preview, etc.) ---
     // Redirect to login if not authenticated
     if (!localStorage.getItem('adminToken')) {
-      window.location.href = 'admin-files/admin-login.html';
+      window.location.href = 'admin-login.html';
     }
 
     function parseJwt(token) {
@@ -433,16 +445,16 @@
       const payload = parseJwt(token);
       if (!payload || (payload.exp * 1000 < Date.now())) {
         localStorage.removeItem('adminToken');
-        window.location.href = 'admin-files/admin-login.html';
+        window.location.href = 'admin-login.html';
       }
     } else {
-      window.location.href = 'admin-files/admin-login.html';
+      window.location.href = 'admin-login.html';
     }
 
     // Logout functionality
     document.getElementById('logout-btn').onclick = function() {
       localStorage.removeItem('adminToken');
-      window.location.href = 'admin-files/admin-login.html';
+      window.location.href = 'admin-login.html';
     };
 
     // --- Events Management ---

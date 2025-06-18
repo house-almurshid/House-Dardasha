@@ -1,149 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Events - Aldardasha House</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aldardasha House - Public Events</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
+  /* ====== Mobile-First Base Styles ====== */
+  * {
+    box-sizing: border-box;
+  }
 
-    header {
-      background-color: #1e293b; /* Same as index.html */
-      color: white; /* White text color */
-      text-align: center;
-      padding: 5px 0;
-    }
+  body {
+    background: #f4f6fa;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0 12px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
 
-    main {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 0 20px;
-    }
+  header, footer {
+  background: #1e293b;
+  color: #fff;
+  text-align: center;
+  padding: 14px 0;
+  margin-left: -12px;
+  margin-right: -12px;
+}
 
+.top-left-return {
+  max-width: 800px;
+  margin: 5px auto 0 auto;
+  padding: 0 8px;
+  text-align: left;
+  }
+
+.return-home-btn {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.return-home-btn:hover {
+  background: #1746a0;
+}
+
+.return-home-btn:active {
+  transform: scale(0.96);
+}
+
+  h1 {
+    font-size: 1.6rem;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin: 0 0 12px;
+    color: #d46904;
+    text-align: center;
+    font: bold 1.2rem Arial;
+  }
+
+  .section {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: justify;
+  }
+
+  ul.event-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li.event {
+    background: #e7f6d5;
+    margin-bottom: 16px;
+    padding: 16px 12px 8px 16px;
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease;
+  }
+
+  li.event:hover {
+    box-shadow: 0 2px 6px rgba(90, 7, 243, 0.815);
+  }
+  li.event:active {
+    box-shadow: 0 2px 8px rgb(243, 4, 16);
+  }
+
+  .archived-event li {
+    background: #fbd5d5;
+  }
+
+  .event strong {
+    font-size: 1.1rem;
+    color: #2563eb;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .event .event-date {
+    color: #8802b1;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+
+  .event .event-details {
+    color: #333;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .read-more-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: #fff;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+
+  .read-more-btn:hover {
+    background: #1746a0;
+  }
+
+  .read-more-btn:active {
+    transform: scale(0.96);
+  }
+
+  .read-more-wrapper {
+  text-align: right;
+}
+
+  /* ====== Pagination Styling ====== */
+  #archived-pagination {
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  #archived-pagination button {
+    margin: 4px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+
+  #archived-pagination button:hover {
+    background: #1746a0;
+  }
+
+  #archived-pagination button:active {
+    transform: scale(0.95);
+  }
+
+  #archived-pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  footer p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* ====== Responsive Breakpoints ====== */
+  @media (max-width: 600px) {
     h1 {
-      font-size: 2.5rem;
-      color: #f9f9fa;
-      text-align: center;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
     }
 
-    .event {
-      margin-bottom: 20px;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background-color: white;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    h2 {
+      font-size: 1.1rem;
     }
 
-    .event h2 {
-      font-size: 1.5rem;
-      color: #1e40af;
-      margin-bottom: 10px;
+    .event strong {
+      font-size: 1rem;
     }
 
-    .event p {
-      color: #555;
-      line-height: 1.6;
+    .read-more-btn,
+    #archived-pagination button {
+      padding: 4px 8px;
+      font-size: 0.85rem;
     }
+  }
+</style>
 
-    .event a {
-      display: inline-block;
-      margin-top: 10px;
-      color: #007bff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .event a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      background-color: #1e293b; /* Same as index.html */
-      color: white;
-      text-align: center;
-      padding: 10px 0;
-      margin-top: 20px;
-    }
-
-    .back-to-house {
-      display: inline-block;
-      background-color: #1e40af; /* Blue background */
-      color: white; /* White text */
-      padding: 5px 5px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-      margin-top: 5px;
-      margin-left: 10px;
-    }
-
-    .back-to-house:hover {
-      background-color: #2563eb; /* Lighter blue on hover */
-    }
-  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>EVENTS - ALDARDASHA HOUSE</h1>
-  </header>
 
-  <!-- Back to House Button -->
-  <div class="text-center">
-    <a href="index.html" class="back-to-house">← Back to House</a>
-  </div>
+<header>
+  <h1>Aldardasha House Events</h1>
+</header>
 
-  <!-- Main Content -->
-  <main>
-    <div class="event">
-      <h2>Leadership Workshop</h2>
-      <p>Date: January 15, 2025</p>
-      <p>Details: A workshop to develop leadership skills among youth. Join us for an engaging session with industry experts.</p>
-      <a href="eventsattach/Abdullah.pdf" target="_blank">Read More</a>
-    </div>
+<div class="top-left-return">
+  <a href="index.html" class="return-home-btn">← Home</a>
+</div>
 
-    <div class="event">
-      <h2>Sports Tournament</h2>
-      <p>Date: February 10, 2025</p>
-      <p>Details: A regional sports event for all age groups. Participate and showcase your talent in various sports activities.</p>
-      <a href="attachments/sports-tournament.pdf" target="_blank">Read More</a>
-    </div>
+<div class="section ongoing-events">
+  <h2>Ongoing Events</h2>
+  <ul id="ongoing-events" class="event-list"></ul>
+</div>
 
-    <div class="event">
-      <h2>Community Service Day</h2>
-      <p>Date: March 5, 2025</p>
-      <p>Details: A day dedicated to giving back to the community. Join us in various service activities to make a difference.</p>
-      <a href="attachments/community-service-day.pdf" target="_blank">Read More</a>
-    </div>
+<div class="section archived-event">
+  <h2>Archived Events</h2>
+  <ul id="archived-events" class="event-list"></ul>
+  <div id="archived-pagination" style="text-align:center; margin-top:16px;"></div>
+</div>
 
-    <div class="event">
-      <h2>Art Exhibition</h2>
-      <p>Date: April 20, 2025</p>
-      <p>Details: Showcasing creative works by local artists. Explore the beauty of art and support local talent.</p>
-      <a href="attachments/art-exhibition.pdf" target="_blank">Read More</a>
-    </div>
+<footer>
+  <p>&copy; 2025 Aldardasha House - All rights reserved.</p>
+</footer>
 
-    <div class="event">
-        <h2>Community Service Day</h2>
-        <p>Date: March 5, 2025</p>
-        <p>Details: A day dedicated to giving back to the community. Join us in various service activities to make a difference.</p>
-        <a href="attachments/community-service-day.pdf" target="_blank">Read More</a>
-      </div>
+<script>
+// Function to format date from dd-mm-yyyy to a more readable format
+function formatDate(dateStr) {
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const [dd, mm, yyyy] = parts;
+  const date = new Date(`${yyyy}-${mm}-${dd}`);
+  const options = { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' };
+  const formatted = date.toLocaleDateString('en-US', options);
+  const [weekday, ...rest] = formatted.split(', ');
+  return `${rest.join(', ')} (${weekday})`;
+}
 
-  </main>
+const archivedPerPage = 10;
+let archivedEvents = [];
+let currentPage = 1;
 
-  <!-- Footer -->
-  <footer>
-    Copyright 2025 © Aldardasha House<br>
-    All Rights Reserved.
-  </footer>
+function renderArchivedPagination() {
+  const paginationEl = document.getElementById("archived-pagination");
+  paginationEl.innerHTML = "";
+
+  const totalPages = Math.ceil(archivedEvents.length / archivedPerPage);
+  if (totalPages <= 1) return;
+
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "« Prev";
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.onclick = () => goToPage(currentPage - 1);
+  paginationEl.appendChild(prevBtn);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.disabled = i === currentPage;
+    btn.onclick = () => goToPage(i);
+    paginationEl.appendChild(btn);
+  }
+
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next »";
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.onclick = () => goToPage(currentPage + 1);
+  paginationEl.appendChild(nextBtn);
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderArchivedEvents();
+  renderArchivedPagination();
+}
+
+function renderArchivedEvents() {
+  const archivedEl = document.getElementById('archived-events');
+  archivedEl.innerHTML = "";
+
+  const start = (currentPage - 1) * archivedPerPage;
+  const end = start + archivedPerPage;
+  const pageEvents = archivedEvents.slice(start, end);
+
+  if (!pageEvents.length) {
+    archivedEl.innerHTML = '<li>No archived events.</li>';
+    return;
+  }
+
+  pageEvents.forEach(ev => {
+    const listItem = document.createElement('li');
+    listItem.className = 'event';
+    listItem.innerHTML = `
+      <strong>${ev.title}</strong>
+      <span class="event-date">${formatDate(ev.date)}</span>
+      <div class="event-details">${ev.details || ''}</div>
+      ${ev.fileUrl ? `<div class="read-more-wrapper"><a href="${ev.fileUrl}" class="read-more-btn" target="_blank">View</a></div>` : ''}
+    `;
+    archivedEl.appendChild(listItem);
+  });
+}
+
+async function fetchEvents() {
+  const ongoingEl = document.getElementById('ongoing-events');
+  const archivedEl = document.getElementById('archived-events');
+  const paginationEl = document.getElementById('archived-pagination');
+
+  ongoingEl.innerHTML = '<li>Loading...</li>';
+  archivedEl.innerHTML = '';
+  paginationEl.innerHTML = '';
+
+  try {
+    const res = await fetch('https://house-dardasha-admin.onrender.com/api/events/public');
+    const events = await res.json();
+
+    if (!Array.isArray(events)) {
+      ongoingEl.innerHTML = '<li>No events found.</li>';
+      return;
+    }
+
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    ongoingEl.innerHTML = '';
+    archivedEvents = [];
+
+    events.sort((a, b) => {
+      const [da, ma, ya] = a.date.split('-');
+      const [db, mb, yb] = b.date.split('-');
+      return new Date(`${yb}-${mb}-${db}`) - new Date(`${ya}-${ma}-${da}`);
+    });
+
+    events.forEach(ev => {
+      const [dd, mm, yyyy] = ev.date.split('-');
+      const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
+
+      const listItem = document.createElement('li');
+      listItem.className = 'event';
+      listItem.innerHTML = `
+        <strong>${ev.title}</strong>
+        <span class="event-date">${formatDate(ev.date)}</span>
+        <div class="event-details">${ev.details || ''}</div>
+        ${ev.fileUrl ? `<div class="read-more-wrapper"><a href="${ev.fileUrl}" class="read-more-btn" target="_blank">View</a></div>` : ''}
+      `;
+
+      if (eventDate >= oneWeekAgo) {
+        ongoingEl.appendChild(listItem);
+      } else {
+        archivedEvents.push(ev);
+      }
+    });
+
+    if (!ongoingEl.children.length) {
+      ongoingEl.innerHTML = '<li>No ongoing events.</li>';
+    }
+
+    if (archivedEvents.length) {
+      goToPage(1);
+    } else {
+      archivedEl.innerHTML = '<li>No archived events.</li>';
+    }
+
+  } catch (err) {
+    ongoingEl.innerHTML = '<li>Failed to load events.</li>';
+    archivedEl.innerHTML = '';
+    console.error(err);
+  }
+}
+
+fetchEvents();
+</script>
 </body>
 </html>

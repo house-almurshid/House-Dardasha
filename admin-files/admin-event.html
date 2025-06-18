@@ -8,273 +8,172 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
-    body { 
-      background: #f4f6fa; 
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .header {
-      background: #1e293b;
-      color: #fff;
-      padding: 2px 0;
-      text-align: center;
-      font-size: 1rem;
-      width: 100%;
-      margin-left: calc(50% - 50vw);
-      box-sizing: border-box;
-    }
-    .top-buttons {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      padding: 0;
-      margin: 20px 0 0 0; /* 20px above, -20px to cancel extra space */
-    }
+/* ---------------------- Base Styles ---------------------- */
+body {
+  background: #f4f6fa;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.header {
+  background: #1e293b;
+  color: #fff;
+  padding: 2px 0;
+  text-align: center;
+  font-size: 1rem;
+  width: 100%;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
+}
+footer {
+  background: #1e293b;
+  color: #fff;
+  padding: 16px 0;
+  text-align: center;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+footer p {
+  margin: 0;
+}
 
-    .top-buttons .container-aligned {
-      max-width: 800px;
-      width: 100%;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 24px;
-      box-sizing: border-box;
-    }
+/* ---------------------- Buttons ---------------------- */
+.logout-btn,
+.return-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+}
+.logout-btn { background-color: #dc2626; }
+.logout-btn:hover { background-color: #b91c1c; }
+.return-btn { background-color: #2563eb; }
+.return-btn:hover { background-color: #1746a0; }
 
+.add-event-btn,
+.file-upload-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.add-event-btn:disabled,
+.file-upload-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.add-event-btn:hover,
+.file-upload-btn:hover {
+  background: #1746a0;
+}
+.add-event-btn:active,
+.file-upload-btn:active {
+  transform: scale(0.95);
+}
 
-      .logout-btn,
-      .return-btn {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        color: white;
-        transition: background 0.2s, box-shadow 0.2s;
-        box-shadow: 0 2px 6px rgba(37,99,235,0.08);
-      }
-
-      .logout-btn {
-        background-color: #dc2626; /* Red */  
-      }
-      .logout-btn:hover {
-        background-color: #b91c1c;
-      }
-
-      .return-btn {
-        background-color: #2563eb; /* Blue */
-      }
-      .return-btn:hover {
-        background-color: #1746a0;
-      }
-
-    .add-event-form {
+/* ---------------------- Layout Containers ---------------------- */
+.top-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin-top: 20px;
+}
+.container-aligned {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0;
+  box-sizing: border-box;
+}
+.add-event-form,
+.ongoing-event,
+.archived-event {
   max-width: 800px;
   margin: 20px auto;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 24px 24px;
-  position: relative;
+  padding: 24px;
   box-sizing: border-box;
+}
+.add-event-form {
+  padding-bottom: 1px;
+}
+.event-section-header {
+  font-size: 1.3rem;
+  color: #02a086;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+/* ---------------------- Forms ---------------------- */
+#add-event-form label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #2563eb;
+  margin-top: 12px;
+}
+#add-event-form input,
+#add-event-form textarea {
   width: 100%;
-  }
-    @media (max-width: 600px) {
-      .add-event-form,
-      .ongoing-event,
-      .container-aligned {
-        width: 90vw;
-      }
-      .header {
-        font-size: 0.6rem;
-      }
-  }
-    .add-event-btn { 
-      background: #2563eb; 
-      color: #fff; 
-      border: none; 
-      border-radius: 6px; 
-      padding: 10px 24px; 
-      font-size: 1rem; 
-      font-weight: bold; 
-      cursor: pointer; 
-      transition: background 0.2s, box-shadow 0.2s; 
-      box-shadow: 0 2px 6px rgba(37,99,235,0.08); 
-      margin-top: 4px;
-      margin-bottom: -20px; /* Adjusted to align with the form */
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .add-event-btn:hover { background: #1746a0; }
-
-    .ongoing-event {
-      max-width: 800px;
-      margin: 20px auto;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      padding: 24px 12px;
-      position: relative;
-      box-sizing: border-box;
-    }
-    .archived-event {
-      max-width: 800px;
-      margin: 20px auto;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      padding: 24px 12px;
-      position: relative;
-      box-sizing: border-box;
-    }
-    @media (max-width: 600px) {
-      .ongoing-event,
-      .archived-event {
-        width: 90vw;
-      }
-    }
-    
-    .event-list { list-style: none; padding: 0; margin: 0; }
-    .event-list li {
-  position: relative;
-  background: #d0ff0075;
+  padding: 10px;
+  border: 1px solid #bbb;
   border-radius: 6px;
-  margin-bottom: 14px;
-  padding: 24px 18px 56px 18px; /* extra bottom padding for buttons */
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-height: 120px;
-  text-align: justify;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  background: #f9fafb;
+  transition: border 0.2s;
 }
-#ongoing-events-list li {
-  background: #d0ff0075; /* Light green background for ongoing events */
+#add-event-form input:focus,
+#add-event-form textarea:focus {
+  border: 1.5px solid #2563eb;
+  outline: none;
+  background: #fff;
 }
-#archived-events-list li {
-  background: #ffb3b3; /* Light red background for archived events */
+#add-event-form textarea {
+  min-height: 44px;
+  resize: vertical;
 }
-
-.event-actions {
-  position: absolute;
-  left: 30px;
-  right: 12px;
-  bottom: 8px;
-  display: flex;
-  justify-content: center;
-  padding: 0 18px;
-  width: 90%;
-  pointer-events: none;
+.date-input {
+  background: #f9fafb;
+  color: #222;
+}
+.date-input:focus {
+  background: #fff;
 }
 
-.event-actions button {
-  pointer-events: auto;
-  min-width: 100px;
-}
-    .event-list li:hover { box-shadow: 0 2px 8px rgba(90, 7, 243, 0.815); }
-    .event-list li:active { box-shadow: 0 2px 8px rgba(243, 4, 16, 0.952); }
-
-    .event-list li strong { color: #2563eb; font-size: 1.1rem; }
-    .event-list li .event-date { color: #8802b1; font-size: 0.98rem; font-weight: 500; }
-    .event-list li .event-details { color: #333; font-size: 1.2rem; margin-bottom: 4px; }
-    .event-list li button { align-self: flex-end; color: #fff; border: none; border-radius: 4px; padding: 6px 12px; font-family: Arial, Helvetica, sans-serif; font-size: 0.97rem; font-weight: 450; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
-    .event-list li button:hover { background: #a30000; }
-    
-    .read-more-btn {
-  position: absolute;
-  background: #2563eb;
-  bottom: 0px;
-  right: 0px;
-  margin: 0;
-  z-index: 1;
-}
-    .delete-btn {
-  position: absolute;
-  background: #fc0303;
-  bottom: 0px;
-  left: 0px;
-  margin: 0;
-  z-index: 1;
-}
-@media(max-width: 600px) {
-  .event-list li .event-details{
-    font-size: 0.97rem;
-    margin-bottom: 50px; /* Adjusted for smaller screens */
-  }
-  .event-actions {
-    left: 0px;
-    right: 0px;
-    display: flex;
-    bottom: 8px;
-    justify-content: space-between;
-  }
-  .delete-btn {
-    left: 8px;
-  }
-}
-    .read-more-btn { 
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 6px 16px;
-      font-size: 0.97rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 4px;
-      margin-right: 8px;
-    }
-    .read-more-btn:hover { background: #1746a0; }
-    #add-event-form label {
-      display: block;
-      font-weight: 500;
-      margin-bottom: 4px;
-      color: #2563eb;
-      margin-top: 12px;
-    }
-    #add-event-form input,
-    #add-event-form textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #bbb;
-      border-radius: 6px;
-      font-size: 1rem;
-      margin-bottom: 12px;
-      box-sizing: border-box;
-      background: #f9fafb;
-      transition: border 0.2s;
-    }
-    #add-event-form input:focus,
-    #add-event-form textarea:focus {
-      border: 1.5px solid #2563eb;
-      outline: none;
-      background: #fff;
-    }
-    #add-event-form textarea {
-      min-height: 44px;
-      resize: vertical;
-    }
-    .date-input {
-      /* Modern date picker look */
-      background: #f9fafb;
-      color: #222;
-    }
-    .date-input:focus {
-      background: #fff;
-    }
-    .file-upload-row {
+/* ---------------------- File Upload ---------------------- */
+.file-upload-row {
   display: flex;
-  align-items: stretch; /* ensures both children fill the row height */
+  align-items: stretch;
   gap: 8px;
   margin-bottom: 12px;
 }
-
 .file-upload-row input[type="file"] {
-  flex: 1 1 auto;
+  flex: 1;
   padding: 0 12px;
   font-size: 1rem;
   border: 1px solid #bbb;
@@ -285,31 +184,151 @@
   align-items: center;
   box-sizing: border-box;
 }
-
 .file-upload-row .file-upload-btn {
-  border-radius: 6px;
-  margin: 0;
-  padding: 0 18px;
   height: 40px;
   font-size: 1rem;
   font-weight: 600;
-  min-width: 0;
-  letter-spacing: 0.02em;
-  display: flex;
-  align-items: center;
-  background: #2563eb;
-  color: #fff;
   border: 1px solid #2563eb;
-  cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: none;
+  letter-spacing: 0.02em;
 }
 
-.file-upload-row .file-upload-btn:hover {
+/* ---------------------- Event Lists ---------------------- */
+.event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.event-list li {
+  position: relative;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  padding: 24px 18px 56px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 120px;
+  text-align: justify;
+}
+#ongoing-events-list li {
+  background: #d0ff0075;
+}
+#archived-events-list li {
+  background: #ffb3b3;
+}
+.event-list li:hover {
+  box-shadow: 0 2px 8px rgba(90, 7, 243, 0.815);
+}
+.event-list li:active {
+  box-shadow: 0 1px 4px rgba(90, 7, 243, 0.815);
+}
+.event-list li strong {
+  color: #2563eb;
+  font-size: 1.1rem;
+}
+.event-date {
+  color: #8802b1;
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+.event-details {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+/* ---------------------- Event Actions ---------------------- */
+.event-actions {
+  position: absolute;
+  left: 16px;
+  right: 12px;
+  bottom: 8px;
+  display: flex;
+  justify-content: center;
+  padding: 0 18px;
+  width: 90%;
+  pointer-events: none;
+}
+.event-actions button {
+  pointer-events: auto;
+  min-width: 100px;
+}
+.delete-btn {
+  position: absolute;
+  background: #fc0303;
+  bottom: 0px;
+  left: 0px;
+  margin: 0;
+  z-index: 1;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 16px;
+  font-size: 0.97rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(252,3,3,0.08);
+}
+.read-more-btn {
+  position: absolute;
+  background: #2563eb;
+  bottom: 0px;
+  right: 0px;
+  margin: 0;
+  z-index: 1;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 16px;
+  font-size: 0.97rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+
+}
+.read-more-btn:hover {
   background: #1746a0;
 }
+.read-more-btn:active {
+  transform: scale(0.95);
+}
+.delete-btn:hover {
+  background: #b91c1c;
+}
+.delete-btn:active {
+  transform: scale(0.95);
+}
 
+/* ---------------------- File Preview ---------------------- */
+#file-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#file-preview.error {
+  color: #d32f2f;
+}
+#file-preview.success {
+  color: #388e3c;
+}
+
+/* ---------------------- Media Queries ---------------------- */
 @media (max-width: 600px) {
+  .add-event-form,
+  .ongoing-event,
+  .archived-event,
+  .container-aligned {
+    width: 90vw;
+  }
+  .ongoing-event,
+  .archived-event {
+    padding: 12px;
+  }
+  .header {
+    font-size: 0.6rem;
+  }
   .file-upload-row {
     flex-direction: row;
   }
@@ -325,53 +344,58 @@
     justify-content: center;
     text-align: center;
   }
-}
-    
-    @media (max-width: 600px) {
-      #add-event-form {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-      }
-      #add-event-form input,
-      #add-event-form textarea {
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-        font-size: 1rem;
-      }
-      .event-list li {
-        padding: 12px 8px 10px 8px;
-      }
-    }
-
-    #file-preview {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  .event-list li {
+    padding: 12px 8px 10px 8px;
+  }
+  .event-details {
+    font-size: 1rem;
+    margin-bottom: 40px;
+  }
+  .event-actions {
+    left: 0px;
+    right: 0px;
+    display: flex;
+    bottom: 8px;
+    justify-content: space-between;
+  }
+  .delete-btn {
+    left: 8px;
+  }
+  .read-more-btn {
+    right: 8px;
+  }
 }
 
-#file-preview.error {
-  color: #d32f2f; /* Red for errors */
+/* ====== Pagination Styling ====== */
+#archived-pagination {
+  margin-top: 16px;
+  text-align: center;
 }
-#file-preview.success {
-  color: #388e3c; /* Green for success/info */
+#archived-pagination button {
+  margin: 4px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
-    footer {
-      background: #1e293b;
-      color: #fff;
-      padding: 16px 0;
-      text-align: center;
-      font-size: 1rem;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    footer p {
-      margin: 0;
-    }
+#archived-pagination button:hover {
+  background: #1746a0;
+}
+#archived-pagination button:active {
+  transform: scale(0.95);
+}
+#archived-pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
 
-  </style>
+</style>
+
 </head>
 <body>
   <header class="header">
@@ -407,20 +431,22 @@
       </form>
   </div>
 </div>
-  <div class="ongoing-event" id="ongoing-event-section">
-    <h2 style="font-size:1.3rem;color:#02a086; text-align: center; margin-top: 0; margin-bottom:18px;">Ongoing Events</h2>
-    <div class="ongoing-event-list-container">
-      <ul id="ongoing-events-list" class="event-list"></ul>
-      <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
-    </div>
+  <!-- Events Section -->
+<div style="max-width: 800px; margin: 20px auto;">
+  <div class="ongoing-event">
+    <h2 class="event-section-header">🟢 Ongoing Events</h2>
+    <ul id="ongoing-events-list" class="event-list"></ul>
+    <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
   </div>
-  <div class="archived-event"style="display:none;">
-    <div class="archived-event-list-container">
-      <h2 style="font-size:1.3rem;color:#02a086; text-align: center; margin-top: 0; margin-bottom:18px;">Archived Events</h2>
-      <ul id="archived-events-list" class="event-list"></ul>
-      <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
-    </div>
-  </div>
+
+  <div class="archived-event" id="archived-event-section">
+  <h2 class="event-section-header">🔴 Archived Events</h2>
+  <ul id="archived-events-list" class="event-list"></ul>
+  <progress id="upload-progress" value="0" max="100" style="width:180px;display:none;margin-bottom:8px;"></progress>
+  <div id="archived-pagination" style="text-align:center; margin-top:16px;"></div> <!-- ✅ Add this -->
+</div>
+
+</div>
 
   <footer>
     <p>&copy; 2025 Aldardasha House - All rights reserved.</p>
@@ -458,93 +484,8 @@
     };
 
     // --- Events Management ---
-    const eventsList = document.getElementById('events-list');
     const addEventForm = document.getElementById('add-event-form');
 
-let lastAddedEventId = null; // Store the ID of the last added event
-let scrollToNewEvent = false; // Flag to scroll to the new event
-    async function fetchEvents() {
-  const ongoingList = document.getElementById("ongoing-events-list");
-  const archivedList = document.getElementById("archived-events-list");
-
-  ongoingList.innerHTML = "<li>Loading...</li>";
-  archivedList.innerHTML = "";
-
-  const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
-    headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
-  });
-  const data = await res.json();
-  data.sort((a, b) => {
-  const [da, ma, ya] = a.date.split('-');
-  const [db, mb, yb] = b.date.split('-');
-  const dateA = new Date(`${ya}-${ma}-${da}`);
-  const dateB = new Date(`${yb}-${mb}-${db}`);
-  return dateB - dateA; // Descending
-});
-  ongoingList.innerHTML = '';
-
-  if (!Array.isArray(data)) {
-    ongoingList.innerHTML = "<li>No events found.</li>";
-    return;
-  }
-
-  const now = new Date();
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(now.getDate() - 7);
-  const twoWeeksAhead = new Date();
-  twoWeeksAhead.setDate(now.getDate() + 14);
-
-  data.forEach(ev => {
-    const parts = ev.date.split('-'); // expected format: dd-mm-yyyy
-    if (parts.length !== 3) return;
-
-    const [dd, mm, yyyy] = parts;
-    const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
-
-    const li = document.createElement("li");
-
-    const formattedDate = formatDate(ev.date);
-    li.innerHTML = `
-      <strong>${ev.title}</strong>
-      <span class="event-date">${formattedDate}</span>
-      <div class="event-details">${ev.details || ''}</div>
-    `;
-
-    const actionsDiv = document.createElement("div");
-    actionsDiv.className = "event-actions";
-
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "Delete";
-    delBtn.className = "delete-btn";
-    delBtn.onclick = () => openDeleteModal(ev._id, ev.title, formatDate(ev.date));
-
-    actionsDiv.appendChild(delBtn);
-
-    if (ev.fileUrl) {
-      const readMoreBtn = document.createElement("button");
-      readMoreBtn.textContent = "Read More";
-      readMoreBtn.className = "read-more-btn";
-      readMoreBtn.onclick = () => window.open(ev.fileUrl, '_blank');
-      actionsDiv.appendChild(readMoreBtn);
-    }
-
-    li.appendChild(actionsDiv);
-
-    if (eventDate >= oneWeekAgo) {
-      ongoingList.appendChild(li);
-    } else if (eventDate < oneWeekAgo) {
-      document.querySelector(".archived-event").style.display = "block";
-      archivedList.appendChild(li);
-    }
-  });
-
-  if (!ongoingList.children.length) {
-    ongoingList.innerHTML = "<li>No ongoing events.</li>";
-  }
-  if (!archivedList.children.length) {
-    archivedList.innerHTML = "<li>No archived events yet.</li>";
-  }
-}
     // Track uploaded file URL
     let uploadedFileUrl = "";
 
@@ -594,35 +535,35 @@ let scrollToNewEvent = false; // Flag to scroll to the new event
         }
       };
 
-      xhr.onload = function() {
-        progressBar.style.display = "none";
-        if (xhr.status === 200) {
-          const data = JSON.parse(xhr.responseText);
-          if (data.fileUrl) {
-            uploadedFileUrl = data.fileUrl;
-            addBtn.disabled = false;
-            // Show preview
-            if (file.type === 'application/pdf') {
-              const gviewUrl = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(uploadedFileUrl)}`;
-              preview.innerHTML = `<iframe src="${gviewUrl}" style="max-width:80%;height:400px;border:1px solid #bbb;border-radius:6px;"></iframe>`;
-            } else if (file.type.startsWith('image/')) {
-              preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:30%;height:100%;border:1px solid #bbb;border-radius:6px;">`;
-            } else {
-              // For file uploaded
-              preview.textContent = "File uploaded.";
-              preview.className = "success";
-            }
-          } else {
-            // For upload failed
-            preview.textContent = "Upload failed.";
-            preview.className = "error";
-          }
+      xhr.onload = function () {
+  progressBar.style.display = "none";
+  try {
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      if (data.fileUrl) {
+        uploadedFileUrl = data.fileUrl;
+        addBtn.disabled = false;
+        preview.textContent = "Upload successful!";
+        preview.className = "success";
+        if (file.type.startsWith("image/")) {
+          preview.innerHTML = `<img src="${uploadedFileUrl}" alt="Preview" style="max-width:30%;">`;
         } else {
-          // For upload failed
-          preview.textContent = "Upload failed.";
-          preview.className = "error";
+          const gview = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(uploadedFileUrl)}`;
+          preview.innerHTML = `<iframe src="${gview}" style="width:80%; height:400px;"></iframe>`;
         }
-      };
+      } else {
+        throw new Error("No fileUrl returned");
+      }
+    } else {
+      throw new Error(`Upload failed with status ${xhr.status}`);
+    }
+  } catch (err) {
+    console.error("Upload Error:", err.message, xhr.responseText);
+    preview.textContent = "Upload failed. Check console.";
+    preview.className = "error";
+    alert("Upload failed. See console for details.");
+  }
+};
 
       xhr.onerror = function() {
         progressBar.style.display = "none";
@@ -663,37 +604,11 @@ let scrollToNewEvent = false; // Flag to scroll to the new event
   // ✅ Wait for events to be rendered before showing modal
   showSuccessModal();
 };
+// Fetch and render events on page load 
+fetchEvents();
+</script>
 
-    // Format date to "14 August 2025 (Thursday)"
-    function formatDate(dateStr) {
-      // Expected input: '14-08-2025'
-        const parts = dateStr.split('-'); // ['14', '08', '2025']
-        if (parts.length !== 3) return dateStr;
-
-        const [day, month, year] = parts;
-        const date = new Date(`${year}-${month}-${day}`); // '2025-08-14'
-
-        if (isNaN(date)) return dateStr;
-
-        const options = { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' };
-        const formatted = date.toLocaleDateString('en-US', options);
-
-        // Move weekday to parentheses at the end
-        const [weekday, ...rest] = formatted.split(', ');
-        return `${rest.join(', ')} (${weekday})`;
-      }
-
-
-    fetchEvents();
-  </script>
-  <script>
-    flatpickr(".date-picker", {
-      dateFormat: "d-m-Y",
-      allowInput: true
-    });
-  </script>
-
-  <!-- Success Modal -->
+ <!-- Success Modal -->
 <div id="success-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
   <div style="background:white; padding:24px 32px; border-radius:12px; text-align:center; max-width:320px; box-shadow:0 6px 24px rgba(0,0,0,0.2);">
     <h2 style="color:#10b981; margin-bottom:12px;">🎉 Added</h2>
@@ -716,6 +631,167 @@ let scrollToNewEvent = false; // Flag to scroll to the new event
   modal.style.display = "none";
 }
 </script>
+
+<script>
+    flatpickr(".date-picker", {
+      dateFormat: "d-m-Y",
+      allowInput: true
+    });
+  </script>
+
+  <script>
+     // ---------------------- Globals ----------------------
+    let archivedEvents = [], currentPage = 1;
+    const eventsPerPage = 10;
+
+    // ---------------------- Date Utils ----------------------
+    function parseDate(dateStr) {
+      if (!dateStr || typeof dateStr !== "string") return null;
+      const [dd, mm, yyyy] = dateStr.split("-");
+      const d = new Date(`${yyyy}-${mm}-${dd}`);
+      return isNaN(d) ? null : d;
+    }
+    function formatDate(dateStr) {
+  if (!dateStr || typeof dateStr !== "string") return "Invalid Date";
+  const [dd, mm, yyyy] = dateStr.split('-');
+  const d = new Date(`${yyyy}-${mm}-${dd}`);
+  if (isNaN(d)) return "Invalid Date";
+
+  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  const datePart = d.toLocaleDateString('en-US', options); // "August 14, 2025"
+  const weekday = d.toLocaleDateString('en-US', { weekday: 'long' }); // "Thursday"
+
+  return `${datePart} (${weekday})`; // "August 14, 2025 (Thursday)" "If want to 14 August 2025 (Thursday) then change un-US to en-GB"
+}
+
+    // ---------------------- Event Rendering ----------------------
+    async function fetchEvents() {
+      const ongoing = document.getElementById("ongoing-events-list");
+      const archived = document.getElementById("archived-events-list");
+      ongoing.innerHTML = "<li>Loading...</li>";
+      archived.innerHTML = "";
+      archivedEvents = [];
+      currentPage = 1;
+      try {
+        const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('adminToken') }
+        });
+        const data = await res.json();
+        if (!Array.isArray(data)) {
+          ongoing.innerHTML = "<li>No events found.</li>";
+          return;
+        }
+        ongoing.innerHTML = "";
+        const now = new Date();
+        const oneWeekAgo = new Date(now);
+        oneWeekAgo.setDate(now.getDate() - 7);
+        let hasOngoing = false;
+        data.sort((a, b) => (parseDate(b.date) || new Date(0)) - (parseDate(a.date) || new Date(0)));
+        data.forEach(ev => {
+          const date = parseDate(ev.date);
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <strong>${ev.title}</strong>
+            <span class="event-date">${formatDate(ev.date)}</span>
+            <div class="event-details">${ev.details || ''}</div>`;
+          const actions = document.createElement("div");
+          actions.className = "event-actions";
+          const del = document.createElement("button");
+          del.textContent = "Delete";
+          del.className = "delete-btn";
+          del.onclick = () => openDeleteModal(ev._id, ev.title, formatDate(ev.date));
+          actions.appendChild(del);
+          if (ev.fileUrl) {
+            const readMore = document.createElement("button");
+            readMore.textContent = "Read More";
+            readMore.className = "read-more-btn";
+            readMore.onclick = () => window.open(ev.fileUrl, '_blank');
+            actions.appendChild(readMore);
+          }
+          li.appendChild(actions);
+          if (date && date >= oneWeekAgo) {
+            ongoing.appendChild(li);
+            hasOngoing = true;
+          } else {
+            archivedEvents.push(ev);
+          }
+        });
+        if (!hasOngoing) ongoing.innerHTML = "<li>No ongoing events.</li>";
+        renderArchivedEvents();
+        renderArchivedPagination();
+      } catch {
+        ongoing.innerHTML = "<li>Error loading events.</li>";
+      }
+    }
+
+    function renderArchivedEvents() {
+      const list = document.getElementById("archived-events-list");
+      list.innerHTML = "";
+      const start = (currentPage - 1) * eventsPerPage;
+      const events = archivedEvents.slice(start, start + eventsPerPage);
+      if (!events.length) {
+        list.innerHTML = "<li>No archived events.</li>";
+        return;
+      }
+      events.forEach(ev => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${ev.title}</strong>
+          <span class="event-date">${formatDate(ev.date || "")}</span>
+          <div class="event-details">${ev.details || ''}</div>`;
+        const actions = document.createElement("div");
+        actions.className = "event-actions";
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.className = "delete-btn";
+        del.onclick = () => openDeleteModal(ev._id, ev.title, formatDate(ev.date || ""));
+        actions.appendChild(del);
+        if (ev.fileUrl) {
+          const readMore = document.createElement("button");
+          readMore.textContent = "Read More";
+          readMore.className = "read-more-btn";
+          readMore.onclick = () => window.open(ev.fileUrl, '_blank');
+          actions.appendChild(readMore);
+        }
+        li.appendChild(actions);
+        list.appendChild(li);
+      });
+    }
+
+    function renderArchivedPagination() {
+      const container = document.getElementById("archived-pagination");
+      if (!container) return;
+      container.innerHTML = "";
+      const total = Math.ceil(archivedEvents.length / eventsPerPage);
+      if (total <= 1) return;
+      const prev = document.createElement("button");
+      prev.textContent = "« Prev";
+      prev.disabled = currentPage === 1;
+      prev.onclick = () => goToPage(currentPage - 1);
+      container.appendChild(prev);
+      for (let i = 1; i <= total; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.disabled = i === currentPage;
+        btn.onclick = () => goToPage(i);
+        container.appendChild(btn);
+      }
+      const next = document.createElement("button");
+      next.textContent = "Next »";
+      next.disabled = currentPage === total;
+      next.onclick = () => goToPage(currentPage + 1);
+      container.appendChild(next);
+    }
+
+    function goToPage(p) {
+      currentPage = p;
+      renderArchivedEvents();
+      renderArchivedPagination();
+    }
+
+    // ---------------------- Init ----------------------
+    fetchEvents();
+  </script>
 
 <!-- Delete Confirmation Modal -->
 <div id="delete-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; justify-content:center; align-items:center;">

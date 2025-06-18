@@ -106,12 +106,27 @@
 </section>
 
 <section id="events" class="mt-12">
-  <h2 class="bg-green-400 text-center text-2xl font-bold mb-4 text-slate-800">Ongoing Events</h2>
-  <ol id="ongoing-home-events" class="list-decimal list-inside text-gray-700 space-y-2">
-    <li>Loading...</li>
-  </ol>
+  <h2 class="text-2xl font-bold mb-4 text-slate-800">Upcoming Events</h2>
+  <ul class="list-disc list-inside text-gray-700 space-y-2">
+    <li>
+      <strong>Leadership Workshop:</strong> January 15, 2025 - A workshop to develop leadership skills among youth.
+      <a href="attachments/leadership-workshop.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+    <li>
+      <strong>Sports Tournament:</strong> February 10, 2025 - A regional sports event for all age groups.
+      <a href="attachments/sports-tournament.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+    <li>
+      <strong>Community Service Day:</strong> March 5, 2025 - A day dedicated to giving back to the community.
+      <a href="attachments/community-service.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+    <li>
+      <strong>Art Exhibition:</strong> April 20, 2025 - Showcasing creative works by local artists.
+      <a href="attachments/art-exhibition.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
+    </li>
+  </ul>
   <div class="text-center mt-4">
-    <a class="text-green-600">To view all events</a>
+    <a class="text-green-600">To view more events.</a>
     <a href="events.html" class="text-blue-600 hover:underline" target="_blank">Click</a>
   </div>
 </section>
@@ -248,74 +263,6 @@
       }
     });
   </script>
-
-  <script>
-function parseDate(dateStr) {
-  if (!dateStr || typeof dateStr !== "string") return null;
-  const [dd, mm, yyyy] = dateStr.split("-");
-  const d = new Date(`${yyyy}-${mm}-${dd}`);
-  return isNaN(d) ? null : d;
-}
-
-function formatDate(dateStr) {
-  if (!dateStr || typeof dateStr !== "string") return "Invalid Date";
-  const [dd, mm, yyyy] = dateStr.split("-");
-  const d = new Date(`${yyyy}-${mm}-${dd}`);
-  if (isNaN(d)) return "Invalid Date";
-  const datePart = d.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric'
-  });
-  const weekday = d.toLocaleDateString('en-GB', { weekday: 'long' });
-  return `${datePart} (${weekday})`;
-}
-
-async function loadOngoingEvents() {
-  const list = document.getElementById("ongoing-home-events");
-  list.innerHTML = "<li>Loading...</li>";
-  try {
-    const res = await fetch("https://house-dardasha-admin.onrender.com/api/events/public");
-    const events = await res.json();
-    list.innerHTML = "";
-
-    const now = new Date();
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(now.getDate() - 7);
-
-    const ongoingEvents = events.filter(ev => {
-      const d = parseDate(ev.date);
-      return d && d >= oneWeekAgo;
-    });
-
-    if (ongoingEvents.length === 0) {
-      list.innerHTML = "<li>No ongoing events.</li>";
-      return;
-    }
-
-    ongoingEvents.sort((a, b) => (parseDate(a.date) || 0) - (parseDate(b.date) || 0));
-
-    ongoingEvents.forEach(ev => {
-      const li = document.createElement("li");
-      li.className = "text-justify leading-relaxed";
-      li.innerHTML = `
-  <strong class="text-slate-800">${ev.title}:</strong>
-  <span class="bg-yellow-200 text-slate-900 px-2 py-0.5 rounded text-sm mx-1 inline-block">
-    📅 ${formatDate(ev.date)}
-  </span>
-  ${ev.details || ''}
-  ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>` : ''}
-`;
-      list.appendChild(li);
-    });
-
-  } catch (err) {
-    list.innerHTML = "<li>Error loading events.</li>";
-  }
-}
-
-loadOngoingEvents();
-</script>
-
+  
 </body>
 </html>
