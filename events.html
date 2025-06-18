@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aldardasha House - Public Events</title>
+  <title>Aldardasha House - Events</title>
   <style>
   /* ====== Mobile-First Base Styles ====== */
   * {
@@ -109,7 +109,7 @@
     font-size: 1.1rem;
     color: #2563eb;
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 2px;
   }
 
   .event .event-date {
@@ -208,7 +208,6 @@
     }
   }
 </style>
-
 </head>
 <body>
 
@@ -299,11 +298,12 @@ function renderArchivedEvents() {
     return;
   }
 
-  pageEvents.forEach(ev => {
-    const listItem = document.createElement('li');
-    listItem.className = 'event';
-    listItem.innerHTML = `
-      <strong>${ev.title}</strong>
+  pageEvents.forEach((ev, index) => {
+  const actualIndex = (currentPage - 1) * archivedPerPage + index;
+  const listItem = document.createElement('li');
+  listItem.className = 'event';
+  listItem.innerHTML = `
+    <strong>${archivedEvents.length - actualIndex}. ${ev.title}</strong>
       <span class="event-date">${formatDate(ev.date)}</span>
       <div class="event-details">${ev.details || ''}</div>
       ${ev.fileUrl ? `<div class="read-more-wrapper"><a href="${ev.fileUrl}" class="read-more-btn" target="_blank">View</a></div>` : ''}
@@ -343,25 +343,33 @@ async function fetchEvents() {
       return new Date(`${yb}-${mb}-${db}`) - new Date(`${ya}-${ma}-${da}`);
     });
 
-    events.forEach(ev => {
-      const [dd, mm, yyyy] = ev.date.split('-');
-      const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
+    let ongoingEvents = [];
 
-      const listItem = document.createElement('li');
-      listItem.className = 'event';
-      listItem.innerHTML = `
-        <strong>${ev.title}</strong>
-        <span class="event-date">${formatDate(ev.date)}</span>
-        <div class="event-details">${ev.details || ''}</div>
-        ${ev.fileUrl ? `<div class="read-more-wrapper"><a href="${ev.fileUrl}" class="read-more-btn" target="_blank">View</a></div>` : ''}
-      `;
+events.forEach((ev) => {
+  const [dd, mm, yyyy] = ev.date.split('-');
+  const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
 
-      if (eventDate >= oneWeekAgo) {
-        ongoingEl.appendChild(listItem);
-      } else {
-        archivedEvents.push(ev);
-      }
-    });
+  if (eventDate >= oneWeekAgo) {
+    ongoingEvents.push(ev);
+  } else {
+    archivedEvents.push(ev);
+  }
+});
+
+// Now render ongoing events with reverse numbering
+const total = ongoingEvents.length;
+ongoingEvents.forEach((ev, i) => {
+  const number = total - i;
+  const listItem = document.createElement('li');
+  listItem.className = 'event';
+  listItem.innerHTML = `
+    <strong>${number}. ${ev.title}</strong>
+    <span class="event-date">${formatDate(ev.date)}</span>
+    <div class="event-details">${ev.details || ''}</div>
+    ${ev.fileUrl ? `<div class="read-more-wrapper"><a href="${ev.fileUrl}" class="read-more-btn" target="_blank">View</a></div>` : ''}
+  `;
+  ongoingEl.appendChild(listItem);
+});
 
     if (!ongoingEl.children.length) {
       ongoingEl.innerHTML = '<li>No ongoing events.</li>';

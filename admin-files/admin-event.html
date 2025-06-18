@@ -687,35 +687,50 @@ fetchEvents();
         oneWeekAgo.setDate(now.getDate() - 7);
         let hasOngoing = false;
         data.sort((a, b) => (parseDate(b.date) || new Date(0)) - (parseDate(a.date) || new Date(0)));
-        data.forEach(ev => {
-          const date = parseDate(ev.date);
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <strong>${ev.title}</strong>
-            <span class="event-date">${formatDate(ev.date)}</span>
-            <div class="event-details">${ev.details || ''}</div>`;
-          const actions = document.createElement("div");
-          actions.className = "event-actions";
-          const del = document.createElement("button");
-          del.textContent = "Delete";
-          del.className = "delete-btn";
-          del.onclick = () => openDeleteModal(ev._id, ev.title, formatDate(ev.date));
-          actions.appendChild(del);
-          if (ev.fileUrl) {
-            const readMore = document.createElement("button");
-            readMore.textContent = "Read More";
-            readMore.className = "read-more-btn";
-            readMore.onclick = () => window.open(ev.fileUrl, '_blank');
-            actions.appendChild(readMore);
-          }
-          li.appendChild(actions);
-          if (date && date >= oneWeekAgo) {
-            ongoing.appendChild(li);
-            hasOngoing = true;
-          } else {
-            archivedEvents.push(ev);
-          }
-        });
+        
+        const ongoingEvents = [];
+
+data.forEach((ev) => {
+  const date = parseDate(ev.date);
+  if (date && date >= oneWeekAgo) {
+    ongoingEvents.push(ev);
+  } else {
+    archivedEvents.push(ev);
+  }
+});
+
+const totalOngoing = ongoingEvents.length;
+
+ongoingEvents.forEach((ev, index) => {
+  const number = totalOngoing - index;
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <strong>${number}. ${ev.title}</strong>
+    <span class="event-date">${formatDate(ev.date)}</span>
+    <div class="event-details">${ev.details || ''}</div>`;
+  const actions = document.createElement("div");
+  actions.className = "event-actions";
+
+  const del = document.createElement("button");
+  del.textContent = "Delete";
+  del.className = "delete-btn";
+  del.onclick = () => openDeleteModal(ev._id, ev.title, formatDate(ev.date));
+  actions.appendChild(del);
+
+  if (ev.fileUrl) {
+    const readMore = document.createElement("button");
+    readMore.textContent = "Read More";
+    readMore.className = "read-more-btn";
+    readMore.onclick = () => window.open(ev.fileUrl, '_blank');
+    actions.appendChild(readMore);
+  }
+
+  li.appendChild(actions);
+  document.getElementById("ongoing-events-list").appendChild(li);
+  // ✅ Fix: mark that we have ongoing events
+  hasOngoing = true;
+});
+        
         if (!hasOngoing) ongoing.innerHTML = "<li>No ongoing events.</li>";
         renderArchivedEvents();
         renderArchivedPagination();
@@ -733,10 +748,14 @@ fetchEvents();
         list.innerHTML = "<li>No archived events.</li>";
         return;
       }
-      events.forEach(ev => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <strong>${ev.title}</strong>
+      events.forEach((ev, index) => {
+      const totalEvents = archivedEvents.length;
+      const globalIndex = (currentPage - 1) * eventsPerPage + index;
+      const displayNumber = totalEvents - globalIndex;
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+          <strong>${displayNumber}. ${ev.title}</strong>
           <span class="event-date">${formatDate(ev.date || "")}</span>
           <div class="event-details">${ev.details || ''}</div>`;
         const actions = document.createElement("div");
