@@ -14,6 +14,11 @@
       text-align: justify;
       text-indent: 1em; /* Indent the first line by 1em */
     }
+    .event-number {
+      color: #dc2626; /* Example: Tailwind's red-600 */
+      font-weight: bold;
+      margin-right: 4px;
+    }
   </style>
 </head>
 <body class="bg-gray-1000 text-gray-800 font-sans">
@@ -35,7 +40,7 @@
     </div>
   </nav>
   
-  <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+  <main class="max-w-5xl mx-auto px-4 py-10 space-y-12">
     <section>
       <h2 class="text-2xl font-bold mb-2 text-slate-800">About Aldardasha House</h2>
       <p class="text-gray-700 leading-relaxed">
@@ -107,7 +112,7 @@
 
 <section id="events" class="mt-12">
   <h2 class="bg-green-400 text-center text-2xl font-bold mb-4 text-slate-800">Ongoing Events</h2>
-  <ol id="ongoing-home-events" class="list-decimal list-inside text-gray-700 space-y-2">
+  <ol id="ongoing-home-events">
     <li>Loading...</li>
   </ol>
   <div class="text-center mt-4">
@@ -295,19 +300,20 @@ async function loadOngoingEvents() {
 
     ongoingEvents.sort((a, b) => (parseDate(a.date) || 0) - (parseDate(b.date) || 0));
 
-    ongoingEvents.forEach(ev => {
-      const li = document.createElement("li");
-      li.className = "text-justify leading-relaxed";
-      li.innerHTML = `
-  <strong class="text-slate-800">${ev.title}:</strong>
-  <span class="bg-yellow-200 text-slate-900 px-2 py-0.5 rounded text-sm mx-1 inline-block">
-    📅 ${formatDate(ev.date)}
-  </span>
-  ${ev.details || ''}
-  ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>` : ''}
-`;
-      list.appendChild(li);
-    });
+  ongoingEvents.forEach((ev, i) => {
+    const number = i + 1; // 1-based index
+    const li = document.createElement("li");
+    li.className = "text-justify leading-relaxed";
+    li.innerHTML = `
+      <strong><span class="event-number">${number}.</span> ${ev.title}</strong>
+      <span class="bg-yellow-200 text-slate-900 px-2 py-0.5 rounded text-sm mx-1 inline-block">
+        📅 ${formatDate(ev.date)}
+      </span>
+      ${ev.details || ''}
+      ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="text-blue-600 hover:underline ml-2" target="_blank">View</a>` : ''}
+    `;
+    list.appendChild(li);
+  });
 
   } catch (err) {
     list.innerHTML = "<li>Error loading events.</li>";
