@@ -393,7 +393,10 @@ footer p {
   background: #ccc;
   cursor: not-allowed;
 }
-
+.event-number {
+  color: #d41976; /* You can change this color to any you like */
+  font-weight: bold;
+}
 </style>
 
 </head>
@@ -705,7 +708,7 @@ ongoingEvents.forEach((ev, index) => {
   const number = totalOngoing - index;
   const li = document.createElement("li");
   li.innerHTML = `
-    <strong>${number}. ${ev.title}</strong>
+    <strong><span class="event-number">${number}.</span> ${ev.title}</strong>
     <span class="event-date">${formatDate(ev.date)}</span>
     <div class="event-details">${ev.details || ''}</div>`;
   const actions = document.createElement("div");
@@ -755,7 +758,7 @@ ongoingEvents.forEach((ev, index) => {
 
       const li = document.createElement("li");
       li.innerHTML = `
-          <strong>${displayNumber}. ${ev.title}</strong>
+          <strong><span class="event-number">${displayNumber}.</span> ${ev.title}</strong>
           <span class="event-date">${formatDate(ev.date || "")}</span>
           <div class="event-details">${ev.details || ''}</div>`;
         const actions = document.createElement("div");
