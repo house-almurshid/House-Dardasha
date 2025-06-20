@@ -109,6 +109,80 @@
       text-align: justify;
       text-indent: 1em; /* Indent the first line by 1em */
     }
+
+
+               /* Gallery Section Styles */
+#gallery {
+  margin-top: 3rem;
+}
+
+.gallery-heading {
+  background-color: #55f58f; /* green-400 */
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b; /* slate-800 */
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: 12rem;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+/* Responsive Grid */
+@media (min-width: 767px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gallery-grid img:nth-child(4),
+  .gallery-grid img:nth-child(5),
+  .gallery-grid img:nth-child(6) {
+    object-fit: cover;
+  }
+  .gallery-grid img:nth-child(1),
+  .gallery-grid img:nth-child(2),
+  .gallery-grid img:nth-child(3) {
+    height: 8rem; /* Adjust height for smaller screens */
+  }
+}
+
+.gallery-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #16a34a; /* green-600 */
+}
+
+.gallery-link span,
+.gallery-link a {
+  display: inline;
+  color: #16a34a;
+}
+
+.gallery-link a {
+  color: #2563eb; /* blue-600 */
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+
+
+    /* Ongoing Events Section Styles */
     .event-number {
       color: #dc2626; /* Example: Tailwind's red-600 */
       font-weight: bold;
@@ -200,18 +274,19 @@
     </section>
 
 <section id="gallery">
-  <h2 class="text-2xl font-bold mb-4 text-slate-800">Gallery</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-    <img src="images/bannar 1st.jpg" alt="Gallery Image 1" class="w-full h-48 object-contain rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
-    <img src="images/iftar.webp" alt="Gallery Image 2" class="w-full h-48 object-contain rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
-    <img src="images/tour.jpg" alt="Gallery Image 3" class="w-full h-48 object-contain rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
-    <img src="images/murihouse.jpg" alt="Gallery Image 4" class="w-full h-48 object-cover rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
-    <img src="images/chariftar.jpg" alt="Gallery Image 5" class="w-full h-48 object-cover rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
-    <img src="images/hfront.jpg" alt="Gallery Image 6" class="w-full h-48 object-cover rounded shadow cursor-pointer" ondblclick="openImageModal(this)">
+  <h2 class="gallery-heading">Gallery</h2>
+  <div class="gallery-grid">
+    <img src="images/img1.jpg" alt="Gallery Image 1" ondblclick="openImageModal(this)">
+    <img src="images/img2.jpg" alt="Gallery Image 2" ondblclick="openImageModal(this)">
+    <img src="images/img3.jpg" alt="Gallery Image 3" ondblclick="openImageModal(this)">
+    <img src="images/img4.jpg" alt="Gallery Image 4" ondblclick="openImageModal(this)">
+    <img src="images/img5.jpg" alt="Gallery Image 5" ondblclick="openImageModal(this)">
+    <img src="images/img6.jpg" alt="Gallery Image 6" ondblclick="openImageModal(this)">
   </div>
-  <div class="text-center mt-4">
-    <a class="text-green-600">To view more images or go to Gallery</a>
-    <a href="gallery.html" class="text-blue-600 hover:underline" target="_blank">Click</a>
+  <div class="gallery-link">
+    <span>To view more images or go to Gallery
+    <a href="gallery.html" target="_blank">Click</a>
+    </span>
   </div>
 </section>
 
