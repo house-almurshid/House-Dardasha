@@ -6,26 +6,196 @@
   <title>Aldardasha House</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    html {
-      scroll-padding-top: 4rem; /* Adjust this value based on the height of your sticky tab bar */
-    }
+  html {
+    scroll-padding-top: 4rem;
+  }
 
-    p {
-      text-align: justify;
-      text-indent: 1em; /* Indent the first line by 1em */
+  body {
+    font-family: sans-serif;
+    background-color: #7f8ba718; /* Tailwind bg-gray-1000 */
+    color: #1f2937;            /* Tailwind text-gray-800 */
+  }
+
+  p {
+    text-align: justify;
+    text-indent: 1em;
+  }
+
+  .event-number {
+    color: #dc2626; /* red-600 */
+    font-weight: bold;
+    margin-right: 4px;
+  }
+
+  header {
+    background-color: #1e293b; /* slate-800 */
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  header h1 {
+    font-size: 2rem;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  header p {
+    margin: 0.25rem 0;
+    font-size: 1rem;
+    text-align: center;
+    
+  }
+
+  nav {
+    background-color: #334155; /* slate-700 */
+    color: white;
+    padding: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+
+  nav a {
+    margin: 0 0.5rem;
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  main {
+    max-width: 64rem; /* Tailwind's max-w-5xl */
+    margin: 0 auto;
+    padding: 2.5rem 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #1e293b; /* slate-800 */
+  }
+
+  .text-gray-700 {
+    color: #374151;
+  }
+
+  .section-button a {
+    display: inline-block;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
-  </style>
+  }
+
+  @media (min-width: 768px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: 12rem;
+    object-fit: contain;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  .footer {
+    background-color: #1e293b;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    width: 24rem;
+    text-align: left;
+  }
+
+  .modal.show {
+    display: flex;
+  }
+
+  .modal button {
+    margin-top: 1rem;
+    background-color: #334155;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+  }
+
+  .modal button:hover {
+    background-color: #1e293b;
+  }
+
+  .text-blue-600 {
+    color: #2563eb;
+  }
+
+  .text-blue-600:hover {
+    text-decoration: underline;
+  }
+
+  .text-red-600 {
+    color: #dc2626;
+  }
+
+  .text-green-600 {
+    color: #16a34a;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+
+  .text-justify {
+    text-align: justify;
+  }
+
+  .leading-relaxed {
+    line-height: 1.625;
+  }
+</style>
 </head>
-<body class="bg-gray-1000 text-gray-800 font-sans">
+<body">
 
-  <header class="bg-slate-800 text-white py-2 text-center shadow">
-    <h1 class="text-4xl font-bold">ALDARDASHA HOUSE</h1>
-    <p class="text-1xl mt-1 text-center">From nothing you may become something.</p>
-    <p class="text-1xl mt-1 text-center">From something you may become everything.</p>
-    <p class="text-1xl mt-2 text-center">Founded by: Abdullah Almurshid, Aksar Ali, Jamil Aktar & Tanbir Ahammed</p>
+  <header>
+    <h1>ALDARDASHA HOUSE</h1>
+    <p>From nothing you may become something.</p>
+    <p>From something you may become everything.</p>
+    <p>Founded by: Abdullah Almurshid, Aksar Ali, Jamil Aktar & Tanbir Ahammed</p>
   </header>
 
-  <nav class="bg-slate-700 text-white py-3 sticky top-0 z-40">
+  <nav>
     <div class="flex flex-wrap justify-center space-x-4 sm:space-x-8 px-2">
       <a href="javascript:void(0);" onclick="openCentersModal()" class="hover:underline">Centers</a>
       <a href="javascript:void(0);" onclick="openModal()" class="hover:underline">Firms</a>
@@ -35,9 +205,9 @@
     </div>
   </nav>
   
-  <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+  <main>
     <section>
-      <h2 class="text-2xl font-bold mb-2 text-slate-800">About Aldardasha House</h2>
+      <h2>About Aldardasha House</h2>
       <p class="text-gray-700 leading-relaxed">
         Established in January 2024, Aldardasha House is the heart of Dardasha Group Pvt Ltd, serving as its permanent office since March 27, 2025. It symbolizes unity, planning, and the future of our multi-venture group.
       </p>
@@ -106,27 +276,12 @@
 </section>
 
 <section id="events" class="mt-12">
-  <h2 class="text-2xl font-bold mb-4 text-slate-800">Upcoming Events</h2>
-  <ul class="list-disc list-inside text-gray-700 space-y-2">
-    <li>
-      <strong>Leadership Workshop:</strong> January 15, 2025 - A workshop to develop leadership skills among youth.
-      <a href="attachments/leadership-workshop.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
-    </li>
-    <li>
-      <strong>Sports Tournament:</strong> February 10, 2025 - A regional sports event for all age groups.
-      <a href="attachments/sports-tournament.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
-    </li>
-    <li>
-      <strong>Community Service Day:</strong> March 5, 2025 - A day dedicated to giving back to the community.
-      <a href="attachments/community-service.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
-    </li>
-    <li>
-      <strong>Art Exhibition:</strong> April 20, 2025 - Showcasing creative works by local artists.
-      <a href="attachments/art-exhibition.pdf" class="text-blue-600 hover:underline ml-2" target="_blank">Read More</a>
-    </li>
-  </ul>
+  <h2 class="bg-green-400 text-center text-2xl font-bold mb-4 text-slate-800">Ongoing Events</h2>
+  <ol id="ongoing-home-events">
+    <li>Loading...</li>
+  </ol>
   <div class="text-center mt-4">
-    <a class="text-green-600">To view more events.</a>
+    <a class="text-green-600">To view all events</a>
     <a href="events.html" class="text-blue-600 hover:underline" target="_blank">Click</a>
   </div>
 </section>
@@ -140,7 +295,7 @@
 </section>
 
 <section id="contact">
-  <h2 class="text-2xl font-bold mb-2 text-slate-800">Contact Details</h2>
+  <h2>Contact Details</h2>
   <p class="text-gray-700">Email: aldardashahouse@gmail.com</p>
   <p class="text-gray-700">Location: Aldardasha House, Kuchgiria, Bhagwangola, Murshidabad, 742123</p>
   <div class="text-center mt-4">
@@ -149,7 +304,7 @@
   </div>
 </section>
 
-  <section id="links" class="bg-slate-200 text-white text-center py-4 mt-10">
+  <section id="links">
     <h2 class="text-2xl font-bold mb-2 text-slate-800">Some Links</h2>
     <div class="text-align mt-4">
       <a class="text-gray-800">To visit official Facebook page click</a>
@@ -158,40 +313,40 @@
   </section>
   </main>
   
-  <footer class="bg-slate-800 text-white text-center py-4 mt-10">
+  <footer>
     <!-- Firms Modal -->
-    <div id="cellsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-      <div class="bg-white rounded-lg p-6 w-96 space-y-4">
-        <h2 class="text-2xl font-bold text-slate-800">Affiliated Firms</h2>
+    <div id="cellsModal">
+      <div>
+        <h2>Affiliated Firms</h2>
         <ul class="space-y-3">
-          <li><a href="legend-firm.html" class="text-blue-600 hover:underline">The Legend Pustika Bhandar</a></li>
-          <li><a href="iktisaf-firm.html" class="text-blue-600 hover:underline">Al Iktisaf Media House</a></li>
-          <li><a href="inqalaab-firm.html" class="text-blue-600 hover:underline">Inqalaab Studio</a></li>
+          <li><a href="legend-firm.html">The Legend Pustika Bhandar</a></li>
+          <li><a href="iktisaf-firm.html">Al Iktisaf Media House</a></li>
+          <li><a href="inqalaab-firm.html">Inqalaab Studio</a></li>
         </ul>
-        <button id="closeModal" class="mt-4 bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800">Close</button>
+        <button id="closeModal">Close</button>
       </div>
     </div>
   
     <!-- Centers Modal -->
-    <div id="centersModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-      <div class="bg-white rounded-lg p-6 w-96 space-y-4">
-        <h2 class="text-2xl font-bold text-slate-800">Affiliated Centers</h2>
+    <div id="centersModal">
+      <div>
+        <h2>Affiliated Centers</h2>
         <ul class="space-y-3">
-          <li><a href="youth-centre.html" class="text-blue-600 hover:underline">Youth Centre</a></li>
-          <li><a href="sports-centre.html" class="text-blue-600 hover:underline">Sports Centre</a></li>
+          <li><a href="youth-centre.html">Youth Centre</a></li>
+          <li><a href="sports-centre.html">Sports Centre</a></li>
         </ul>
-        <button id="closeCentersModal" class="mt-4 bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800">Close</button>
+        <button id="closeCentersModal">Close</button>
       </div>
     </div>
 
     <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
-      <div class="relative">
-        <img id="modalImage" src="" alt="Broad Image" class="max-w-full max-h-screen rounded shadow">
-        <button onclick="closeImageModal()" class="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded hover:bg-gray-200">Close</button>
+    <div id="imageModal">
+      <div>
+        <img id="modalImage" src="" alt="Broad Image">
+        <button onclick="closeImageModal()">Close</button>
       </div>
     </div>
-    <p class="text-center">&copy; 2025 Aldardasha House | All rights reserved.</p>
+    <p>&copy; 2025 Aldardasha House | All rights reserved.</p>
   </footer>
   
   <script>
@@ -263,6 +418,75 @@
       }
     });
   </script>
-  
+
+  <script>
+function parseDate(dateStr) {
+  if (!dateStr || typeof dateStr !== "string") return null;
+  const [dd, mm, yyyy] = dateStr.split("-");
+  const d = new Date(`${yyyy}-${mm}-${dd}`);
+  return isNaN(d) ? null : d;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr || typeof dateStr !== "string") return "Invalid Date";
+  const [dd, mm, yyyy] = dateStr.split("-");
+  const d = new Date(`${yyyy}-${mm}-${dd}`);
+  if (isNaN(d)) return "Invalid Date";
+  const datePart = d.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
+  const weekday = d.toLocaleDateString('en-GB', { weekday: 'long' });
+  return `${datePart} (${weekday})`;
+}
+
+async function loadOngoingEvents() {
+  const list = document.getElementById("ongoing-home-events");
+  list.innerHTML = "<li>Loading...</li>";
+  try {
+    const res = await fetch("https://house-dardasha-admin.onrender.com/api/events/public");
+    const events = await res.json();
+    list.innerHTML = "";
+
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    const ongoingEvents = events.filter(ev => {
+      const d = parseDate(ev.date);
+      return d && d >= oneWeekAgo;
+    });
+
+    if (ongoingEvents.length === 0) {
+      list.innerHTML = "<li>No ongoing events.</li>";
+      return;
+    }
+
+    ongoingEvents.sort((a, b) => (parseDate(a.date) || 0) - (parseDate(b.date) || 0));
+
+  ongoingEvents.forEach((ev, i) => {
+    const number = i + 1; // 1-based index
+    const li = document.createElement("li");
+    li.className = "text-justify leading-relaxed";
+    li.innerHTML = `
+      <strong><span class="event-number">${number}.</span> ${ev.title}</strong>
+      <span class="bg-yellow-200 text-slate-900 px-2 py-0.5 rounded text-sm mx-1 inline-block">
+        📅 ${formatDate(ev.date)}
+      </span>
+      ${ev.details || ''}
+      ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="text-blue-600 hover:underline ml-2" target="_blank">View</a>` : ''}
+    `;
+    list.appendChild(li);
+  });
+
+  } catch (err) {
+    list.innerHTML = "<li>Error loading events.</li>";
+  }
+}
+
+loadOngoingEvents();
+</script>
+
 </body>
 </html>

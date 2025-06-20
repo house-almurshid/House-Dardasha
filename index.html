@@ -9,6 +9,101 @@
     html {
       scroll-padding-top: 4rem; /* Adjust this value based on the height of your sticky tab bar */
     }
+    body {
+      background-color: #ffffff;
+      color: #333333;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+  background-color: #ffffff;
+  color: #dc2626;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-container {
+  max-width: 1024px;
+  min-width: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.header-content {
+  align-items: center;
+}
+
+.header-title {
+  font-weight: bold;
+  margin-bottom: 0;
+  line-height: 1.2;
+  word-spacing: 0.1em;
+  font-size: 60px;
+}
+
+.header-slogan {
+  font-style: italic;
+  line-height: 1.2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slogan-line {
+  white-space: nowrap;       /* Prevents word breaking */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 767px) {
+  .header-title {
+    font-size: 34px;
+  }
+
+  .header-slogan {
+    font-size: 18px;
+    white-space: nowrap;
+  }
+}
+  @media (min-width: 600px) {
+  .slogan-line {
+    display: inline;
+    font-size: 18px;
+  }
+
+  .header-slogan {
+    flex-direction: row;
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+  .header-slogan {
+    white-space: normal;
+    display: block;
+  }
+}
+
+    .announcement {
+      background-color: #f8f9fa; /* Light gray background */
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .announcement h2 {
+      color: #dc2626; /* Example: Tailwind's red-600 */
+      font-weight: bold;
+      margin-top: -5px;
+      margin-bottom: 0.3rem;
+      font-size: 24px;
+      text-align: center;
+    }
 
     p {
       text-align: justify;
@@ -21,13 +116,19 @@
     }
   </style>
 </head>
-<body class="bg-gray-1000 text-gray-800 font-sans">
+<body>
 
-  <header class="bg-slate-800 text-white py-2 text-center shadow">
-    <h1 class="text-4xl font-bold">ALDARDASHA HOUSE</h1>
-    <p class="text-1xl mt-1 text-center">From nothing you may become something.</p>
-    <p class="text-1xl mt-1 text-center">From something you may become everything.</p>
-    <p class="text-1xl mt-2 text-center">Founded by: Abdullah Almurshid, Aksar Ali, Jamil Aktar & Tanbir Ahammed</p>
+  <header>
+    <div class="header-container">
+      <div class="header-content">
+        <div class="header-title">ALDARDASHA HOUSE</div>
+        <div class="header-slogan">
+          <div class="slogan-line slogan-line-1">From nothing you may become something.</div>
+          <div class="slogan-line slogan-line-2">From something you may become everything.</div>
+        </div>
+
+      </div>
+    </div>
   </header>
 
   <nav class="bg-slate-700 text-white py-3 sticky top-0 z-40">
@@ -40,7 +141,11 @@
     </div>
   </nav>
   
-  <main class="max-w-5xl mx-auto px-4 py-10 space-y-12">
+  <main class="max-w-5xl mx-auto px-4 py-5 space-y-12">
+    <section class="announcement">
+      <h2>Important Announcements</h2>
+      <p>Currently no announcement.</p>
+      </section>
     <section>
       <h2 class="text-2xl font-bold mb-2 text-slate-800">About Aldardasha House</h2>
       <p class="text-gray-700 leading-relaxed">
