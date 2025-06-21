@@ -491,7 +491,7 @@ async function loadOngoingEvents() {
         📅 ${formatDate(ev.date)}
       </span>
       ${ev.details || ''}
-      ${ev.fileUrl ? `<a href="${ev.fileUrl}" class="text-blue-600 hover:underline ml-2" target="_blank">View</a>` : ''}
+      <a href="#" class="text-blue-600 hover:underline ml-2" onclick="${ev.fileUrl ? `window.open('${ev.fileUrl}', '_blank')` : 'showNoFileModal(); return false;'}">View</a>
     `;
     list.appendChild(li);
   });
@@ -503,6 +503,25 @@ async function loadOngoingEvents() {
 
 loadOngoingEvents();
 </script>
+
+<!-- No File Modal -->
+<div id="no-file-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+  <div class="bg-white p-6 rounded shadow-lg max-w-xs text-center">
+    <h2 class="text-xl font-bold text-orange-600 mb-2">⚠️ No File Attached</h2>
+    <p class="text-gray-700">There is no file attached for this event.</p>
+    <button onclick="closeNoFileModal()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">OK</button>
+  </div>
+</div>
+
+<script>
+function showNoFileModal() {
+  document.getElementById("no-file-modal").classList.remove("hidden");
+}
+function closeNoFileModal() {
+  document.getElementById("no-file-modal").classList.add("hidden");
+}
+</script>
+
 
 </body>
 </html>

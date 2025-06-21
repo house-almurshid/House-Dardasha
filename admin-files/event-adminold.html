@@ -430,7 +430,7 @@ footer p {
           <button type="button" id="upload-file-btn" class="add-event-btn file-upload-btn">Upload</button>
         </div>
         <div id="file-preview" style="margin-bottom:16px;"></div>
-        <button type="submit" class="add-event-btn" id="add-event-btn" style="margin-top:10px;">Add Event</button>
+        <button type="submit" class="add-event-btn" disabled id="add-event-btn" style="margin-top:10px;">Add Event</button>
       </form>
   </div>
 </div>
@@ -500,6 +500,7 @@ footer p {
       const progressBar = document.getElementById('upload-progress');
 
       preview.innerHTML = "";
+      addBtn.disabled = true;
       uploadedFileUrl = "";
 
       if (!file) {
@@ -584,21 +585,18 @@ footer p {
   const details = document.getElementById('event-details').value.trim();
   const addBtn = document.getElementById('add-event-btn');
 
-  if (!title || !date || !details) return;
+  if (!title || !date || !details || !uploadedFileUrl) return;
 
-  const bodyData = { title, date, details };
-if (uploadedFileUrl) {
-  bodyData.fileUrl = uploadedFileUrl;
-}
+  addBtn.disabled = true;
 
-const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + localStorage.getItem('adminToken')
-  },
-  body: JSON.stringify(bodyData)
-});
+  const res = await fetch('https://house-dardasha-admin.onrender.com/api/events', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('adminToken')
+    },
+    body: JSON.stringify({ title, date, details, fileUrl: uploadedFileUrl })
+  });
   const result = await res.json();
 
   addEventForm.reset();
@@ -722,18 +720,13 @@ ongoingEvents.forEach((ev, index) => {
   del.onclick = () => openDeleteModal(ev._id, ev.title, formatDate(ev.date));
   actions.appendChild(del);
 
-  const readMore = document.createElement("button");
-readMore.textContent = "Read More";
-readMore.className = "read-more-btn";
-readMore.onclick = () => {
   if (ev.fileUrl) {
-    window.open(ev.fileUrl, '_blank');
-  } else {
-    showNoFileModal();
+    const readMore = document.createElement("button");
+    readMore.textContent = "Read More";
+    readMore.className = "read-more-btn";
+    readMore.onclick = () => window.open(ev.fileUrl, '_blank');
+    actions.appendChild(readMore);
   }
-};
-actions.appendChild(readMore);
-
 
   li.appendChild(actions);
   document.getElementById("ongoing-events-list").appendChild(li);
@@ -775,18 +768,13 @@ actions.appendChild(readMore);
         del.className = "delete-btn";
         del.onclick = () => openDeleteModal(ev._id, ev.title, formatDate(ev.date || ""));
         actions.appendChild(del);
-        const readMore = document.createElement("button");
-readMore.textContent = "Read More";
-readMore.className = "read-more-btn";
-readMore.onclick = () => {
-  if (ev.fileUrl) {
-    window.open(ev.fileUrl, '_blank');
-  } else {
-    showNoFileModal();
-  }
-};
-actions.appendChild(readMore);
-
+        if (ev.fileUrl) {
+          const readMore = document.createElement("button");
+          readMore.textContent = "Read More";
+          readMore.className = "read-more-btn";
+          readMore.onclick = () => window.open(ev.fileUrl, '_blank');
+          actions.appendChild(readMore);
+        }
         li.appendChild(actions);
         list.appendChild(li);
       });
@@ -927,24 +915,6 @@ function showDeleteSuccessModal() {
 }
 function closeDeleteSuccessModal() {
   document.getElementById("delete-success-modal").style.display = "none";
-}
-</script>
-<!-- No File Modal -->
-<div id="no-file-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
-  <div style="background:white; padding:24px 32px; border-radius:12px; text-align:center; max-width:320px; box-shadow:0 6px 24px rgba(0,0,0,0.2);">
-    <h2 style="color:#f97316; margin-bottom:12px;">⚠️ No File Attached</h2>
-    <p style="font-size:1rem; color:#333;">There is no attached file for this event.</p>
-    <button onclick="closeNoFileModal()" style="margin-top:20px; background:#2563eb; color:white; padding:10px 20px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">OK</button>
-  </div>
-</div>
-<script>
-  // Show no file modal if no file URL
-  function showNoFileModal() {
-  document.getElementById("no-file-modal").style.display = "flex";
-}
-
-function closeNoFileModal() {
-  document.getElementById("no-file-modal").style.display = "none";
 }
 </script>
 </body>
