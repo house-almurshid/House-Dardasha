@@ -113,6 +113,20 @@
       font-weight: bold;
       cursor: pointer;
     }
+    .submit-btn:hover {
+      background-color: darkgreen;
+    }
+    .submit-btn:disabled {
+      background-color: #a3a3a3;
+      color: #fff;
+      cursor: not-allowed;
+      filter: blur(0.5px);
+    }
+    .submit-btn:active {
+      filter: brightness(0.85);
+      transform: scale(0.97);
+      transition: filter 0.1s, transform 0.1s;
+    }
 
     .reset-btn {
       background-color: red;
@@ -121,6 +135,20 @@
       border: none;
       font-weight: bold;
       cursor: pointer;
+    }
+    .reset-btn:hover {
+      background-color: darkred;
+    }
+    .reset-btn:active {
+      filter: brightness(0.85);
+      transform: scale(0.97);
+      transition: filter 0.1s, transform 0.1s;
+    }
+    .reset-btn:disabled {
+      background-color: #a3a3a3;
+      color: #fff;
+      cursor: not-allowed;
+      filter: blur(0.5px);
     }
 
     .required {
@@ -152,6 +180,31 @@
       margin: 12px 0;
       letter-spacing: 2px;
     }
+
+    #verify-email-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+#verify-email-btn:hover {
+  background-color: #1d4ed8;
+}
+#verify-email-btn:disabled,
+.verify-email-btn-disabled {
+  background-color: #a3a3a3 !important;
+  color: #fff !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+  filter: blur(0.5px);
+}
+#verify-email-btn:active {
+  filter: brightness(0.85);
+  transform: scale(0.97);
+}
 
     .confirm-btn-disabled {
       background: #a3a3a3 !important;
@@ -380,6 +433,7 @@ let generatedCode = "";
 let resendTimer = null;
 let resendSeconds = 60;
 let canResend = false;
+let emailSendingInProgress = false;
 
 function showVerificationStage(email) {
   document.getElementById('appointment-form').style.display = 'none';
@@ -434,30 +488,36 @@ document.getElementById('appointment-form').addEventListener('submit', async fun
 
   setTimeout(() => {
     // Prevent double click on Verify Email
-    document.getElementById('verify-email-btn').onclick = function() {
-      const btn = this;
-      btn.disabled = true;
-      setTimeout(() => { btn.disabled = false; }, 3000); // Optionally re-enable after 3s if needed
-      generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
-      emailjs.send(
-        "service_s3lhaf6",
-        "template_a5xhdud",
-        { to_email: email, code: generatedCode }
-      ).then(function() {
-        btn.style.display = 'none';
-        document.getElementById('otp-row').style.display = 'inline-block';
-        document.getElementById('verify-otp-btn').style.display = 'inline-block';
-        const resendBtn = document.getElementById('resend-otp-btn');
-        resendBtn.style.display = 'inline-block';
-        resendBtn.disabled = true;
-        resendBtn.classList.add('resend-btn-disabled');
-        resendBtn.innerHTML = `Resend OTP (<span id="resend-timer">60</span>s)`;
-        startResendTimer();
-      }, function() {
-        alert("Failed to send OTP. Please try again.");
-        btn.disabled = false;
-      });
-    };
+    document.getElementById('verify-email-btn').onclick = function () {
+  const btn = this;
+  if (emailSendingInProgress) return;
+  emailSendingInProgress = true;
+  btn.classList.add('verify-email-btn-disabled');
+  btn.disabled = true;
+
+  generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+  emailjs.send(
+    "service_s3lhaf6",
+    "template_a5xhdud",
+    { to_email: email, code: generatedCode }
+  ).then(function () {
+    btn.style.display = 'none';
+    document.getElementById('otp-row').style.display = 'inline-block';
+    document.getElementById('verify-otp-btn').style.display = 'inline-block';
+    const resendBtn = document.getElementById('resend-otp-btn');
+    resendBtn.style.display = 'inline-block';
+    resendBtn.disabled = true;
+    resendBtn.classList.add('resend-btn-disabled');
+    resendBtn.innerHTML = `Resend OTP (<span id="resend-timer">60</span>s)`;
+    startResendTimer();
+  }).catch(function () {
+    alert("Failed to send OTP. Please try again.");
+    btn.disabled = false;
+    btn.classList.remove('verify-email-btn-disabled');
+  }).finally(() => {
+    emailSendingInProgress = false;
+  });
+};
 
     document.getElementById('resend-otp-btn').onclick = function() {
       if (!canResend) return;
