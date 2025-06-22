@@ -181,7 +181,7 @@
       letter-spacing: 2px;
     }
 
-    #verify-email-btn {
+    .verify-email-btn {
   background-color: #2563eb;
   color: white;
   border: none;
@@ -190,10 +190,10 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
-#verify-email-btn:hover {
+.verify-email-btn:hover {
   background-color: #1d4ed8;
 }
-#verify-email-btn:disabled,
+.verify-email-btn:disabled,
 .verify-email-btn-disabled {
   background-color: #a3a3a3 !important;
   color: #fff !important;
@@ -201,7 +201,7 @@
   opacity: 0.6;
   filter: blur(0.5px);
 }
-#verify-email-btn:active {
+.verify-email-btn:active {
   filter: brightness(0.85);
   transform: scale(0.97);
 }
@@ -439,19 +439,19 @@ function showVerificationStage(email) {
   document.getElementById('appointment-form').style.display = 'none';
   document.getElementById('verify-section').style.display = 'block';
   document.getElementById('verify-section').innerHTML = `
-    <div style="margin-bottom:10px;">
-      <b>Email:</b> <span id="verify-email" style="color:#2563eb;">${email}</span>
-    </div>
-    <button id="verify-email-btn" style="padding:8px 18px; font-weight:bold; background:#2563eb; color:white; border:none; margin-bottom:10px;">Verify Email</button>
-    <div id="otp-row" style="margin:16px 0; display:none;">
-      <input type="text" id="verify-code-input" placeholder="Enter OTP" maxlength="6" style="padding:8px; font-size:1rem; width:120px;">
-      <button id="verify-otp-btn" style="padding:8px 18px; font-weight:bold; background:green; color:white; border:none; margin-left:10px; display:none;">Verify OTP</button>
-      <span id="otp-status" style="color:red; margin-left:10px;"></span>
-    </div>
-    <button id="resend-otp-btn" class="resend-btn-disabled" style="padding:8px 18px; font-weight:bold; background:#f59e42; color:white; border:none; display:none; margin-bottom:10px;" disabled>Resend OTP (<span id="resend-timer">60</span>s)</button>
-    <br>
-    <button id="confirm-btn" class="confirm-btn-disabled" style="padding:10px 25px; font-weight:bold; background:green; color:white; border:none; margin-top:20px;" disabled>Confirm Appointment</button>
-  `;
+  <div style="margin-bottom:10px;">
+    <b>Email:</b> <span id="verify-email" style="color:#2563eb;">${email}</span>
+  </div>
+  <button id="verify-email-btn" class="verify-email-btn">Verify Email</button>
+  <div id="otp-row" style="margin:16px 0; display:none;">
+    <input type="text" id="verify-code-input" placeholder="Enter OTP" maxlength="6" style="padding:8px; font-size:1rem; width:120px;">
+    <button id="verify-otp-btn" style="padding:8px 18px; font-weight:bold; background:green; color:white; border:none; margin-left:10px; display:none;">Verify OTP</button>
+    <span id="otp-status" style="color:red; margin-left:10px;"></span>
+  </div>
+  <button id="resend-otp-btn" class="resend-btn-disabled" style="padding:8px 18px; font-weight:bold; background:#f59e42; color:white; border:none; display:none; margin-bottom:10px;" disabled>Resend OTP (<span id="resend-timer">60</span>s)</button>
+  <br>
+  <button id="confirm-btn" class="confirm-btn-disabled" style="padding:10px 25px; font-weight:bold; background:green; color:white; border:none; margin-top:20px;" disabled>Confirm Appointment</button>
+`;
 }
 
 function startResendTimer() {
