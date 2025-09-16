@@ -6,98 +6,98 @@
   <title>PDF Cropper — A-size selector</title>
   <style>
     :root{--bg:#0f172a;--panel:#0b1220;--accent:#06b6d4}
-body{
-  font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
-  min-height:100vh;
-  margin:0;
-  background:#0b1220;
-  color:#e6eef8;
-  display:flex;
-  justify-content:center;
-  padding:8px;
-}
-.container{
-  display:flex;
-  flex-direction:column;
-  width:100%;
-  max-width:1200px;
-  gap:10px;
-}
-.sidebar{
-  background:linear-gradient(180deg,#071026,#0b1522);
-  padding:8px 12px;
-  border-radius:10px;
-  box-shadow:0 4px 20px rgba(2,6,23,.6);
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
-.sidebar h2{
-  margin:0;
-  font-size:14px;
-  color:#9ecbe2;
-  flex:0 0 auto;
-}
-.sidebar label{
-  font-size:12px;
-  opacity:.8;
-  margin-right:4px;
-}
-.sidebar select,
-.sidebar input[type=file],
-.sidebar input[type=number],
-.sidebar button{
-  padding:6px 10px;
-  border-radius:6px;
-  border:1px solid rgba(255,255,255,.1);
-  background:#0f172a;
-  color:inherit;
-  font-size:13px;
-  flex:0 0 auto;
-}
-.sidebar button{
-  background:var(--accent);
-  color:#fff;
-  border:none;
-  cursor:pointer;
-}
-.sidebar button:hover{opacity:.9}
-.viewer{
-  flex:1;
-  background:linear-gradient(180deg,#071026,#031124);
-  padding:8px;
-  border-radius:12px;
-  box-shadow:0 6px 30px rgba(2,6,23,.6);
-  min-height:400px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.page-wrap{
-  position:relative;
-  border-radius:8px;
-  background:#071025;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  width:100%;
-}
-canvas{
-  max-width:100%;
-  height:auto;
-  border-radius:4px;
-  box-shadow:0 8px 30px rgba(0,0,0,.6);
-}
-.crop-box{
-  position:absolute;
-  border:2px dashed var(--accent);
-  box-sizing:border-box;
-  cursor:grab;
-}
-.crop-box.dragging{cursor:grabbing}
-.note{font-size:12px;color:#89c7d6;margin-left:auto}
-
+    body{
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+      min-height:100vh;
+      margin:0;
+      background:#0b1220;
+      color:#e6eef8;
+      display:flex;
+      justify-content:center;
+      padding:8px;
+    }
+    .container{
+      display:flex;
+      flex-direction:column;
+      width:100%;
+      max-width:1200px;
+      gap:10px;
+    }
+    .sidebar{
+      background:linear-gradient(180deg,#071026,#0b1522);
+      padding:8px 12px;
+      border-radius:10px;
+      box-shadow:0 4px 20px rgba(2,6,23,.6);
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    .sidebar h2{
+      margin:0;
+      font-size:14px;
+      color:#9ecbe2;
+      flex:0 0 auto;
+    }
+    .sidebar label{
+      font-size:12px;
+      opacity:.8;
+      margin-right:4px;
+    }
+    .sidebar select,
+    .sidebar input[type=file],
+    .sidebar input[type=number],
+    .sidebar button{
+      padding:6px 10px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,.1);
+      background:#0f172a;
+      color:inherit;
+      font-size:13px;
+      flex:0 0 auto;
+    }
+    .sidebar button{
+      background:var(--accent);
+      color:#fff;
+      border:none;
+      cursor:pointer;
+    }
+    .sidebar button:hover{opacity:.9}
+    .viewer{
+      flex:1;
+      background:linear-gradient(180deg,#071026,#031124);
+      padding:8px;
+      border-radius:12px;
+      box-shadow:0 6px 30px rgba(2,6,23,.6);
+      min-height:400px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .page-wrap{
+      position:relative;
+      border-radius:8px;
+      background:#071025;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      width:100%;
+    }
+    canvas{
+      max-width:100%;
+      height:auto;
+      border-radius:4px;
+      box-shadow:0 8px 30px rgba(0,0,0,.6);
+    }
+    .crop-box{
+      position:absolute;
+      border:2px dashed var(--accent);
+      box-sizing:border-box;
+      cursor:grab;
+      touch-action:none; /* prevent page scroll while dragging */
+    }
+    .crop-box.dragging{cursor:grabbing}
+    .note{font-size:12px;color:#89c7d6;margin-left:auto}
   </style>
   <!-- CDN: pdf.js + pdf-lib -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
@@ -106,32 +106,31 @@ canvas{
 <body>
   <div class="container">
     <div class="sidebar">
-  <h2>PDF Cropper</h2>
+      <h2>PDF Cropper</h2>
 
-  <label>File:</label>
-  <input id="file" type="file" accept="application/pdf" />
+      <label>File:</label>
+      <input id="file" type="file" accept="application/pdf" />
 
-  <label>Page:</label>
-  <select id="pageSelect"></select>
+      <label>Page:</label>
+      <select id="pageSelect"></select>
 
-  <label>Size:</label>
-  <select id="sizeSelect">
-    <option value="A6">A6</option>
-    <option value="A5">A5</option>
-    <option value="Custom">Custom</option>
-  </select>
+      <label>Size:</label>
+      <select id="sizeSelect">
+        <option value="A6">A6</option>
+        <option value="A5">A5</option>
+        <option value="Custom">Custom</option>
+      </select>
 
-  <span id="customBox" style="display:none">
-    <label>W:</label><input id="customW" type="number" value="105" style="width:60px" />
-    <label>H:</label><input id="customH" type="number" value="148" style="width:60px" />
-  </span>
+      <span id="customBox" style="display:none">
+        <label>W:</label><input id="customW" type="number" value="105" style="width:60px" />
+        <label>H:</label><input id="customH" type="number" value="148" style="width:60px" />
+      </span>
 
-  <button id="applyBox">Place A-box</button>
-  <button id="cropBtn">Crop</button>
+      <button id="applyBox">Place A-box</button>
+      <button id="cropBtn">Crop</button>
 
-  <div class="note">No upload, client-side only</div>
-</div>
-
+      <div class="note">No upload, client-side only</div>
+    </div>
 
     <div class="viewer">
       <div class="page-wrap" id="pageWrap">
@@ -163,7 +162,6 @@ let lastRender = {width:0,height:0};
 let originalFile = null;
 
 const A_SIZES = { 'A6': {w:105,h:148}, 'A5': {w:148,h:210} };
-
 function mmToPoints(mm){ return mm * 72 / 25.4; }
 
 fileInput.addEventListener('change', async (e)=>{
@@ -210,13 +208,15 @@ function placeBox(){
   const mmW = sizeKey==='Custom' ? (+customW.value||105) : A_SIZES[sizeKey].w;
   const mmH = sizeKey==='Custom' ? (+customH.value||148) : A_SIZES[sizeKey].h;
 
-  // Convert mm → PDF points → intrinsic pixels
   const ptsW = mmToPoints(mmW);
   const ptsH = mmToPoints(mmH);
-  const pppX = lastRender.width / lastRender.pageWidthPoints;
-  const pppY = lastRender.height / lastRender.pageHeightPoints;
-  const pxW = Math.round(ptsW * pppX);
-  const pxH = Math.round(ptsH * pppY);
+
+  // Use CSS displayed size
+  const rect = pdfCanvas.getBoundingClientRect();
+  const scaleX = rect.width / lastRender.pageWidthPoints;
+  const scaleY = rect.height / lastRender.pageHeightPoints;
+  const pxW = Math.round(ptsW * scaleX);
+  const pxH = Math.round(ptsH * scaleY);
 
   if(cropBoxEl) cropBoxEl.remove();
   cropBoxEl = document.createElement('div');
@@ -224,12 +224,10 @@ function placeBox(){
   cropBoxEl.style.width = pxW + 'px';
   cropBoxEl.style.height = pxH + 'px';
 
-  // Center inside intrinsic canvas dimensions
-  cropBoxEl.style.left = Math.max(10,(pdfCanvas.width - pxW)/2) + 'px';
-  cropBoxEl.style.top  = Math.max(10,(pdfCanvas.height - pxH)/2) + 'px';
+  cropBoxEl.style.left = Math.max(10,(rect.width - pxW)/2) + 'px';
+  cropBoxEl.style.top  = Math.max(10,(rect.height - pxH)/2) + 'px';
 
-  const container = document.getElementById('viewerInner');
-  container.appendChild(cropBoxEl);
+  document.getElementById('viewerInner').appendChild(cropBoxEl);
   cropBoxEl.addEventListener('pointerdown', startDrag);
 }
 
@@ -242,19 +240,21 @@ function startDrag(e){
     origTop:parseFloat(cropBoxEl.style.top)
   };
   cropBoxEl.classList.add('dragging');
-  window.addEventListener('pointermove', doDrag);
+  window.addEventListener('pointermove', doDrag, {passive:false});
   window.addEventListener('pointerup', endDrag);
 }
 function doDrag(e){
   if(!dragInfo) return;
+  e.preventDefault(); // prevent page scroll
+
   const dx = e.clientX - dragInfo.startX;
   const dy = e.clientY - dragInfo.startY;
   const newLeft = dragInfo.origLeft + dx;
   const newTop  = dragInfo.origTop + dy;
 
-  // clamp inside intrinsic canvas size
-  const relLeft = Math.max(0, Math.min(newLeft, pdfCanvas.width - cropBoxEl.offsetWidth));
-  const relTop  = Math.max(0, Math.min(newTop, pdfCanvas.height - cropBoxEl.offsetHeight));
+  const rect = pdfCanvas.getBoundingClientRect();
+  const relLeft = Math.max(0, Math.min(newLeft, rect.width - cropBoxEl.offsetWidth));
+  const relTop  = Math.max(0, Math.min(newTop, rect.height - cropBoxEl.offsetHeight));
 
   cropBoxEl.style.left = relLeft + 'px';
   cropBoxEl.style.top  = relTop + 'px';
@@ -273,16 +273,20 @@ applyBox.addEventListener('click', ()=>{ placeBox(); });
 // Crop -> preserve vectors/text using pdf-lib
 cropBtn.addEventListener('click', async ()=>{
   if(!cropBoxEl) return alert('Place the A box first');
+
+  const rect = pdfCanvas.getBoundingClientRect();
+  const scaleX = lastRender.pageWidthPoints / rect.width;
+  const scaleY = lastRender.pageHeightPoints / rect.height;
+
   const leftPx = parseFloat(cropBoxEl.style.left);
   const topPx = parseFloat(cropBoxEl.style.top);
   const wPx = cropBoxEl.offsetWidth;
   const hPx = cropBoxEl.offsetHeight;
-  const pppX = lastRender.width / lastRender.pageWidthPoints;
-  const pppY = lastRender.height / lastRender.pageHeightPoints;
-  const cropLeftPoints = leftPx / pppX;
-  const cropTopPoints = topPx / pppY;
-  const cropWPoints = wPx / pppX;
-  const cropHPoints = hPx / pppY;
+
+  const cropLeftPoints = leftPx * scaleX;
+  const cropTopPoints  = topPx * scaleY;
+  const cropWPoints    = wPx * scaleX;
+  const cropHPoints    = hPx * scaleY;
 
   const arr = await originalFile.arrayBuffer();
   const pdfDocLib = await PDFLib.PDFDocument.load(arr);
