@@ -180,7 +180,7 @@ function placeBox(){
 
     // center horizontally, top aligned
     cropBoxEl.style.left = Math.max(10, (rect.width - pxW)/2) + 'px';
-    cropBoxEl.style.top  = '10px';
+    cropBoxEl.style.top  = '0';
 
     document.getElementById('viewerInner').appendChild(cropBoxEl);
     cropBoxEl.addEventListener('pointerdown', startDrag);
