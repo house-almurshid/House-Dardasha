@@ -6,93 +6,98 @@
   <title>PDF Cropper — A-size selector</title>
   <style>
     :root{--bg:#0f172a;--panel:#0b1220;--accent:#06b6d4}
-    body{
-      font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
-      min-height:100vh;
-      margin:0;
-      background:#0b1220;
-      color:#e6eef8;
-      display:flex;
-      justify-content:center;
-      padding:16px;
-    }
-    .container{
-      display:flex;
-      flex-wrap:wrap;
-      gap:18px;
-      width:100%;
-      max-width:1200px;
-    }
-    .sidebar{
-      flex:1 1 300px;
-      max-width:320px;
-      background:linear-gradient(180deg,#071026,#0b1522);
-      padding:18px;
-      border-radius:12px;
-      box-shadow:0 6px 30px rgba(2,6,23,.6);
-    }
-    .viewer{
-      flex:3 1 600px;
-      background:linear-gradient(180deg,#071026,#031124);
-      padding:18px;
-      border-radius:12px;
-      box-shadow:0 6px 30px rgba(2,6,23,.6);
-      min-height:400px;
-    }
-    h2{margin:6px 0 12px;font-size:16px}
-    label{font-size:13px;color:#a8c0cd}
-    select,input[type=file],button{
-      width:100%;
-      padding:8px 10px;
-      margin-top:6px;
-      margin-bottom:12px;
-      border-radius:8px;
-      border:1px solid rgba(255,255,255,.06);
-      background:transparent;
-      color:inherit;
-    }
-    .page-wrap{
-      position:relative;
-      border-radius:8px;
-      overflow:auto;
-      padding:8px;
-      background:#071025;
-      display:flex;
-      justify-content:center;
-    }
-    canvas{
-      max-width:100%;
-      height:auto;
-      border-radius:4px;
-      box-shadow:0 8px 30px rgba(0,0,0,.6);
-    }
-    .crop-box{
-      position:absolute;
-      border:2px dashed var(--accent);
-      box-sizing:border-box;
-      cursor:grab;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .crop-box.dragging{cursor:grabbing}
-    .crop-handle{width:10px;height:10px;background:var(--accent);position:absolute;border-radius:2px}
-    .handle-bl{left:-6px;bottom:-6px}
-    .handle-br{right:-6px;bottom:-6px}
-    .handle-tl{left:-6px;top:-6px}
-    .handle-tr{right:-6px;top:-6px}
-    .muted{opacity:.75;color:#9fb6c2}
-    .row{display:flex;gap:8px;flex-wrap:wrap}
-    .note{font-size:12px;color:#89c7d6;margin-top:8px}
-    footer{margin-top:12px;font-size:12px;color:#7ea8b6}
+body{
+  font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+  min-height:100vh;
+  margin:0;
+  background:#0b1220;
+  color:#e6eef8;
+  display:flex;
+  justify-content:center;
+  padding:8px;
+}
+.container{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  max-width:1200px;
+  gap:10px;
+}
+.sidebar{
+  background:linear-gradient(180deg,#071026,#0b1522);
+  padding:8px 12px;
+  border-radius:10px;
+  box-shadow:0 4px 20px rgba(2,6,23,.6);
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+.sidebar h2{
+  margin:0;
+  font-size:14px;
+  color:#9ecbe2;
+  flex:0 0 auto;
+}
+.sidebar label{
+  font-size:12px;
+  opacity:.8;
+  margin-right:4px;
+}
+.sidebar select,
+.sidebar input[type=file],
+.sidebar input[type=number],
+.sidebar button{
+  padding:6px 10px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#0f172a;
+  color:inherit;
+  font-size:13px;
+  flex:0 0 auto;
+}
+.sidebar button{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+.sidebar button:hover{opacity:.9}
+.viewer{
+  flex:1;
+  background:linear-gradient(180deg,#071026,#031124);
+  padding:8px;
+  border-radius:12px;
+  box-shadow:0 6px 30px rgba(2,6,23,.6);
+  min-height:400px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.page-wrap{
+  position:relative;
+  border-radius:8px;
+  background:#071025;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+}
+canvas{
+  max-width:100%;
+  height:auto;
+  border-radius:4px;
+  box-shadow:0 8px 30px rgba(0,0,0,.6);
+}
+.crop-box{
+  position:absolute;
+  border:2px dashed var(--accent);
+  box-sizing:border-box;
+  cursor:grab;
+}
+.crop-box.dragging{cursor:grabbing}
+.note{font-size:12px;color:#89c7d6;margin-left:auto}
 
-    /* Mobile responsiveness */
-    @media (max-width:768px){
-      body{padding:8px}
-      .container{flex-direction:column}
-      .sidebar,.viewer{max-width:100%;flex:1 1 100%}
-      .viewer{min-height:300px}
-    }
   </style>
   <!-- CDN: pdf.js + pdf-lib -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
@@ -101,36 +106,32 @@
 <body>
   <div class="container">
     <div class="sidebar">
-      <h2>PDF Cropper (A-size selector)</h2>
-      <label>Load PDF</label>
-      <input id="file" type="file" accept="application/pdf" />
+  <h2>PDF Cropper</h2>
 
-      <label>Choose page</label>
-      <select id="pageSelect"></select>
+  <label>File:</label>
+  <input id="file" type="file" accept="application/pdf" />
 
-      <label>Paper size</label>
-      <select id="sizeSelect">
-        <option value="A6">A6 (105 × 148 mm)</option>
-        <option value="A5">A5 (148 × 210 mm)</option>
-        <option value="Custom">Custom (mm)</option>
-      </select>
+  <label>Page:</label>
+  <select id="pageSelect"></select>
 
-      <div id="customBox" style="display:none">
-        <label>Width (mm)</label>
-        <input id="customW" type="number" value="105" />
-        <label>Height (mm)</label>
-        <input id="customH" type="number" value="148" />
-      </div>
+  <label>Size:</label>
+  <select id="sizeSelect">
+    <option value="A6">A6</option>
+    <option value="A5">A5</option>
+    <option value="Custom">Custom</option>
+  </select>
 
-      <div class="row">
-        <button id="applyBox">Place A-box</button>
-        <button id="cropBtn">Crop → PDF</button>
-      </div>
+  <span id="customBox" style="display:none">
+    <label>W:</label><input id="customW" type="number" value="105" style="width:60px" />
+    <label>H:</label><input id="customH" type="number" value="148" style="width:60px" />
+  </span>
 
-      <div class="note">Workflow: load a PDF, pick page, choose A-size, click <b>Place A-box</b>, drag to desired area, then <b>Crop → PDF</b>. Output keeps text & vectors intact.</div>
+  <button id="applyBox">Place A-box</button>
+  <button id="cropBtn">Crop</button>
 
-      <footer>Client-side only. No files uploaded. Uses pdf.js + pdf-lib.</footer>
-    </div>
+  <div class="note">No upload, client-side only</div>
+</div>
+
 
     <div class="viewer">
       <div class="page-wrap" id="pageWrap">
