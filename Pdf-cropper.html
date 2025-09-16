@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDF Cropper — A-size selector (A6)</title>
+  <style>
+    :root{--bg:#0f172a;--panel:#0b1220;--accent:#06b6d4}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;min-height:100vh;margin:0;background:#0b1220;color:#e6eef8;display:flex;align-items:flex-start;gap:20px;padding:24px}
+    .container{width:1100px;max-width:calc(100% - 48px);display:flex;gap:18px}
+    .sidebar{width:320px;background:linear-gradient(180deg,#071026,#0b1522);padding:18px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,.6)}
+    .viewer{flex:1;background:linear-gradient(180deg,#071026,#031124);padding:18px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,.6);min-height:600px}
+    h2{margin:6px 0 12px;font-size:16px}
+    label{font-size:13px;color:#a8c0cd}
+    select,input[type=file],button{width:100%;padding:8px 10px;margin-top:6px;margin-bottom:12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:transparent;color:inherit}
+    .page-wrap{position:relative;border-radius:8px;overflow:auto;padding:16px;background:#071025;display:flex;justify-content:center}
+    canvas{box-shadow:0 8px 30px rgba(0,0,0,.6);border-radius:4px}
+    /* crop box */
+    .crop-box{position:absolute;border:2px dashed var(--accent);box-sizing:border-box;cursor:grab;display:flex;align-items:center;justify-content:center}
+    .crop-box.dragging{cursor:grabbing}
+    .crop-handle{width:10px;height:10px;background:var(--accent);position:absolute;border-radius:2px}
+    .handle-bl{left:-6px;bottom:-6px}
+    .handle-br{right:-6px;bottom:-6px}
+    .handle-tl{left:-6px;top:-6px}
+    .handle-tr{right:-6px;top:-6px}
+    .muted{opacity:.75;color:#9fb6c2}
+    .row{display:flex;gap:8px}
+    .note{font-size:12px;color:#89c7d6;margin-top:8px}
+    footer{margin-top:12px;font-size:12px;color:#7ea8b6}
+  </style>
+  <!-- CDN: pdf.js + pdf-lib -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>PDF Cropper (A-size selector)</h2>
+      <label>Load PDF</label>
+      <input id="file" type="file" accept="application/pdf" />
+
+      <label>Choose page</label>
+      <select id="pageSelect"></select>
+
+      <label>Paper size</label>
+      <select id="sizeSelect">
+        <option value="FLA6">FLA6 (100 × 138 mm)</option>
+        <option value="A6">A6 (105 × 148 mm)</option>
+        <option value="A5">A5 (148 × 210 mm)</option>
+        <option value="Custom">Custom (mm)</option>
+      </select>
+
+      <div id="customBox" style="display:none">
+        <label>Width (mm)</label>
+        <input id="customW" type="number" value="105" />
+        <label>Height (mm)</label>
+        <input id="customH" type="number" value="148" />
+      </div>
+
+      <div class="row">
+        <button id="applyBox">Place A-box</button>
+        <button id="cropBtn">Crop → PDF</button>
+      </div>
+
+      <div class="note">Workflow: load a PDF, pick page, choose A-size (A6), click <b>Place A-box</b>, drag to desired area, then <b>Crop → PDF</b>. Output will be an A-sized PDF with intact text & vectors.</div>
+
+      <footer>Client-side only. No files uploaded to servers. Uses pdf.js + pdf-lib.</footer>
+    </div>
+
+    <div class="viewer">
+      <div class="page-wrap" id="pageWrap">
+        <div id="viewerInner" style="position:relative;display:inline-block">
+          <canvas id="pdfCanvas"></canvas>
+          <!-- crop box will be appended here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const fileInput = document.getElementById('file');
+const pageSelect = document.getElementById('pageSelect');
+const pdfCanvas = document.getElementById('pdfCanvas');
+const sizeSelect = document.getElementById('sizeSelect');
+const customBox = document.getElementById('customBox');
+const customW = document.getElementById('customW');
+const customH = document.getElementById('customH');
+const applyBox = document.getElementById('applyBox');
+const cropBtn = document.getElementById('cropBtn');
+
+let pdfDoc = null;
+let currentPage = 1;
+let renderedScale = 1.5;
+let cropBoxEl = null;
+let dragInfo = null;
+let lastRender = {width:0,height:0};
+let originalFile = null;
+
+const A_SIZES = { 'FLA6': {w:100,h:138},'A6': {w:105,h:148}, 'A5': {w:148,h:210} };
+
+function mmToPoints(mm){ return mm * 72 / 25.4; }
+
+fileInput.addEventListener('change', async (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  originalFile = f;
+  const arr = await f.arrayBuffer();
+  const loadingTask = pdfjsLib.getDocument({data:arr});
+  pdfDoc = await loadingTask.promise;
+  pageSelect.innerHTML = '';
+  for(let i=1;i<=pdfDoc.numPages;i++){
+    const opt = document.createElement('option');
+    opt.value=i; opt.textContent='Page '+i;
+    pageSelect.appendChild(opt);
+  }
+  currentPage = 1;
+  pageSelect.value = 1;
+  renderPage(1);
+});
+
+pageSelect.addEventListener('change', ()=>{ currentPage = +pageSelect.value; renderPage(currentPage); });
+sizeSelect.addEventListener('change', ()=>{ customBox.style.display = (sizeSelect.value==='Custom')? 'block':'none'; });
+
+async function renderPage(pageNum){
+  if(!pdfDoc) return;
+  const page = await pdfDoc.getPage(pageNum);
+  const viewport = page.getViewport({scale: renderedScale});
+  pdfCanvas.width = Math.floor(viewport.width);
+  pdfCanvas.height = Math.floor(viewport.height);
+  const ctx = pdfCanvas.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,pdfCanvas.width,pdfCanvas.height);
+  await page.render({canvasContext: ctx, viewport}).promise;
+  lastRender = {
+    width: pdfCanvas.width, height: pdfCanvas.height,
+    pageWidthPoints: (page.view[2]-page.view[0]),
+    pageHeightPoints: (page.view[3]-page.view[1])
+  };
+  if(cropBoxEl) cropBoxEl.remove(); cropBoxEl = null;
+}
+
+function placeBox(){
+  if(!pdfDoc) return alert('Load a PDF first');
+  const sizeKey = sizeSelect.value;
+  const mmW = sizeKey==='Custom' ? (+customW.value||105) : A_SIZES[sizeKey].w;
+  const mmH = sizeKey==='Custom' ? (+customH.value||148) : A_SIZES[sizeKey].h;
+  const ptsW = mmToPoints(mmW);
+  const ptsH = mmToPoints(mmH);
+  const pppX = lastRender.width / lastRender.pageWidthPoints;
+  const pppY = lastRender.height / lastRender.pageHeightPoints;
+  const pxW = Math.round(ptsW * pppX);
+  const pxH = Math.round(ptsH * pppY);
+
+  if(cropBoxEl) cropBoxEl.remove();
+  cropBoxEl = document.createElement('div');
+  cropBoxEl.className = 'crop-box';
+  cropBoxEl.style.width = pxW + 'px';
+  cropBoxEl.style.height = pxH + 'px';
+  const rect = pdfCanvas.getBoundingClientRect();
+  const container = document.getElementById('viewerInner');
+  cropBoxEl.style.left = Math.max(10,(rect.width - pxW)/2) + 'px';
+  cropBoxEl.style.top = Math.max(10,(rect.height - pxH)/2) + 'px';
+  container.appendChild(cropBoxEl);
+  cropBoxEl.addEventListener('pointerdown', startDrag);
+}
+
+function startDrag(e){
+  e.preventDefault();
+  cropBoxEl.setPointerCapture(e.pointerId);
+  dragInfo = {startX:e.clientX, startY:e.clientY,
+              origLeft:parseFloat(cropBoxEl.style.left),
+              origTop:parseFloat(cropBoxEl.style.top)};
+  cropBoxEl.classList.add('dragging');
+  window.addEventListener('pointermove', doDrag);
+  window.addEventListener('pointerup', endDrag);
+}
+function doDrag(e){
+  if(!dragInfo) return;
+  const dx = e.clientX - dragInfo.startX;
+  const dy = e.clientY - dragInfo.startY;
+  const newLeft = dragInfo.origLeft + dx;
+  const newTop = dragInfo.origTop + dy;
+  const canvasRect = pdfCanvas.getBoundingClientRect();
+  const relLeft = Math.max(0, Math.min(newLeft, canvasRect.width - cropBoxEl.offsetWidth));
+  const relTop = Math.max(0, Math.min(newTop, canvasRect.height - cropBoxEl.offsetHeight));
+  cropBoxEl.style.left = relLeft + 'px';
+  cropBoxEl.style.top = relTop + 'px';
+}
+function endDrag(e){
+  if(!dragInfo) return;
+  cropBoxEl.classList.remove('dragging');
+  cropBoxEl.releasePointerCapture(e.pointerId);
+  dragInfo = null;
+  window.removeEventListener('pointermove', doDrag);
+  window.removeEventListener('pointerup', endDrag);
+}
+
+applyBox.addEventListener('click', ()=>{ placeBox(); });
+
+// Crop -> preserve vectors/text using pdf-lib
+cropBtn.addEventListener('click', async ()=>{
+  if(!cropBoxEl) return alert('Place the A box first');
+  const leftPx = parseFloat(cropBoxEl.style.left);
+  const topPx = parseFloat(cropBoxEl.style.top);
+  const wPx = cropBoxEl.offsetWidth;
+  const hPx = cropBoxEl.offsetHeight;
+  const pppX = lastRender.width / lastRender.pageWidthPoints;
+  const pppY = lastRender.height / lastRender.pageHeightPoints;
+  const cropLeftPoints = leftPx / pppX;
+  const cropTopPoints = topPx / pppY;
+  const cropWPoints = wPx / pppX;
+  const cropHPoints = hPx / pppY;
+
+  const arr = await originalFile.arrayBuffer();
+  const pdfDocLib = await PDFLib.PDFDocument.load(arr);
+  const page = pdfDocLib.getPages()[currentPage - 1];
+  const pageHeight = page.getSize().height;
+  const cropBottom = pageHeight - (cropTopPoints + cropHPoints);
+
+  page.setCropBox(cropLeftPoints, cropBottom, cropWPoints, cropHPoints);
+  page.setMediaBox(cropLeftPoints, cropBottom, cropWPoints, cropHPoints);
+
+  const croppedBytes = await pdfDocLib.save();
+  const blob = new Blob([croppedBytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cropped.pdf';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
