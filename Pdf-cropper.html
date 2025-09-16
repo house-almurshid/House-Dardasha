@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PDF Cropper — A-size selector</title>
+  <title>Aldardasha House — PDF Cropper</title>
   <style>
     :root{--bg:#0f172a;--panel:#0b1220;--accent:#06b6d4}
     body{
@@ -106,7 +106,7 @@
 <body>
   <div class="container">
     <div class="sidebar">
-      <h2>PDF Cropper</h2>
+      <h2>Aldardasha House PDF Cropper</h2>
 
       <label>File:</label>
       <input id="file" type="file" accept="application/pdf" />
@@ -116,6 +116,7 @@
 
       <label>Size:</label>
       <select id="sizeSelect">
+        <option value="FLA6">FLA6</option>
         <option value="A6">A6</option>
         <option value="A5">A5</option>
         <option value="Custom">Custom</option>
@@ -161,7 +162,7 @@ let dragInfo = null;
 let lastRender = {width:0,height:0};
 let originalFile = null;
 
-const A_SIZES = { 'A6': {w:105,h:148}, 'A5': {w:148,h:210} };
+const A_SIZES = { 'FLA6': {w:100,h:138}, 'A6': {w:105,h:148}, 'A5': {w:148,h:210} };
 function mmToPoints(mm){ return mm * 72 / 25.4; }
 
 fileInput.addEventListener('change', async (e)=>{
